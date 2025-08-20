@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的主页</title>
+<style>
+    body{background:#FAFAF0;color:#333;font-family:Arial,sans-serif;margin:0;padding:0}
+    body.dark{background:#11151c;color:#e6e6e6}
+    #darkToggle{position:absolute;right:12px;top:12px;cursor:pointer}
+    h1{text-align:center;margin:20px 0 10px;font-size:26px}
+    .search-bar{display:flex;justify-content:center;align-items:center;gap:6px;margin:0 auto 20px;max-width:600px}
+    select,input,button{padding:6px;border:1px solid #ccc;border-radius:4px;background:#fff;font-size:14px}
+    body.dark select,body.dark input,body.dark button{background:#1c1f28;color:#e6e6e6;border:1px solid #555}
+    main{padding:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;max-width:1400px;margin:auto}
+    @media(min-width:1024px){main{grid-template-columns:repeat(8,1fr)}}
+    @media(max-width:600px){main{grid-template-columns:repeat(2,1fr)}}
+    h2{grid-column:1/-1;font-size:16px;border-bottom:1px solid #ccc;margin-top:20px;padding-bottom:4px}
+    body.dark h2{border-bottom:1px solid #555}
+    .link-card{background:#fff;border-radius:6px;padding:8px;border:1px solid #ccc;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+    body.dark .link-card{background:#1c1f28;border:1px solid #555}
+    .link-card a{color:inherit;text-decoration:none;font-weight:500;overflow-wrap:anywhere}
+    .copy-btn{cursor:pointer;font-size:14px;color:#888}
+    /* 隐蔽小圆点按钮 */
+    #unlockBtn{
+        position:fixed;
+        bottom:12px;
+        right:12px;
+        width:12px;
+        height:12px;
+        border-radius:50%;
+        border:none;
+        background:rgba(150,150,150,0.3);
+        cursor:pointer;
+        padding:0;
+    }
+    #unlockBtn:hover{background:rgba(150,150,150,0.6)}
+    body.dark #unlockBtn{background:rgba(200,200,200,0.2)}
+    body.dark #unlockBtn:hover{background:rgba(200,200,200,0.5)}
+</style>
+</head>
+<body>
+
+<button id="darkToggle" onclick="toggleDarkMode()">🌙/☀️</button>
+<h1>我的主页</h1>
+
+<div class="search-bar">
+    <select id="engine">
+        <option value="https://www.google.com/search?q=">Google</option>
+        <option value="https://www.baidu.com/s?wd=">百度</option>
+        <option value="https://www.bing.com/search?q=">Bing</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="搜索...">
+    <button onclick="doSearch()">搜索</button>
+</div>
+
+<main id="links"></main>
+<!-- 小圆点按钮 -->
+<button id="unlockBtn" onclick="unlockSecret()"></button>
+
+<script id="markdown-data" type="text/plain">
+## 常用网站
+- [百度](https://www.baidu.com)
+- [谷歌](https://www.google.com)
+
+## 学习资料
+- [MDN](https://developer.mozilla.org)
+- [菜鸟教程](https://www.runoob.com)
+
+## 私藏 · 工具
+- [秘密工具](https://secret-tool.com)
+- [备用收藏](https://backup.org)
+</script>
+
+<script defer>
+var SECRET_PWD="1234"; // 👉 修改这里的密码
+
+function parseMarkdown(md,showSecret){
+    var lines=md.split("\n"),html="",skip=false;
+    for(var i=0;i<lines.length;i++){
+        var line=lines[i].trim();
+        if(line.indexOf("##")===0){
+            var title=line.replace(/^##+/,"").trim();
+            if(title.indexOf("私藏")!==-1&&!showSecret){skip=true;continue}
+            skip=false;html+="<h2>"+title+"</h2>"
+        }else if(line.indexOf("- [")===0&&!skip){
+            var m=line.match(/- \[(.*?)\]\((.*?)\)/);
+            if(m){html+='<div class="link-card"><a href="'+m[2]+'" target="_blank">'+m[1]+'</a><span class="copy-btn" onclick="copyLink(\''+m[2]+'\',this)">📋</span></div>'}
+        }
+    }
+    return html
+}
+
+function renderLinks(showSecret){
+    var md=document.getElementById("markdown-data").textContent;
+    document.getElementById("links").innerHTML=parseMarkdown(md,showSecret)
+}
+
+function doSearch(){
+    var e=document.getElementById("engine").value,k=document.getElementById("searchInput").value.trim();
+    if(k)window.open(e+encodeURIComponent(k),"_blank")
+}
+
+function toggleDarkMode(){
+    document.body.classList.toggle("dark")
+}
+
+function copyLink(url,el){
+    var i=document.createElement("input");i.value=url;document.body.appendChild(i);i.select();
+    document.execCommand("copy");document.body.removeChild(i);
+    el.innerHTML="✅";setTimeout(function(){el.innerHTML="📋"},1000)
+}
+
+function unlockSecret(){
+    var p=prompt("请输入密码查看私藏链接：");
+    if(p===SECRET_PWD){renderLinks(true);document.getElementById("unlockBtn").style.display="none"}
+    else alert("密码错误！")
+}
+
+renderLinks(false);
+</script>
+
+</body>
+</html>
