@@ -5,59 +5,167 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>我的主页</title>
 <style>
-    body{background:#FAFAF0;color:#333;font-family:Arial,sans-serif;margin:0;padding:0}
-    body.dark{background:#11151c;color:#e6e6e6}
-    body.secret{background:#11151c;color:#e6e6e6} /* 私藏页背景 */
-    
-    #darkToggle{position:absolute;right:12px;top:12px;cursor:pointer}
-    body.secret #darkToggle{display:none} /* 私藏页隐藏按钮 */
-    
-    h1{text-align:center;margin:20px 0 10px;font-size:26px}
-    .search-bar{display:flex;justify-content:center;align-items:center;gap:6px;margin:0 auto 20px;max-width:600px}
-    select,input,button{padding:6px;border:1px solid #ccc;border-radius:4px;background:#fff;font-size:14px}
-    body.dark select,body.dark input,body.dark button,
-    body.secret select,body.secret input,body.secret button{background:#1c1f28;color:#e6e6e6;border:1px solid #555}
-    
-    /* 网格布局优化：主页 & 私藏页 */
-    main#links{
-        padding:15px;
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-        gap:12px;
-        max-width:1200px;
-        margin:0 auto 30px;
-    }
-    @media(min-width:1024px){main#links{grid-template-columns:repeat(8,1fr)}}
-    @media(max-width:600px){main#links{grid-template-columns:repeat(2,1fr)}}
+/* 默认主题 (统一使用白天配色，因为取消了切换) */
+:root {
+    --bg-main: #FAFAF0; 
+    --bg-card: #fff;    
+    --color-text: #333; 
+    --color-border: #ccc;
+    --color-link-btn: #4A90E2; 
+}
 
-    h2{grid-column:1/-1;font-size:16px;border-bottom:1px solid #ccc;margin-top:20px;padding-bottom:4px}
-    body.dark h2, body.secret h2{border-bottom:1px solid #555}
-    .link-card{background:#fff;border-radius:6px;padding:8px;border:1px solid #ccc;display:flex;justify-content:space-between;align-items:center;font-size:14px}
-    body.dark .link-card, body.secret .link-card{background:#1c1f28;border:1px solid #555}
-    .link-card a{color:inherit;text-decoration:none;font-weight:500;overflow-wrap:anywhere}
-    .copy-btn{cursor:pointer;font-size:14px;color:#888}
-    
-    /* 隐蔽小圆点按钮 */
-    #unlockBtn{
-        position:fixed;
-        bottom:12px;
-        right:12px;
-        width:12px;
-        height:12px;
-        border-radius:50%;
-        border:none;
-        background:rgba(150,150,150,0.3);
-        cursor:pointer;
-        padding:0;
-    }
-    #unlockBtn:hover{background:rgba(150,150,150,0.6)}
-    body.dark #unlockBtn, body.secret #unlockBtn{background:rgba(200,200,200,0.2)}
-    body.dark #unlockBtn:hover, body.secret #unlockBtn:hover{background:rgba(200,200,200,0.5)}
+/* ===== 全局样式 ===== */
+body {
+    background: var(--bg-main);
+    color: var(--color-text);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ------------------- 私密模式 (独立隔离) ------------------- */
+body.secret {
+    background: #1A2430; 
+    --color-text: #e6e6e6; 
+    --bg-card: #1C2F40;
+    --color-border: #555;
+    --color-link-btn: #8CC4FF;
+}
+
+/* ------------------- 元素样式 ------------------- */
+/* 顶部按钮 (已移除 darkToggle) */
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 26px;
+}
+
+/* 搜索栏 */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 0 auto 20px;
+    max-width: 600px;
+}
+select, input, button {
+    padding: 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--bg-card); 
+    color: var(--color-text);
+    font-size: 14px;
+    transition: background 0.3s, border 0.3s, color 0.3s;
+}
+
+/* 网格布局 */
+main#links {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto 50px;
+}
+.links-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+@media (min-width: 1024px) {
+    .links-group { grid-template-columns: repeat(8, 1fr); }
+}
+@media (max-width: 600px) {
+    .links-group { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* 分组标题及展开按钮 */
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    grid-column: 1 / -1;
+    margin-top: 50px; 
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 4px;
+}
+.group-header h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* 展开/收缩按钮样式 */
+.toggle-btn {
+    background: none;
+    border: none; 
+    color: var(--color-link-btn); 
+    padding: 0 5px; 
+    font-size: 14px; 
+    cursor: pointer;
+    display: none; 
+    user-select: none;
+    text-decoration: none;
+    transition: color 0.1s;
+}
+.toggle-btn:hover {
+    text-decoration: underline; 
+    color: var(--color-link-btn); /* 保持链接色 hover */
+}
+body.secret .toggle-btn:hover {
+    color: var(--color-text); /* 私密模式使用主文字色 hover */
+}
+
+
+/* 链接卡片 */
+.link-card {
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+.link-card a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+.copy-btn {
+    cursor: pointer;
+    font-size: 14px;
+    color: #888;
+}
+.links-group.collapsed .link-card.hidden-by-limit {
+    display: none;
+}
+
+/* 隐蔽小圆点按钮 */
+#unlockBtn {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(150,150,150,0.3);
+    cursor: pointer;
+    padding: 0;
+}
+#unlockBtn:hover { background: rgba(150,150,150,0.6); }
+body.secret #unlockBtn {
+    background: rgba(200,200,200,0.2);
+}
+body.secret #unlockBtn:hover {
+    background: rgba(200,200,200,0.5);
+}
 </style>
 </head>
 <body>
 
-<button id="darkToggle" onclick="toggleDarkMode()">🌙/☀️</button>
 <h1 id="pageTitle">我的主页</h1>
 
 <div class="search-bar" id="searchBar">
@@ -68,15 +176,13 @@
         <option value="https://yandex.com/=">Yandex</option>
     </select>
     <input type="text" id="searchInput" placeholder="搜索...">
-    <button onclick="doSearch()">搜索</button>
+    <button id="searchButton">搜索</button>
 </div>
 
 <main id="links"></main>
 
-<!-- 小圆点入口 -->
-<button id="unlockBtn" onclick="unlockSecret()"></button>
+<button id="unlockBtn"></button>
 
-<!-- 主页面 Markdown -->
 <script id="markdown-main" type="text/plain">
 ## 影视资源
 - [低端影视](https://ddys.info)  
@@ -85,14 +191,13 @@
 - [kimivod](https://kimivod.com/)
 - [修罗影视](https://xlys.me)
 - [嘀嗒影视](https://www.didahd.pro/)
-- [猩球影视](https://gorilla-flix.com/)
 - [B站](https://www.bilibili.com/)
 - [TVB云播](http://www.hktvyb.cc/)
 - [厂长资源](https://www.cz01.vip/)
 - [热播之家](https://rebozj.pro/)
 - [素白白影视](https://subaibai.vip/)
 - [HDmoli](https://www.molicp.com/)
-- [vidhub](https://121310.xyz)  
+- [GoFilm](https://m.mubai.link/index)
 - [电影天堂资源](http://dyttzy1.tv/)     
 - [老地方影院](https://www.laodifang.icu/)
 - [N奈飞工厂](https://www.netflixgc.com)  
@@ -105,6 +210,7 @@
 - [火车太堵](https://www.tdnow.life)  
 - [百思派影视网](https://www.bestpipe.cn)  
 - [4k影视](https://4kvm.site)  
+- [vidhub](https://121310.xyz)  
 - [爱一帆](https://www.iyf.lv)  
 - [熊猫影视](https://youku.xm08.cn)  
 - [小红影视](https://www.xiaohys.com)  
@@ -112,7 +218,6 @@
 - [帕皮牛影视](https://www.papiniu.com)
 - [注视影视](https://gaze.run/)
 - [8号影院](http://www.bahaotv.com)
-- [GoFilm](https://m.mubai.link/index)
 - [inmi](https://www.inmi.app/)
 - [粤正影视](https://m.939394.xyz/)
 - [港剧屋](http://m.gangju5.cc/)
@@ -140,85 +245,9 @@
 - [寻找最佳类似电影](https://leisidianying.com/)
 - [A控屋](https://akongwu.com/)  
 - [站长资源](https://www.zzzypro.com/)  
-    
-
-## 资源
-- [QiuQuan's Blog](http://www.qiuquan.cc/)  
-- [MEFCL](https://www.mefcl.com/)
-- [applnn](https://www.applnn.com)  
-- [ababtools](https://ababtools.com/)
-- [423down](https://www.423down.com/)
-- [殁漂遥](https://www.mpyit.com/)
-- [开源软件站](https://www.openapk.net/zh/)    
-- [易破解](https://www.ypojie.com/)
-- [分享迷](https://www.fenxm.com/)
-- [工具集](https://gongjuji.org/)
-- [知音资源库](https://zyzyk.flowus.cn/)  
-- [Puresys](https://www.puresys.net/)
-- [软件库](https://www.ligonggong.com/)
-- [真下载](https://www.zhenxz.com/)
-- [资源帝](https://ziyuandi.cn/)    
-- [爱纯净博客](https://www.aichunjing.cn/)   
-- [轻狂志唯一](https://www.flighty.cn)   
-- [Bccfxs](https://www.bccfxs.com/)
-
-    
+- [猩球影视](https://gorilla-flix.com/)
 
 
-
-## 工具/发现
-- [一网一匠](https://ywyj.cn/)  
-- [偷懒爱好者周刊](https://toolight.zhubai.love/)  
-- [偷懒工具](https://toolight.cn/)  
-- [小信号](https://xiaoxinhao.top/)  
-- [有趣网址之家](https://youquhome.com/)  
-- [有经验网站](https://yyjingyan.com/)  
-- [ababtools](https://ababtools.com/)  
-- [ask发现优秀的……](https://zsk.ai/home)  
-- [DocHub 分享优质文档](https://www.dochub.wiki/)  
-- [合集网](https://233heji.com/)  
-- [虫部落](https://www.chongbuluo.com)  
-- [app喵](https://www.appmiu.com/)  
-- [奇趣网站](https://qiqu.dreamthere.cn/)  
-- [神器集](https://hao.logosc.cn/)  
-- [趣集](https://ifun.cool/)  
-- [HSL](https://haoshangle.com/)  
-- [新趣集](https://xinquji.com/)  
-- [有意思的小周刊](https://www.fengxiaoqiang.com/yys/)  
-- [酷口家数字花园](https://weqoocu.com/)  
-- [酷特喵](https://www.kutmd.com/)  
-- [发现有趣的东西](https://iui.su/3093/)  
-- [比格张](https://bigezhang.com/)  
-- [HuntScreens](https://huntscreens.com/zh)  
-- [1000UserGuide](https://1000userguide.com/#/)  
-- [indie-hackers-guide](https://indie-hackers-guide.pages.dev/#/) 
-- [有趣网址之家](https://youquhome.com/)  
-- [产品分享社区](https://www.partnershare.cn/)  
-- [哎哟不错](https://aiyoubucuo.com/)  
-- [decohack](https://decohack.com/)
-- [科技师](https://www.3kjs.com/)
-- [小众软件](https://www.appinn.com/)
-- [Solo4A](https://www.solo4a.com/)
-- [大眼仔旭](https://www.dayanzai.me/)    
-- [PartneShare](https://www.partnershare.cn/)  
-- [AlternativeTo](https://alternativeto.net/) 
-- [PPbuzz](https://ppbuzz.com/) 
-- [Applnn](https://www.applnn.com/) 
-- [新趣集](https://xinquji.com/) 
-- [只读](https://www.rdonly.com/) 
-- [异次元软件世界](https://www.iplaysoft.com) 
-- [如有乐享](https://51.ruyo.net) 
-- [懒得勤快](https://masuit.net/) 
-- [酷库博客](https://www.zxki.cn/) 
-- [ZAPRO](https://tmioe.com/)
-- [北城分享社](https://www.bccfxs.com/)
-- [FMHY](https://fmhy.pages.dev/)
-- [VPS大玩家](https://www.vpsdawanjia.com/)
-
-
-
-    
-    
 ## AI
 - [AI研究所](https://www.aiyjs.com/)  
 - [AI工具集](https://ai-bot.cn/)      
@@ -226,19 +255,9 @@
 - [AI NavHub](https://ainavhub.com/cn)   
 - [ai工具导航](https://promptchoose.com/)         
 - [TOOLIFY](https://www.toolify.ai/zh/) 
-- [Hugging Face](https://huggingface.co/) 
+- [Hugging Face](https://huggingface.co/)     
 
-    
 
-## 博客
-- [浪海导航](https://www.langhai.net/)  
-- [发现博客](https://bf.zzxworld.com/)  
-- [利器](https://liqi.io/)  
-- [出海研习社](https://indiehackertools.net/)  
-- [博客园](https://www.cnblogs.com/)  
-- [Xlog](https://xlog.app/)  
-- [水星投资博客](https://mercurychong.blogspot.com/)  
-- [博友圈](https://www.boyouquan.com/home)
 
 ## 书籍
 - [电子书导航](https://shu.baozangdh.com/)  
@@ -269,7 +288,162 @@
 - [多读书，读好书](https://http561856124.wordpress.com/)
 - [慧眼看](https://www.huiyankan.com)
 
+
+## 电视盒子
+- [聚玩盒子](https://www.juwanhezi.com/)  
+- [盒子派](https://www.hezipie.com/)  
+- [优质电视盒子应用分享](https://app.iyouhun.com/)  
+- [强大的iptv直播源](https://iptv.hacks.tools/)  
+- [影用仓库](https://www.wmdz.com/)  
+- [APTV直播源](http://profile.aptvapp.com/)  
+- [7080影视搜](https://7080.wang/)  
+- [IPTV 直播源](https://github.com/yuanzl77/IPTV)
+- [IPTVKK云视界](https://www.iptvkk.com/)
+- [淘IPTV](https://taoiptv.com/)
+- [IPTV论坛](https://iptv.cc/)
+- [小盒子工具箱](https://xhztv.pro/)
+- [zdns电视软件](https://www.znds.com)   
+- [IPTVindex](https://iptvindex.com/)  
+
+
+## 生活健康
+- [原研药目录](https://medicine.lvwzhen.com/)  
+- [WIKIHOW](https://zh.wikihow.com/%E9%A6%96%E9%A1%B5)  
+- [城市租房生存指南](https://zufang.ababtools.com/)  
+- [鸭小组](https://yaxiaozu.ababtools.com/)  
+- [家庭药房](https://apothecary.tips/zh)  
+- [医保政策导航](https://yibao.233h.com/)  
+- [家庭妙招](https://comeworlds.com/)  
+- [ai就诊问问](https://ask.nocode.com/)  
+- [情感](https://www.lovepanky.com/)  
+- [有用经验](https://yyjingyan.com/)  
+- [ifxit免费修理手册](https://zh.ifixit.com/)  
+- [心理学网站导航](https://kuakua.app/zh-CN/explore)  
+- [健康前线](https://www.healthline.com/)  
+- [练习](https://www.lianjingshu.com)  
+- [默沙东诊疗手册](https://www.msdmanuals.cn/)  
+- [乡间郎中](https://www.xjlz365.com/)  
+- [中国医药信息查询平台](https://m.dayi.org.cn/)
+
+
+## 系统
+- [风林火山](http://www.zrkj.net/)
+- [不忘初心](https://www.pc528.net/)
+- [青苹果家园](http://www.pggho.com/)
+- [远航技术](http://www.far123.com)
+- [格子家园](http://www.gzoso.com)
+- [深度系统](http://www.deepinghost.com)
+- [pcos技术精品](https://www.pcosw.com)
+
+
+## 其他
+- [电报值得看](https://dbzdk.com/)    
+- [在线转盘](https://wheelpage.com/zh/) 
+- [工具帮](https://cn.piliapp.com/)    
+- [行为同意书](https://001.123408.xyz/) 
+- [天涯1](https://tianya.at/) 
+- [天涯2](https://tianya.im) 
+
+
+
+
+</script>
+
+<script id="markdown-secret" type="text/plain">
+## 成人导航
+- [国际导航](https://theporndude.com/ja)  
+- [文尼导航](https://biglist.xyz/)  
+- [大全导航](https://whichav.video)  
+- [17321导航](https://17321.xyz)  
+- [三多媒体](https://3dmt.xyz/)  
+- [成人导航](https://huangse.carrd.co)
+- [91导航](https://c7c.kfrbhdf.xyz/)
+- [FamilyStrokes](https://pornchannels.link/familystrokes)   
+- [网站大全](https://qingse.one/)
+- [娇色导航](https://jiao.se/)
+- [色p计划](https://spplan.pages.dev/)
+- [酮体的秘密](https://www.dongti.me/)
+- [18+福利导航](https://www.18fuli.app/)
+- [导航](https://dagesite.com/cn/)
+
+
+
+
     
+## 论坛
+- [草榴社区](https://www.t66y.com/)
+- [色中色](http://sexinsex.net/)
+- [1024社区](http://1024xp.com)
+- [2048社区](https://2048bt.cc/)    
+- [福利吧](https://fuliba2023.net/)
+- [色花堂](https://www.sehuatang.org/) 
+    
+
+## 成人网站
+- [Pornhub](https://www.pornhub.com/)  
+- [XVIDEOS](https://www.xvideos.com/)  
+- [XNXX](https://www.xnxx.com/)  
+- [Xhamster](https://zh.xhamster.com/)  
+- [Thumbzilla](https://www.thumbzilla.com/)
+- [Eporner](https://www.eporner.com/)  
+- [Noodlemagazine](https://noodlemagazine.com/new-video)  
+- [Beeg](https://beeg.com/)
+- [YOUPORN](https://www.youporn.com/)
+- [REDTUBE](https://www.redtube.com/)
+
+
+
+    
+## 日本
+- [AVgle](https://av.gl/)
+- [Missav](https://missav.ws/dm45)
+- [Jable](https://jable.tv/)
+- [Javsb](https://jav.sb/)
+- [成人奈飞](https://netflav.com/)
+- [鉴黄](https://www.javrate.com/)
+- [Avx16](https://avx16.com/cn)
+- [91jav](https://91jav7.com/)
+- [JavTREE](https://javtree.com/) 
+- [Jav777](https://www.jav777.xyz/) 
+- [18AV](https://18av.mm-cg.com/) 
+- [AV55](https://av55.com/cn) 
+    
+    
+## 国产
+- [笔盒](https://bh62609.vip/)
+- [四虎](https://4h.tv/)
+- [熊猫影视](https://91xm.tv/)
+- [黑料网](https://hlwn20.com/)
+- [黄色仓库](http://143ck.cc/)
+- [好色TV](https://chair.ffymijog.com/)
+
+    
+    
+ ## 临时   
+- [ptt.co](https://ptt.co/)
+</script>
+
+<script id="markdown-private" type="text/plain">
+## 资源
+- [QiuQuan's Blog](http://www.qiuquan.cc/)  
+- [MEFCL](https://www.mefcl.com/)
+- [applnn](https://www.applnn.com)  
+- [ababtools](https://ababtools.com/)
+- [423down](https://www.423down.com/)
+- [殁漂遥](https://www.mpyit.com/)
+- [开源软件站](https://www.openapk.net/zh/)    
+- [易破解](https://www.ypojie.com/)
+- [分享迷](https://www.fenxm.com/)
+- [工具集](https://gongjuji.org/)
+- [知音资源库](https://zyzyk.flowus.cn/)  
+- [Puresys](https://www.puresys.net/)
+- [软件库](https://www.ligonggong.com/)
+- [真下载](https://www.zhenxz.com/)
+- [资源帝](https://ziyuandi.cn/)    
+- [爱纯净博客](https://www.aichunjing.cn/)   
+- [轻狂志唯一](https://www.flighty.cn)   
+- [Bccfxs](https://www.bccfxs.com/)
+
 ## 综合导航
 - [喜欢书签](https://www.likebookmark.com)  
 - [书签导航](https://nav.xybin.top)  
@@ -351,55 +525,74 @@
 - [一糖导航](https://iitang.com/)
 - [星云导航](https://www.xygalaxy.com/)
 
+## 工具/发现
+- [一网一匠](https://ywyj.cn/)  
+- [偷懒爱好者周刊](https://toolight.zhubai.love/)  
+- [偷懒工具](https://toolight.cn/)  
+- [小信号](https://xiaoxinhao.top/)  
+- [有趣网址之家](https://youquhome.com/)  
+- [有经验网站](https://yyjingyan.com/)  
+- [ababtools](https://ababtools.com/)  
+- [ask发现优秀的……](https://zsk.ai/home)  
+- [DocHub 分享优质文档](https://www.dochub.wiki/)  
+- [合集网](https://233heji.com/)  
+- [虫部落](https://www.chongbuluo.com)  
+- [app喵](https://www.appmiu.com/)  
+- [奇趣网站](https://qiqu.dreamthere.cn/)  
+- [神器集](https://hao.logosc.cn/)  
+- [趣集](https://ifun.cool/)  
+- [HSL](https://haoshangle.com/)  
+- [新趣集](https://xinquji.com/)  
+- [有意思的小周刊](https://www.fengxiaoqiang.com/yys/)  
+- [酷口家数字花园](https://weqoocu.com/)  
+- [酷特喵](https://www.kutmd.com/)  
+- [发现有趣的东西](https://iui.su/3093/)  
+- [比格张](https://bigezhang.com/)  
+- [HuntScreens](https://huntscreens.com/zh)  
+- [1000UserGuide](https://1000userguide.com/#/)  
+- [indie-hackers-guide](https://indie-hackers-guide.pages.dev/#/) 
+- [有趣网址之家](https://youquhome.com/)  
+- [产品分享社区](https://www.partnershare.cn/)  
+- [哎哟不错](https://aiyoubucuo.com/)  
+- [decohack](https://decohack.com/)
+- [科技师](https://www.3kjs.com/)
+- [小众软件](https://www.appinn.com/)
+- [Solo4A](https://www.solo4a.com/)
+- [大眼仔旭](https://www.dayanzai.me/)    
+- [PartneShare](https://www.partnershare.cn/)  
+- [AlternativeTo](https://alternativeto.net/) 
+- [PPbuzz](https://ppbuzz.com/) 
+- [Applnn](https://www.applnn.com/) 
+- [新趣集](https://xinquji.com/) 
+- [只读](https://www.rdonly.com/) 
+- [异次元软件世界](https://www.iplaysoft.com) 
+- [如有乐享](https://51.ruyo.net) 
+- [懒得勤快](https://masuit.net/) 
+- [酷库博客](https://www.zxki.cn/) 
+- [ZAPRO](https://tmioe.com/)
+- [北城分享社](https://www.bccfxs.com/)
+- [FMHY](https://fmhy.pages.dev/)
+- [VPS大玩家](https://www.vpsdawanjia.com/)
+
+## 博客
+- [浪海导航](https://www.langhai.net/)  
+- [发现博客](https://bf.zzxworld.com/)  
+- [利器](https://liqi.io/)  
+- [出海研习社](https://indiehackertools.net/)  
+- [博客园](https://www.cnblogs.com/)  
+- [Xlog](https://xlog.app/)  
+- [水星投资博客](https://mercurychong.blogspot.com/)  
+- [博友圈](https://www.boyouquan.com/home)
+
+
 
     
-    
-## 生活健康
-- [原研药目录](https://medicine.lvwzhen.com/)  
-- [WIKIHOW](https://zh.wikihow.com/%E9%A6%96%E9%A1%B5)  
-- [城市租房生存指南](https://zufang.ababtools.com/)  
-- [鸭小组](https://yaxiaozu.ababtools.com/)  
-- [家庭药房](https://apothecary.tips/zh)  
-- [医保政策导航](https://yibao.233h.com/)  
-- [家庭妙招](https://comeworlds.com/)  
-- [ai就诊问问](https://ask.nocode.com/)  
-- [情感](https://www.lovepanky.com/)  
-- [有用经验](https://yyjingyan.com/)  
-- [ifxit免费修理手册](https://zh.ifixit.com/)  
-- [心理学网站导航](https://kuakua.app/zh-CN/explore)  
-- [健康前线](https://www.healthline.com/)  
-- [练习](https://www.lianjingshu.com)  
-- [默沙东诊疗手册](https://www.msdmanuals.cn/)  
-- [乡间郎中](https://www.xjlz365.com/)  
-- [中国医药信息查询平台](https://m.dayi.org.cn/)
 
 
 
     
-## 系统
-- [风林火山](http://www.zrkj.net/)
-- [不忘初心](https://www.pc528.net/)
-- [青苹果家园](http://www.pggho.com/)
-- [远航技术](http://www.far123.com)
-- [格子家园](http://www.gzoso.com)
-- [深度系统](http://www.deepinghost.com)
-- [pcos技术精品](https://www.pcosw.com)
 
-## 电视盒子
-- [聚玩盒子](https://www.juwanhezi.com/)  
-- [盒子派](https://www.hezipie.com/)  
-- [优质电视盒子应用分享](https://app.iyouhun.com/)  
-- [强大的iptv直播源](https://iptv.hacks.tools/)  
-- [影用仓库](https://www.wmdz.com/)  
-- [APTV直播源](http://profile.aptvapp.com/)  
-- [7080影视搜](https://7080.wang/)  
-- [IPTV 直播源](https://github.com/yuanzl77/IPTV)
-- [IPTVKK云视界](https://www.iptvkk.com/)
-- [淘IPTV](https://taoiptv.com/)
-- [IPTV论坛](https://iptv.cc/)
-- [小盒子工具箱](https://xhztv.pro/)
-- [zdns电视软件](https://www.znds.com)   
-- [IPTVindex](https://iptvindex.com/)  
+
 
     
     
@@ -409,171 +602,206 @@
 - [前途日历](https://qianturili.ababtools.com/?url=heeee.com)
 - [自由者工具](https://freelancer-tools.shop/)
 
-## 其他
-- [电报值得看](https://dbzdk.com/)    
-- [在线转盘](https://wheelpage.com/zh/) 
-- [工具帮](https://cn.piliapp.com/)    
-- [行为同意书](https://001.123408.xyz/) 
-- [天涯1](https://tianya.at/) 
-- [天涯2](https://tianya.im) 
-
-
-    
-</script>
-
-<!-- 私藏页面 Markdown -->
-<script id="markdown-secret" type="text/plain">
-## 成人导航
-- [国际导航](https://theporndude.com/ja)  
-- [文尼导航](https://biglist.xyz/)  
-- [大全导航](https://whichav.video)  
-- [17321导航](https://17321.xyz)  
-- [三多媒体](https://3dmt.xyz/)  
-- [成人导航](https://huangse.carrd.co)
-- [91导航](https://c7c.kfrbhdf.xyz/)
-- [FamilyStrokes](https://pornchannels.link/familystrokes)   
-- [网站大全](https://qingse.one/)
-- [娇色导航](https://jiao.se/)
-- [色p计划](https://spplan.pages.dev/)
-- [酮体的秘密](https://www.dongti.me/)
-- [18+福利导航](https://www.18fuli.app/)
-- [导航](https://dagesite.com/cn/)
 
 
 
 
-    
-## 论坛
-- [草榴社区](https://www.t66y.com/)
-- [色中色](http://sexinsex.net/)
-- [1024社区](http://1024xp.com)
-- [2048社区](https://2048bt.cc/)    
-- [福利吧](https://fuliba2023.net/)
-- [色花堂](https://www.sehuatang.org/) 
-    
-
-## 成人网站
-- [Pornhub](https://www.pornhub.com/)  
-- [XVIDEOS](https://www.xvideos.com/)  
-- [XNXX](https://www.xnxx.com/)  
-- [Xhamster](https://zh.xhamster.com/)  
-- [Thumbzilla](https://www.thumbzilla.com/)
-- [Eporner](https://www.eporner.com/)  
-- [Noodlemagazine](https://noodlemagazine.com/new-video)  
-- [Beeg](https://beeg.com/)
-- [YOUPORN](https://www.youporn.com/)
-- [REDTUBE](https://www.redtube.com/)
-
-
-
-    
-## 日本
-- [AVgle](https://av.gl/)
-- [Missav](https://missav.ws/dm45)
-- [Jable](https://jable.tv/)
-- [Javsb](https://jav.sb/)
-- [成人奈飞](https://netflav.com/)
-- [鉴黄](https://www.javrate.com/)
-- [Avx16](https://avx16.com/cn)
-- [91jav](https://91jav7.com/)
-- [JavTREE](https://javtree.com/) 
-- [Jav777](https://www.jav777.xyz/) 
-- [18AV](https://18av.mm-cg.com/) 
-- [AV55](https://av55.com/cn) 
-    
-    
-## 国产
-- [笔盒](https://bh62609.vip/)
-- [四虎](https://4h.tv/)
-- [熊猫影视](https://91xm.tv/)
-- [黑料网](https://hlwn20.com/)
-- [黄色仓库](http://143ck.cc/)
-- [好色TV](https://chair.ffymijog.com/)
-
-    
-    
- ## 临时   
-- [ptt.co](https://ptt.co/)
-    
 </script>
 
 <script defer>
-var SECRET_PWD="709394"; // 👉 修改密码
+const SECRET_PWD  = "709394"; 
+const PRIVATE_PWD = "abcd"; 
+const MOBILE_LIMIT = 10;
+const DESKTOP_LIMIT = 16;
 
-function parseMarkdown(md){
-    var lines=md.split("\n"),html="";
-    for(var i=0;i<lines.length;i++){
-        var line=lines[i].trim();
-        if(line.indexOf("##")===0){
-            html+="<h2>"+line.replace(/^##+/,"").trim()+"</h2>";
-        }else if(line.indexOf("- [")===0){
-            var m=line.match(/- \[(.*?)\]\((.*?)\)/);
-            if(m){html+='<div class="link-card"><a href="'+m[2]+'" target="_blank">'+m[1]+'</a><span class="copy-btn" onclick="copyLink(\''+m[2]+'\',this)">📋</span></div>'}
-        }
+/*
+主题切换逻辑已移除，不再需要 THEME_CLASSES 和 toggleTheme。
+*/
+
+/* ===== 辅助函数：获取默认显示数量 ===== */
+function getDisplayLimit() {
+    return window.innerWidth <= 600 ? MOBILE_LIMIT : DESKTOP_LIMIT;
+}
+
+/* ===== Markdown 解析 (已优化链接安全属性) ===== */
+function parseMarkdown(md) {
+    const lines = md.split("\n");
+    let html = "";
+    let currentGroupName = "";
+    let currentLinks = [];
+    const displayLimit = getDisplayLimit();
+
+    function flushGroup() {
+        if (!currentGroupName || currentLinks.length === 0) return;
+
+        const totalLinks = currentLinks.length;
+        const needsToggle = totalLinks > displayLimit;
+        const collapsedClass = needsToggle ? 'collapsed' : '';
+        const toggleBtnDisplay = needsToggle ? 'inline-block' : 'none';
+        
+        const initialBtnText = `展开 (${totalLinks} 个)`; 
+        
+        html += `<div class="group-header">
+                    <h2>${currentGroupName}</h2>
+                    <button class="toggle-btn" 
+                            style="display: ${toggleBtnDisplay}" 
+                            data-group-id="${currentGroupName.replace(/\s+/g, '-').toLowerCase()}"
+                            data-collapsed="true">
+                        ${initialBtnText}
+                    </button>
+                </div>`;
+
+        html += `<div class="links-group ${collapsedClass}" id="group-${currentGroupName.replace(/\s+/g, '-').toLowerCase()}">`;
+
+        currentLinks.forEach((m, index) => {
+            const isHidden = needsToggle && index >= displayLimit;
+            const hiddenClass = isHidden ? 'hidden-by-limit' : '';
+            // 链接已添加 rel="noopener noreferrer" 优化
+            html += `<div class="link-card ${hiddenClass}">
+                        <a href="${m[2]}" target="_blank" rel="noopener noreferrer">${m[1]}</a>
+                        <span class="copy-btn" onclick="copyLink('${m[2]}', this)">📋</span>
+                    </div>`;
+        });
+        
+        html += `</div>`; 
+
+        currentGroupName = "";
+        currentLinks = [];
     }
+
+    lines.forEach(line => {
+        line = line.trim();
+        if (!line) return;
+
+        if (line.startsWith("##")) {
+            flushGroup();
+            currentGroupName = line.replace(/^##+/, "").trim();
+        } else if (line.startsWith("- [")) {
+            const m = line.match(/- \[(.*?)\]\((.*?)\)/);
+            if (m) {
+                currentLinks.push(m);
+            }
+        }
+    });
+    
+    flushGroup();
+    
     return html;
 }
 
-function render(id){
-    var md=document.getElementById(id).textContent;
-    document.getElementById("links").innerHTML=parseMarkdown(md);
+/* ===== 渲染 & 展开/收缩逻辑 (保持不变) ===== */
+function render(id) {
+    const md = document.getElementById(id).textContent;
+    document.getElementById("links").innerHTML = parseMarkdown(md);
+    bindToggleEvents();
 }
 
-function doSearch(){
-    var e=document.getElementById("engine").value,k=document.getElementById("searchInput").value.trim();
-    if(k)window.open(e+encodeURIComponent(k),"_blank")
+function toggleGroup(btn) {
+    const groupId = btn.dataset.groupId;
+    const groupElement = document.getElementById(`group-${groupId}`);
+    const isCollapsed = groupElement.classList.contains('collapsed');
+    const totalLinks = groupElement.querySelectorAll('.link-card').length;
+    
+    if (isCollapsed) {
+        groupElement.classList.remove('collapsed');
+        btn.innerHTML = `收起`;
+        btn.dataset.collapsed = 'false';
+    } else {
+        groupElement.classList.add('collapsed');
+        btn.innerHTML = `展开 (${totalLinks} 个)`;
+        btn.dataset.collapsed = 'true';
+    }
 }
 
-function toggleDarkMode(){
-    document.body.classList.toggle("dark")
+function bindToggleEvents() {
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.removeEventListener('click', handleToggleClick); 
+        btn.addEventListener('click', handleToggleClick);
+    });
+}
+function handleToggleClick(event) {
+    toggleGroup(event.currentTarget);
 }
 
-function copyLink(url,el){
-    var i=document.createElement("input");i.value=url;document.body.appendChild(i);i.select();
-    document.execCommand("copy");document.body.removeChild(i);
-    el.innerHTML="✅";setTimeout(function(){el.innerHTML="📋"},1000)
+/* ===== 核心功能函数 (保持不变) ===== */
+function doSearch() {
+    const engine = document.getElementById("engine").value;
+    const keyword = document.getElementById("searchInput").value.trim();
+    if (keyword) window.open(engine + encodeURIComponent(keyword), "_blank");
 }
 
-function unlockSecret(){
-    var p=prompt("请输入密码查看私藏页面：");
-    if(p===SECRET_PWD){
+async function copyLink(url, el) {
+    try {
+        await navigator.clipboard.writeText(url);
+        el.innerHTML = "✅";
+    } catch (err) {
+        console.error('复制失败:', err);
+        el.innerHTML = "❌";
+    }
+    setTimeout(() => el.innerHTML = "📋", 1000);
+}
+
+function unlockSecret() {
+    const pwd = prompt("请输入密码查看内容：");
+    if (pwd === SECRET_PWD) {
+        // 进入私密模式
+        document.body.classList.remove(...document.body.classList); // 清除所有主题类，只保留 secret
         render("markdown-secret");
-        document.getElementById("unlockBtn").style.display="none";
-        document.getElementById("searchBar").style.display="none";
-        document.getElementById("pageTitle").style.display="none"; 
-        document.body.classList.add("secret"); // 🚀 私藏页深色背景 & 隐藏按钮
-    }else alert("密码错误！");
+        enterMode("私藏页面");
+    } else if (pwd === PRIVATE_PWD) {
+        // 进入个人模式
+        document.body.classList.remove(...document.body.classList);
+        render("markdown-private");
+        enterMode("个人空间");
+    } else {
+        alert("密码错误！");
+    }
+}
+function enterMode(title) {
+    document.getElementById("unlockBtn").style.display = "none";
+    document.getElementById("searchBar").style.display = "none";
+    document.getElementById("pageTitle").innerText = title;
+    document.body.classList.add("secret");
 }
 
-render("markdown-main");
+/* ===== 页面初始化和事件绑定 ===== */
+document.addEventListener('DOMContentLoaded', () => {
+    render("markdown-main");
+    
+    // 主题切换按钮事件已移除
+    document.getElementById("searchButton").addEventListener('click', doSearch);
+    document.getElementById("unlockBtn").addEventListener('click', unlockSecret);
+    
+    document.getElementById("searchInput").addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') doSearch();
+    });
+    
+    // 监听窗口大小变化（用于调整链接显示数量）
+    let resizeTimer;
+    let lastWidth = window.innerWidth;
+    
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        
+        if (window.innerWidth !== lastWidth) {
+            lastWidth = window.innerWidth;
+            
+            resizeTimer = setTimeout(() => {
+                const currentTitle = document.getElementById("pageTitle").innerText;
+                // 重新渲染时需要重新判断当前模式
+                if (document.body.classList.contains('secret')) {
+                    if (currentTitle === "私藏页面") render("markdown-secret");
+                    else render("markdown-private");
+                } else {
+                    render("markdown-main");
+                }
+            }, 200); 
+        }
+    });
+
+    document.getElementById("searchInput").focus();
+});
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
