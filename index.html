@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我的主页</title>
+<title>福利导航</title>
 <style>
 /* 默认主题 (统一使用白天配色，因为取消了切换) */
 :root {
     --bg-main: #FAFAF0; 
     --bg-card: #fff;    
-    --color-text: #333; 
+    --color-text: #111; 
     --color-border: #ccc;
     --color-link-btn: #4A90E2; 
 }
@@ -26,14 +26,13 @@ body {
 /* ------------------- 私密模式 (独立隔离) ------------------- */
 body.secret {
     background: #1A2430; 
-    --color-text: #e6e6e6; 
+    --color-text: #f8f8f8; 
     --bg-card: #1C2F40;
     --color-border: #555;
     --color-link-btn: #8CC4FF;
 }
 
 /* ------------------- 元素样式 ------------------- */
-/* 顶部按钮 (已移除 darkToggle) */
 h1 {
     text-align: center;
     margin: 20px 0;
@@ -97,14 +96,19 @@ main#links {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 12px;
     margin-top: 10px;
+    /* 修改：将手机端（全局）的卡片高度再压扁一点，设定为 34px */
+    grid-auto-rows: 34px; 
 }
 @media (min-width: 1024px) {
-    .links-group { grid-template-columns: repeat(8, 1fr); }
+    .links-group { 
+        grid-template-columns: repeat(8, minmax(0, 1fr)); 
+        /* 电脑端保持 36px 不变 */
+        grid-auto-rows: 36px; 
+    }
 }
 @media (max-width: 600px) {
-    .links-group { grid-template-columns: repeat(2, 1fr); }
+    .links-group { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
 
 /* 分组标题及展开按钮 */
 .group-header {
@@ -136,12 +140,11 @@ main#links {
 }
 .toggle-btn:hover {
     text-decoration: underline; 
-    color: var(--color-link-btn); /* 保持链接色 hover */
+    color: var(--color-link-btn); 
 }
 body.secret .toggle-btn:hover {
-    color: var(--color-text); /* 私密模式使用主文字色 hover */
+    color: var(--color-text); 
 }
-
 
 /* 链接卡片 */
 .link-card {
@@ -153,12 +156,20 @@ body.secret .toggle-btn:hover {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
+    height: 100%;
+    box-sizing: border-box;
 }
 .link-card a {
     color: inherit;
     text-decoration: none;
     font-weight: 500;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; 
+    min-width: 0; 
+    flex: 1;
+    margin-right: 5px; 
 }
 .copy-btn {
     cursor: pointer;
@@ -193,7 +204,7 @@ body.secret #unlockBtn:hover {
 </head>
 <body>
 
-<h1 id="pageTitle">我的主页</h1>
+<h1 id="pageTitle">我的导航</h1>
 
 <div class="search-bar" id="searchBar">
     <select id="engine">
@@ -228,7 +239,6 @@ body.secret #unlockBtn:hover {
 - [GoFilm](https://m.mubai.link/index)
 - [麦田影视](https://www.mtyy5.com/)    
 - [电影天堂资源](http://dyttzy1.tv/)     
-
 - [N奈飞工厂](https://www.netflixgc.com)     
 - [网飞猫](https://www.ncat21.com)  
 - [皮皮蛋影视](https://cddys1.me)  
@@ -237,19 +247,16 @@ body.secret #unlockBtn:hover {
 - [4k影视](https://4kvm.site)  
 - [vidhub](https://121310.xyz)  
 - [爱一帆](https://www.iyf.lv)  
-
-- [小红影视](https://www.xiaohys.com)  
+- [小红影视](https://www.xiaohys.com)  
 - [帕皮牛影视](https://www.papiniu.com)
 - [注视影视](https://gaze.run/)
 - [8号影院](http://www.bahaotv.com)
 - [inmi](https://www.inmi.app/)
 - [粤正影视](https://m.939394.xyz/)
 - [港剧屋](http://m.gangju5.cc/)
-
 - [爱看港剧](https://www.hkgjw.com/)
 - [港剧发烧友](https://www.gjfsy.com/)    
 - [共青春](https://ting.cool/)
-
 - [Free OK](https://link3.cc/freeok)
 - [王子TV](https://www.333611.xyz/)
 - [dramas线上看](https://dramasq.com.tr/)
@@ -268,9 +275,8 @@ body.secret #unlockBtn:hover {
 - [快点播](https://www.quickvod.vip/)   
 - [爱看机器人](https://v.ikanbot.com) 
 - [粤爱看](https://www.yueak.top/)    
-- [求职信](https://h5v1.cibnabg.com) 
+- [求职信](https://h5v1.cibnabg.com) 
 - [低端影视1](https://ddys.io/)  
-
 - [QuickVod](https://www.quickvod.vip/)  
 - [袋鼠影视](https://dsdytv.com/) 
 - [visiontv](https://www.visiontv.club/) 
@@ -291,7 +297,7 @@ body.secret #unlockBtn:hover {
 - [copilot](https://copilot.microsoft.com/)  
 - [GPT](https://chatgpt.com)  
 - [Deepseek](https://www.deepseek.com)  
-
+- [LMArena](https://arena.ai/zh)  
 
     
     
@@ -334,7 +340,6 @@ body.secret #unlockBtn:hover {
 - [Tbox导航](https://www.tboxn.com/) 
 - [我的书签](https://it-cxy.top)  
 - [jay资源库](https://www.lovejay.top)  
-
 - [酷啦鱼](https://www.kulayu.com/)  
 - [图欧学习导航](https://tuostudy.upnb.top)  
 - [叛逆草导航](https://www.pncao.com)  
@@ -540,7 +545,6 @@ body.secret #unlockBtn:hover {
 - [linux.do](https://linux.do)
 - [独立开发出海工具箱](https://indiehackertools.net)
 
-
 </script>
 
 <script id="markdown-secret" type="text/plain">
@@ -571,10 +575,9 @@ body.secret #unlockBtn:hover {
 ## 论坛
 - [草榴社区](https://www.t66y.com/)
 - [色中色](http://sexinsex.net/)
-- [1024社区](http://1024xp.com)
-- [2048社区](https://2048bt.cc/)    
+- [1024社区](https://10018.c6027bk.cc/pw/)
 - [福利吧](https://fuliba2023.net/)
-- [色花堂](https://www.sehuatang.org/) 
+
     
 
 ## 成人网站
@@ -634,13 +637,12 @@ body.secret #unlockBtn:hover {
 - [91porn](https://www.91porn.com)  
 - [香蕉资源网](https://www.xiangjiaozyw.com)  
 - [DsysAV](https://dsysav2xtlsz.230100.xyz/)  
-
-    
- ## 临时   
 - [ptt.co](https://ptt.co/)
 
-
 </script>
+
+
+
 
 <script id="markdown-private" type="text/plain">
 ## 资源
@@ -665,17 +667,17 @@ body.secret #unlockBtn:hover {
 
 
 
-## 工具/发现 
+## 工具/发现
 - [偷懒爱好者周刊](https://toolight.zhubai.love/)  
 - [偷懒工具](https://toolight.cn/)  
 - [小信号](https://xiaoxinhao.top/)  
 - [有趣网址之家](https://youquhome.com/)    
-- [ababtools](https://ababtools.com/)  
+- [ababtools](https://ababtools.com/)  
 - [DocHub 分享优质文档](https://www.dochub.wiki/)  
 - [合集网](https://233heji.com/)  
 - [虫部落](https://www.chongbuluo.com)  
 - [app喵](https://www.appmiu.com/)  
-- [奇趣网站](https://qiqu.dreamthere.cn/)  
+- [奇趣网站](https://qiqu.dreamthere.cn/)  
 - [HSL](https://haoshangle.com/)  
 - [新趣集](https://xinquji.com/)  
 - [有意思的小周刊](https://www.fengxiaoqiang.com/yys/)  
@@ -750,18 +752,10 @@ body.secret #unlockBtn:hover {
 
 
 
-
-    
-
-
-
-    
-    
 ## 副业赚钱
 - [不上班研究所](https://www.toocool.cc/)
-- [顾小北](https://guxiaobei.com/)
 - [前途日历](https://qianturili.ababtools.com/?url=heeee.com)
-- [自由者工具](https://freelancer-tools.shop/)
+
 
 
 </script>
@@ -772,16 +766,10 @@ const PRIVATE_PWD = "abcd";
 const MOBILE_LIMIT = 10;
 const DESKTOP_LIMIT = 16;
 
-/*
-主题切换逻辑已移除，不再需要 THEME_CLASSES 和 toggleTheme。
-*/
-
-/* ===== 辅助函数：获取默认显示数量 ===== */
 function getDisplayLimit() {
     return window.innerWidth <= 600 ? MOBILE_LIMIT : DESKTOP_LIMIT;
 }
 
-/* ===== Markdown 解析 (已优化链接安全属性) ===== */
 function parseMarkdown(md) {
     const lines = md.split("\n");
     let html = "";
@@ -814,7 +802,6 @@ function parseMarkdown(md) {
         currentLinks.forEach((m, index) => {
             const isHidden = needsToggle && index >= displayLimit;
             const hiddenClass = isHidden ? 'hidden-by-limit' : '';
-            // 链接已添加 rel="noopener noreferrer" 优化
             html += `<div class="link-card ${hiddenClass}">
                         <a href="${m[2]}" target="_blank" rel="noopener noreferrer">${m[1]}</a>
                         <span class="copy-btn" onclick="copyLink('${m[2]}', this)">📋</span>
@@ -847,7 +834,6 @@ function parseMarkdown(md) {
     return html;
 }
 
-/* ===== 渲染 & 展开/收缩逻辑 (保持不变) ===== */
 function render(id) {
     const md = document.getElementById(id).textContent;
     document.getElementById("links").innerHTML = parseMarkdown(md);
@@ -881,7 +867,6 @@ function handleToggleClick(event) {
     toggleGroup(event.currentTarget);
 }
 
-/* ===== 核心功能函数 (保持不变) ===== */
 function doSearch() {
     const engine = document.getElementById("engine").value;
     const keyword = document.getElementById("searchInput").value.trim();
@@ -899,32 +884,26 @@ async function copyLink(url, el) {
     setTimeout(() => el.innerHTML = "📋", 1000);
 }
 
-/* ===== 新增：返回主页函数 ===== */
 function backToHome() {
-    // 移除返回按钮
     const backBtn = document.getElementById('backBtn');
     if (backBtn) backBtn.remove();
     
-    // 恢复默认状态
     render("markdown-main");
     document.getElementById("pageTitle").innerText = "我的主页";
-    document.getElementById("searchBar").style.display = "flex";  // 注意：原为 block，现改 flex 以匹配 search-bar
+    document.getElementById("searchBar").style.display = "flex";  
     document.getElementById("unlockBtn").style.display = "block";
     document.body.classList.remove("secret");
     
-    // 焦点回搜索框
     document.getElementById("searchInput").focus();
 }
 
 function unlockSecret() {
     const pwd = prompt("请输入密码查看内容：");
     if (pwd === SECRET_PWD) {
-        // 进入私密模式
-        document.body.classList.remove(...document.body.classList); // 清除所有主题类，只保留 secret
+        document.body.classList.remove(...document.body.classList); 
         render("markdown-secret");
         enterMode("私藏页面");
     } else if (pwd === PRIVATE_PWD) {
-        // 进入个人模式
         document.body.classList.remove(...document.body.classList);
         render("markdown-private");
         enterMode("个人空间");
@@ -933,29 +912,29 @@ function unlockSecret() {
     }
 }
 
-/* ===== 修改：enterMode 函数，添加返回按钮 ===== */
 function enterMode(title) {
     document.getElementById("unlockBtn").style.display = "none";
     document.getElementById("searchBar").style.display = "none";
     document.getElementById("pageTitle").innerText = title;
     document.body.classList.add("secret");
     
-    // 创建返回按钮
+    const oldBackBtn = document.getElementById('backBtn');
+    if (oldBackBtn) {
+        oldBackBtn.remove();
+    }
+    
     const backBtn = document.createElement('button');
     backBtn.id = 'backBtn';
     backBtn.className = 'back-btn';
     backBtn.innerText = '返回我的主页';
     backBtn.addEventListener('click', backToHome);
     
-    // 插入到 h1 后
     document.getElementById("pageTitle").parentNode.insertBefore(backBtn, document.getElementById("pageTitle").nextSibling);
 }
 
-/* ===== 页面初始化和事件绑定 ===== */
 document.addEventListener('DOMContentLoaded', () => {
     render("markdown-main");
     
-    // 主题切换按钮事件已移除
     document.getElementById("searchButton").addEventListener('click', doSearch);
     document.getElementById("unlockBtn").addEventListener('click', unlockSecret);
     
@@ -963,7 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') doSearch();
     });
     
-    // 监听窗口大小变化（用于调整链接显示数量）
     let resizeTimer;
     let lastWidth = window.innerWidth;
     
@@ -975,19 +953,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             resizeTimer = setTimeout(() => {
                 const currentTitle = document.getElementById("pageTitle").innerText;
-                // 重新渲染时需要重新判断当前模式
                 if (document.body.classList.contains('secret')) {
-                    // 如果是 secret/private 模式，重新创建返回按钮
                     if (currentTitle === "私藏页面") {
                         render("markdown-secret");
-                        enterMode("私藏页面");  // 重新调用以添加按钮
+                        enterMode("私藏页面");  
                     } else if (currentTitle === "个人空间") {
                         render("markdown-private");
-                        enterMode("个人空间");  // 重新调用以添加按钮
+                        enterMode("个人空间");  
                     }
                 } else {
                     render("markdown-main");
-                    // 确保返回按钮被移除
                     const backBtn = document.getElementById('backBtn');
                     if (backBtn) backBtn.remove();
                 }
