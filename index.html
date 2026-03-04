@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我的导航</title>
+<title>我的主页</title>
 <style>
-/* 默认主题 (统一使用白天配色，因为取消了切换) */
+/* ===== 默认主题：高级大地色系 (侘寂风) ===== */
 :root {
-    --bg-main: #FAFAF0; 
-    --bg-card: #fff;    
-    --color-text: #111; 
-    --color-border: #ccc;
-    --color-link-btn: #4A90E2; 
+    --bg-main: #F6F5F0;     /* 奶油米白底 */
+    --bg-card: #FFFFFF;     /* 纯白卡片提亮 */
+    --color-text: #34433A;  /* 深墨绿主文字 */
+    --color-border: #E1DFD5;/* 柔和的卡其灰边框 */
+    --color-link-btn: #8C7C61; /* 复古金/卡其棕 点缀色 */
 }
 
 /* ===== 全局样式 ===== */
@@ -23,13 +23,13 @@ body {
     padding: 0;
 }
 
-/* ------------------- 私密模式 (独立隔离) ------------------- */
+/* ------------------- 私密模式：暗夜森林 ------------------- */
 body.secret {
-    background: #1A2430; 
-    --color-text: #f8f8f8; 
-    --bg-card: #1C2F40;
-    --color-border: #555;
-    --color-link-btn: #8CC4FF;
+    background: #2B2D2A;    /* 深夜苔藓暗绿 */
+    --color-text: #E8E6E1;  /* 柔和的米灰文字 */
+    --bg-card: #363937;     /* 深咖灰卡片 */
+    --color-border: #4D524E;
+    --color-link-btn: #B5A68D; /* 提亮的复古金 */
 }
 
 /* ------------------- 元素样式 ------------------- */
@@ -56,14 +56,14 @@ h1 {
     width: fit-content;
 }
 .back-btn:hover {
-    background: rgba(74, 144, 226, 0.1);
+    background: rgba(140, 124, 97, 0.1); /* 复古金半透明底 */
     text-decoration: underline;
 }
 body.secret .back-btn {
     color: var(--color-link-btn);
 }
 body.secret .back-btn:hover {
-    background: rgba(140, 196, 255, 0.1);
+    background: rgba(181, 166, 141, 0.15);
 }
 
 /* 搜索栏 */
@@ -84,8 +84,24 @@ select, input, button {
     font-size: 14px;
     transition: background 0.3s, border 0.3s, color 0.3s;
 }
+select:focus, input:focus {
+    outline: none;
+    border-color: var(--color-link-btn);
+}
 
-/* 网格布局 */
+/* 搜索按钮特殊定制：致敬图片里的深色主按钮 */
+button#searchButton {
+    background: var(--color-text); /* 默认深墨绿底 */
+    color: var(--bg-main);         /* 奶油白字 */
+    border-color: var(--color-text);
+    font-weight: bold;
+    cursor: pointer;
+}
+button#searchButton:hover {
+    opacity: 0.9;
+}
+
+/* 网格布局 (V2.0 终极版骨架 - 焊死高度与省略号) */
 main#links {
     padding: 20px;
     max-width: 1200px;
@@ -96,14 +112,12 @@ main#links {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 12px;
     margin-top: 10px;
-    /* 修改：将手机端（全局）的卡片高度再压扁一点，设定为 34px */
-    grid-auto-rows: 34px; 
+    grid-auto-rows: 34px; /* 手机端高度死锁 */
 }
 @media (min-width: 1024px) {
     .links-group { 
         grid-template-columns: repeat(8, minmax(0, 1fr)); 
-        /* 电脑端保持 36px 不变 */
-        grid-auto-rows: 36px; 
+        grid-auto-rows: 36px; /* 电脑端高度死锁 */
     }
 }
 @media (max-width: 600px) {
@@ -140,13 +154,13 @@ main#links {
 }
 .toggle-btn:hover {
     text-decoration: underline; 
-    color: var(--color-link-btn); 
+    color: var(--color-link-btn);
 }
 body.secret .toggle-btn:hover {
     color: var(--color-text); 
 }
 
-/* 链接卡片 */
+/* 链接卡片 (V2.0 终极排版) */
 .link-card {
     background: var(--bg-card);
     border-radius: 6px;
@@ -174,13 +188,13 @@ body.secret .toggle-btn:hover {
 .copy-btn {
     cursor: pointer;
     font-size: 14px;
-    color: #888;
+    color: #A3A097; /* 暖灰色的复制图标，配合整体大地色 */
 }
 .links-group.collapsed .link-card.hidden-by-limit {
     display: none;
 }
 
-/* 隐蔽小圆点按钮 */
+/* 隐蔽小圆点按钮 (还原极简 12px 尺寸) */
 #unlockBtn {
     position: fixed;
     bottom: 12px;
@@ -189,22 +203,22 @@ body.secret .toggle-btn:hover {
     height: 12px;
     border-radius: 50%;
     border: none;
-    background: rgba(150,150,150,0.3);
+    background: rgba(140, 124, 97, 0.3); /* 复古金半透明 */
     cursor: pointer;
     padding: 0;
 }
-#unlockBtn:hover { background: rgba(150,150,150,0.6); }
+#unlockBtn:hover { background: rgba(140, 124, 97, 0.6); }
 body.secret #unlockBtn {
-    background: rgba(200,200,200,0.2);
+    background: rgba(181, 166, 141, 0.2);
 }
 body.secret #unlockBtn:hover {
-    background: rgba(200,200,200,0.5);
+    background: rgba(181, 166, 141, 0.5);
 }
 </style>
 </head>
 <body>
 
-<h1 id="pageTitle">我的导航</h1>
+<h1 id="pageTitle">我的主页</h1>
 
 <div class="search-bar" id="searchBar">
     <select id="engine">
@@ -643,11 +657,7 @@ body.secret #unlockBtn:hover {
 - [香蕉资源网](https://www.xiangjiaozyw.com)  
 - [DsysAV](https://dsysav2xtlsz.230100.xyz/)  
 - [ptt.co](https://ptt.co/)
-
 </script>
-
-
-
 
 <script id="markdown-private" type="text/plain">
 ## 资源
@@ -757,9 +767,6 @@ body.secret #unlockBtn:hover {
 ## 副业赚钱
 - [不上班研究所](https://www.toocool.cc/)
 - [前途日历](https://qianturili.ababtools.com/?url=heeee.com)
-
-
-
 </script>
 
 <script defer>
@@ -892,7 +899,7 @@ function backToHome() {
     
     render("markdown-main");
     document.getElementById("pageTitle").innerText = "我的主页";
-    document.getElementById("searchBar").style.display = "flex";  
+    document.getElementById("searchBar").style.display = "flex";
     document.getElementById("unlockBtn").style.display = "block";
     document.body.classList.remove("secret");
     
@@ -978,6 +985,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
 
 
