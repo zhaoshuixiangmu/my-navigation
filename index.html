@@ -18,7 +18,6 @@
 html { scroll-behavior: smooth; } 
 body { background: var(--bg-main); color: var(--color-text); font-family: Arial, sans-serif; margin: 0; padding: 0; }
 
-/* 【修复1】：给锁定背景用的类 */
 body.no-scroll { overflow: hidden; }
 
 #unlockBtn { position: fixed; bottom: 12px; right: 12px; width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(140, 124, 97, 0.3); cursor: pointer; padding: 0; z-index: 999; }
@@ -40,14 +39,11 @@ body.no-scroll { overflow: hidden; }
 .mobile-top-bar .top-title { font-size: 18px; font-weight: bold; user-select: none; }
 .menu-btn { background: none; border: none; color: var(--color-text); padding: 0; display: flex; align-items: center; cursor: pointer; }
 
-/* 隐藏子页面的后台设置图标 */
 body.secret #mobileAdminBtn { visibility: hidden; pointer-events: none; }
 
-/* 【修复1补充】：增加 touch-action 防止遮罩层被拖拽滑动 */
 .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 45, 42, 0.4); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; touch-action: none; }
 .sidebar-overlay.active { opacity: 1; visibility: visible; }
 
-/* 【修复2核心】：彻底抛弃 height: 100vh，改用 top:0 bottom:0，并增加底部 Padding，完美兼容安卓虚拟按键 */
 .sidebar { 
     position: fixed; top: 0; bottom: 0; left: 0; 
     width: 75%; max-width: 320px; 
@@ -56,7 +52,7 @@ body.secret #mobileAdminBtn { visibility: hidden; pointer-events: none; }
     padding: 40px 20px 80px 20px; 
     overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.1); 
     display: flex; flex-direction: column; 
-    overscroll-behavior-y: contain; /* 【修复1核心】：锁死滚动边界，防止穿透到底层 */
+    overscroll-behavior-y: contain; 
 }
 .sidebar.open { transform: translateX(0); }
 .sidebar h1 { display: none; } 
@@ -71,8 +67,6 @@ body.secret #mobileAdminBtn { visibility: hidden; pointer-events: none; }
 .nav-menu { display: flex; flex-direction: column; gap: 8px; }
 .nav-item { padding: 12px 16px; border-radius: 8px; cursor: pointer; color: var(--color-text); font-size: 15px; font-weight: bold; }
 .nav-item:hover, .nav-item.active { background: rgba(140, 124, 97, 0.1); color: var(--color-link-btn); }
-
-body.mode-secret .nav-menu { margin-top: auto; padding-bottom: max(env(safe-area-inset-bottom), 60px); }
 
 .layout-wrapper { display: block; padding: 66px 16px 50px; max-width: 1200px; margin: 0 auto; }
 .group-section { display: none; margin-bottom: 40px; } 
@@ -90,7 +84,6 @@ body.mode-secret .nav-menu { margin-top: auto; padding-bottom: max(env(safe-area
     
     .layout-wrapper { display: flex; max-width: 1400px; margin: 0 auto; align-items: flex-start; padding: 0; }
     
-    /* 恢复电脑端的原生滚动控制和高度 */
     .sidebar { 
         position: sticky; top: 0; left: 0; transform: none; width: 220px; max-width: none; 
         height: 100vh; bottom: auto;
@@ -101,7 +94,6 @@ body.mode-secret .nav-menu { margin-top: auto; padding-bottom: max(env(safe-area
     
     #pageTitle { user-select: none; cursor: default; }
     
-    body.mode-secret .nav-menu { margin-top: 0; padding-bottom: 0; }
     .sidebar h1 { display: block; text-align: left; margin: 0 0 30px; font-size: 24px; }
     .sidebar .back-btn { display: block; margin: 0 0 30px 0; text-align: left; background: none; border: none; color: var(--color-link-btn); padding: 8px 16px; font-size: 14px; cursor: pointer; width: fit-content; border-radius: 4px; }
     .sidebar .back-btn:hover { background: rgba(140, 124, 97, 0.1); text-decoration: underline; }
@@ -253,10 +245,6 @@ body.mode-secret .nav-menu { margin-top: auto; padding-bottom: max(env(safe-area
 
 <script id="markdown-main" type="text/plain">
 ## 影视资源
-- [NO视频](https://findno.tv/) 
-- [LIBVIO](https://www.libvio.app) 
-- [飞流视频](https://www.flixflop.com/)
-- [kimivod](https://kimivod.com/)
 - [修罗影视](https://xlys.me)
 - [嘀嗒影视](https://www.didahd.pro/)
 - [HDmoli](https://HDmo.li/)    
@@ -264,633 +252,28 @@ body.mode-secret .nav-menu { margin-top: auto; padding-bottom: max(env(safe-area
 - [TVB云播](http://www.hktvyb.cc/)
 - [厂长资源](https://www.cz01.vip/)
 - [热播之家](https://rebozj.vip/)
-- [素白白影视](https://subaibai.vip/)
-- [GoFilm](https://m.mubai.link/index)
-- [麦田影视](https://www.mtyy5.com/)    
-- [电影天堂资源](http://dyttzy1.tv/)     
-- [N奈飞工厂](https://www.netflixgc.com)     
-- [网飞猫](https://www.ncat21.com)  
-- [皮皮蛋影视](https://cddys1.me)  
-- [蛋蛋兔](https://www.dandantu.vip/)    
-- [百思派影视网](https://www.bestpipe.cn)  
-- [4k影视](https://4kvm.site)  
-- [vidhub](https://121310.xyz)  
-- [爱一帆](https://www.iyf.lv)  
-- [注视影视](https://gaze.run/)
-- [8号影院](http://www.bahaotv.com)
-- [inmi](https://www.inmi.app/)
-- [粤正影视](https://m.939394.xyz/)
-- [港剧屋](http://m.gangju5.cc/)
-- [爱看港剧](https://www.hkgjw.com/)
-- [港剧发烧友](https://www.gjfsy.com/)    
-- [共青春](https://ting.cool/)
-- [Free OK](https://link3.cc/freeok)
-- [王子TV](https://www.333611.xyz/)
-- [dramas线上看](https://dramasq.com.tr/)
-- [毒舌电影](https://dl.dushe03.com/?ref=juzyw.com)
-- [豌豆pro](https://www.wdoo.net/)  
-- [简单tv](https://jiandantv.com)  
-- [影猫仓库](https://ymck.pro/)  
-- [寻找最佳类似电影](https://leisidianying.com/)
-- [A控屋](https://akongwu.com/)  
-- [站长资源](https://www.zzzypro.com/)  
-- [飞快TV](https://feikuai.tv/)
-- [兄弟影视](https://xdys.vip/)    
-- [爱看机器人](https://v.ikanbot.com) 
-- [粤爱看](https://www.yueak.top/)    
-- [求职信](https://h5v1.cibnabg.com) 
-- [低端影视1](https://ddys.io/)  
-- [低端影视2](https://www.ddys.diy/)      
-- [QuickVod](https://www.quickvod.vip/)  
-- [袋鼠影视](https://dsdytv.com/) 
-- [visiontv](https://www.visiontv.club/) 
-- [猴影工坊](https://monkey-flix.com/) 
-- [美剧窝](https://www.1mj.cc/) 
-- [123tv](https://a123tv.com/) 
-- [达达影漫](https://www.dddym.com/) 
-- [247看](https://247kan.com/app) 
-- [Lai影院](https://www.laisd.com/) 
-- [开心影院](https://www.kxyytv.com/) 
-- [粤漫之家](https://www.ymvid.com/) 
-- [粤语屋](https://yueyuwu.top/) 
-- [白嫖者联盟](https://198mv.com/) 
-- [五五短剧](https://www.duanju55.com/) 
-- [独播库](https://www.dbku.tv/) 
 
-
-
-
-
-
-    
-## AI
-- [AI研究所](https://www.aiyjs.com/)  
-- [AI工具集](https://ai-bot.cn/)      
-- [halotool](https://halotool.com/)    
-- [AI NavHub](https://ainavhub.com/cn)   
-- [ai工具导航](https://promptchoose.com/)         
-- [TOOLIFY](https://www.toolify.ai/zh/) 
-- [Hugging Face](https://huggingface.co/)     
-- [攻壳智能体](https://gongke.net/) 
-- [GPT DEMO](https://www.gptdemo.net/) 
-- [TryAii](https://tryaii.com) 
-- [AI邮报](https://www.aiposthub.com/)  
-- [AI今日热榜](https://aihot.today)  
-- [copilot](https://copilot.microsoft.com/)  
-- [GPT](https://chatgpt.com)  
-- [Deepseek](https://www.deepseek.com)  
-- [LMArena](https://arena.ai/zh)  
-- [MossAI](https://mossai.org/cn)  
-- [通往AGI之路](https://www.waytoagi.com/zh)     
-- [Perplexity](https://www.perplexity.ai/)  
-- [AI产品创造101](https://fancyteams.bonjour.bio/)  
-- [ai分享圈](https://aisharenet.com/)  
-- [aibase基地](https://www.aibase.com/zh) 
-- [aitop10](https://aitop10.tools/zh) 
-- [AIDirs](https://aidirs.org/) 
-- [Tap4 AI](https://tap4.ai/cn/) 
-- [ailibri](https://ailibri.com/) 
-- [人工智能网](https://navs.site/) 
-- [新工具](https://newtool.site/) 
-
-
-    
-
-## 资源
-- [QiuQuan's Blog](http://www.qiuquan.cc/)  
-- [MEFCL](https://www.mefcl.com/)
-- [applnn](https://www.applnn.com)  
-- [ababtools](https://ababtools.com/)
-- [423down](https://www.423down.com/)
-- [殁漂遥](https://www.mpyit.com/)
-- [开源软件站](https://www.openapk.net/zh/)    
-- [易破解](https://www.ypojie.com/)
-- [分享迷](https://www.fenxm.com/)
-- [工具集](https://gongjuji.org/)
-- [知音资源库](https://zyzyk.flowus.cn/)  
-- [Puresys](https://www.puresys.net/)
-- [软件库](https://www.ligonggong.com/)
-- [真下载](https://www.zhenxz.com/)
-- [资源帝](https://ziyuandi.cn/)    
-- [爱纯净博客](https://www.aichunjing.cn/)   
-- [轻狂志唯一](https://www.flighty.cn) 
-- [软盘](https://123.isharepc.com/)
-- [佛系软件](https://foxirj.com/)
-
-
-
-
-    
-    
-## 每日每期分享
-- [软鸭资源库](https://ruanyazyk.com)
-- [哎哟不错](https://aiyoubucuo.com/)  
-- [不死鸟](https://iui.su/)  
-- [小棉袄的百味人生](https://haikuoshijie.cn/)  
-- [二丫讲梵](https://wiki.eryajf.net) 
-- [潮流周刊](https://weekly.tw93.fun) 
-- [DecoHack](https://decohack.com/) 
-
-
-
-
-    
-## 网盘资源
-- [海搜](https://haisou.cc/) 
-- [网盘资源避难所](https://suenen.com/) 
-
-
-
-
-
-
-    
-
-## 投资金融
-- [投资导航](http://value500.com)  
-- [雪球导航](https://xueqiu.com/dh)
-- [投资干货](https://news.futunn.com/news-topics/127/investment-practical-information-collection)
-- [投资界](https://m.pedaily.cn)  
-- [发现报告](https://www.fxbaogao.com/)      
-
-
-
-
-    
-## GitHub
-- [HelloGitHub](https://hellogithub.com)
-- [Zread](https://zread.ai)
-- [Gitcode](https://gitcode.com)
-- [trendingrepos](https://trendingrepos.glup3.dev/?time=daily)
-- [Deepwiki](https://deepwiki.com)
-- [Openlsle](https://www.open-isle.com) 
-- [GitHub Star Tracker](https://www.1kgithub.com) 
-- [Open Source Daily](https://opensourcedaily.blog) 
-- [rising repo](https://yanggggjie.github.io/rising-repo/) 
-- [中国独立开发者项目](https://github.com/1c7/chinese-independent-developer)
-
-    
-    
-    
-## 综合导航
-- [喜欢书签](https://www.likebookmark.com)  
-- [书签导航](https://nav.xybin.top)  
-- [神秘的热心网友](https://imyshare.com)  
-- [noise 导航](https://www.noisedh.link)  
-- [Tbox导航](https://www.tboxn.com/) 
-- [我的书签](https://it-cxy.top)  
-- [jay资源库](https://www.lovejay.top)  
-- [酷啦鱼](https://www.kulayu.com/)  
-- [图欧学习导航](https://tuostudy.upnb.top)  
-- [叛逆草导航](https://www.pncao.com)  
-- [创意导航](https://idea.dreamthere.cn)  
-- [阿虚同学](https://axutongxue.com)  
-- [考拉新媒体导航](https://www.kaolamedia.com)  
-- [爱达杂货铺](https://adzhp.xyz)  
-- [宝站](https://bao.ink)  
-- [阿威导航](https://rjawei.vip)  
-- [开源精选](https://www.ossnav.com)  
-- [网址之家](https://www.urlzj.com)  
-- [下次一定](https://www.iiice.cn)  
-- [小众技术](https://www.xiaozhongjishu.com)  
-- [i8k影视导航](https://i8k.tv/)  
-- [新媒体导航](https://nav.newrank.cn)  
-- [cooltool](https://cooltools.top)  
-- [芙蓉导航 国外新闻资讯](https://www.navs.cc)  
-- [标题系网址](https://nav.cnxiaobai.com)  
-- [霂明导航](https://n.mumingfang.com)  
-- [阿酷导航](https://www.a.cool)  
-- [爱寻迷](https://www.aixunni.com)  
-- [剪映迷](https://nav.jianjimi.cn)
-- [影视森林](https://549.fr/)  
-- [可乐影视](https://klyingshi.top/)  
-- [影视收藏夹](https://a.ysscj.site/)  
-- [好狗导航](https://www.howgo.cc/watch)  
-- [硬核影视](https://yinghezhinan.com/)  
-- [蛋蛋影视](https://cddys.com/)  
-- [大佬做的影视导航](https://yinghezhinan.com/)  
-- [电影导航](https://www.f7s.net/)  
-- [影视宝藏导航](https://tv.baozangdh.com/)  
-- [磁力天堂](https://cilitiantang.co/)  
-- [4a影视导航](https://www.4abyte.com/)  
-- [影剧搜](https://link3.cc/bababa888#=klyingshi1.com)  
-- [来不及等待](https://tgdriver.com/)
-- [影视采集站](https://www.zzzypro.com/)
-- [思菲影视](https://www.sfeii.cn/)
-- [蜗牛个人导航](https://s.eallion.com/)
-- [快嘴科技](https://kkzui.com/)
-- [挂梯子](https://guatizi.com)
-- [Clash](https://www.clash.la/)
-- [MJJ导盲犬](https://www.idcquery.com/)    
-- [Yiove](https://www.yiove.com/)
-- [福利吧](https://fuliba123.com/)
-- [谎伴导航](https://nav.liesys.com/)
-- [新电影导航](https://www.xdy.me/)
-- [白漂](https://baipiao.top/)
-- [资源分享网](https://www.ziyuan.tv/)    
-- [阿威导航](https://www.rjawei.vip/)    
-- [二叔导航](https://2sdh.com/) 
-- [自媒体家园](https://www.zmthome.com/)
-- [一个框导航](https://yigekuang.cn/)
-- [懂窝](https://www.ddddwo.com/)
-- [星书导航](https://www.star8.cn/)
-- [无峰导航](https://www.8kmm.com/)
-- [终极导航](https://www.zjnav.cc/)
-- [egouz](https://www.egouz.com)
-- [媒帮派导航](https://123.meibp.com/)    
-- [公子墨](https://xydh.fun/%E5%85%AC%E5%AD%90%E5%A2%A8)      
-- [集知盒子](https://www.jizhihezi.com/)  
-- [开发者导航](https://codernav.com/)
-- [小众技术工具库](https://www.xiaozhongjishu.com/)
-- [柒夜导航](https://nav.qinight.com/)
-- [yelle nav](https://webs.yelleis.top/)
-- [趣导航](https://qssily.com/)
-- [国际站常用](https://daohang.zzhvip.cn/)
-- [一糖导航](https://iitang.com/)
-- [星云导航](https://www.xygalaxy.com/)
-- [导航蟹](https://daohangxie.com/)
-- [爱思链池](https://www.a4lc.com/)
-- [小帅同学](https://xydh.fun/gmengshuai)
-- [玲珑导航](https://open-navigation.blendviewer.com/?mode=dark)
-- [TGNAV](https://tgnav.github.io/group/)
-- [188导航](https://www.188dh.cn)
-- [全网导航](https://www.webnav.net/)
-- [安逸导航](https://anee.cc/)
-- [观影导航](https://www.guannav.com/)
-- [聚收集导航网](https://sjsdhw.com/)
-- [秋水网](https://www.qiushui.vip/)
-- [迷鹿导航](https://www.plnav.com/)
-- [学生优惠汇](https://nav.edumails.cn/)
-- [维度导航](https://www.weidus.com/)    
-- [发现之门](https://faxianx.com/) 
-
-
-
-    
-    
-## 书籍
-- [电子书导航](https://shu.baozangdh.com/)  
-- [阅读指南Readzn](https://readzn.com/)  
-- [数字素养网](https://szsyw.cn/book)  
-- [ywebook](https://ywebook.com/)  
-- [熊猫搜书](https://xmsoushu.com/#/)  
-- [z-library](https://zh.z-library.sk/)  
-- [苦瓜书盘](http://www.kgbook.com/)  
-- [安娜的档案](https://zh.annas-archive.org/)  
-- [mobi图书网](http://mobitushu.com/)  
-- [恩京书房](https://www.enjing.net/)  
-- [读书派](https://www.dushupai.com/)  
-- [偶书](https://obook.cc/)  
-- [小力盘](https://www.xiaolipan.com/index.html)  
-- [24h搜书](https://24hsoushu.ggonav.com/)  
-- [sobook](https://sobooks.cc/)  
-- [雅书](https://yabook.blog/)  
-- [宝阳阅读网](https://www.mq59.com/)  
-- [图书库图书库](https://www.tbookk.com/)  
-- [飞库文学](https://www.feiku6.com/index.html)
-- [SaltyLeo的书架](https://tstrs.me/)
-- [书葵网](https://www.shukui.net/)
-- [一单书](https://yidanshu.com/)    
-- [多读书，读好书](https://http561856124.wordpress.com/)
-- [慧眼看](https://www.huiyankan.com)
-- [鹿鸣川](https://lunarora.com/)
-- [WELIB](http://welib.org/)
-
-
-
-    
-
-
-
-    
-## 电视盒子
-- [聚玩盒子](https://www.juwanhezi.com/)  
-- [盒子派](https://www.hezipie.com/)  
-- [优质电视盒子应用分享](https://app.iyouhun.com/)  
-- [强大的iptv直播源](https://iptv.hacks.tools/)  
-- [影用仓库](https://www.wmdz.com/)  
-- [APTV直播源](http://profile.aptvapp.com/)  
-- [7080影视搜](https://7080.wang/)  
-- [IPTV 直播源](https://github.com/yuanzl77/IPTV)
-- [IPTVKK云视界](https://www.iptvkk.com/)
-- [淘IPTV](https://taoiptv.com/)
-- [小盒子工具箱](https://xhztv.pro/)
-- [zdns电视软件](https://www.znds.com)   
-- [IPTVindex](https://iptvindex.com/)  
-- [饭太硬](https://www.xn--sss604efuw.com/)
-- [免费电视节目表](https://epg.pw/index.html?lang=zh-hant)
-- [黑猫影视](https://www.heimao.app/)
-- [iptv](https://live.zhi35.com/)
-- [裤佬书签收藏](https://down.nigx.cn/jsnzkpg.github.io/)
-- [影视仓接口](https://api.starlink.fan/)
-- [荐片官网](https://jianpian23.com/#/home)
-
-
-    
-    
-    
-## 生活健康
-- [原研药目录](https://medicine.lvwzhen.com/)  
-- [WIKIHOW](https://zh.wikihow.com/%E9%A6%96%E9%A1%B5)  
-- [城市租房生存指南](https://zufang.ababtools.com/)  
-- [鸭小组](https://yaxiaozu.ababtools.com/)  
-- [家庭药房](https://apothecary.tips/zh)  
-- [医保政策导航](https://yibao.233h.com/)  
-- [家庭妙招](https://comeworlds.com/)  
-- [ai就诊问问](https://ask.nocode.com/)  
-- [情感](https://www.lovepanky.com/)  
-- [ifxit免费修理手册](https://zh.ifixit.com/)  
-- [心理学网站导航](https://kuakua.app/zh-CN/explore)  
-- [健康前线](https://www.healthline.com/)  
-- [练习](https://www.lianjingshu.com)  
-- [俱乐部](https://sexpositions.club/)     
-- [性教育网](https://xingjiaoyu.com)      
-- [默沙东诊疗手册](https://www.msdmanuals.cn/)  
-- [乡间郎中](https://www.xjlz365.com/)  
-- [中国医药信息查询平台](https://m.dayi.org.cn/)
-- [Wonder How To](https://www.wonderhowto.com)
-- [Brain.fm](https://www.brain.fm)
-- [Health](https://www.health.com)  
-- [喜欢浪漫](https://likeromance.com)  
-- [急救指南](https://m.youlai.cn/jijiu)  
-- [Kuakua夸夸](https://kuakua.app/zh-Hans)      
-- [FreeMind](https://freemind.fit/)     
-
-
-
-
-    
-
-## 系统
-- [风林火山](http://www.zrkj.net/)
-- [不忘初心](https://www.pc528.net/)
-- [青苹果家园](http://www.pggho.com/)
-- [远航技术](http://www.far123.com)
-- [格子家园](http://www.gzoso.com)
-- [深度系统](http://www.deepinghost.com)
-- [pcos技术精品](https://www.pcosw.com)
-- [宋永志博客](http://www.songyongzhi.com/)
-
-
-
-
-
-    
-## 无分类
-- [电报值得看](https://dbzdk.com/)    
-- [在线转盘](https://wheelpage.com/zh/) 
-- [工具帮](https://cn.piliapp.com/)    
-- [行为同意书](https://001.123408.xyz/) 
-- [天涯](https://tianya.im) 
-- [虫部落](https://www.chongbuluo.com/) 
-- [MD转卡片](https://simple.md2card.cc/) 
-- [OSCHINA](https://www.oschina.net/) 
-- [AUTODESK](https://www.instructables.com) 
-- [极客洞察](https://newshacker.me)  
-- [论坛整理网站](https://www.forumdirectory.com)  
-- [书签地球](https://www.bookmarkearth.cn)  
-- [老爸建站](https://blog.naibabiji.com)  
-- [Failory](https://www.failory.com)  
-- [Zapier MCP](https://zapier.com/mcp) 
-- [Classcentral](https://www.classcentral.com) 
-- [灵感电波](https://www.linggandianbo.com) 
-- [外国资讯](https://immersivetranslate.com/docs/sites/) 
-- [酷站](https://ruby-china.org/sites) 
-- [前瞻网](https://xw.qianzhan.com) 
-- [tg下载器](https://tg-video-downloader.net/cn) 
-- [tg視頻下載](https://telegrabber.com/zh) 
-- [登链社区](https://www.learnblockchain.cn/) 
-- [fn精选](https://foresightnews.pro)
-- [超链接](https://href.host)
-- [外国博客平台](https://medium.com) 
-- [Fagan Finder](https://www.faganfinder.com) 搜索引擎合集
-- [BrowseBase](https://browsebase.pages.dev)
-- [linux.do](https://linux.do)
-- [独立开发出海工具箱](https://indiehackertools.net)
-- [Ping0](https://ping0.cc/)
-- [figma配色](https://www.figma.com/colors/)
-- [DeepSoga](https://www.deepsoga.com/)
-- [DownloadHD](https://downloadhd.net/)
-- [cutcut](https://cutcut.top/)
-- [通用媒体下载器](https://downloader.bhwa233.com/zh)
-- [GreenVideo 视频下载](https://greenvideo.cc/)
-- [在线视频压缩](https://videocompressors.com/zh)
-- [App Stacks](https://appstacks.club/)
-- [Appteka](https://appteka.store/)
-- [花百科](https://www.huabaike.com/)
-- [morerss](https://morerss.com/zh)   
-- [crx搜搜](https://www.crxsoso.com/)   
-- [BetaList](https://betalist.com/)   
-- [小贴士](https://17yongai.com/submit-website)   
-- [DEV 社区](https://dev.to/)   
-- [IPIP0](https://ipip0.net/)   
-
+## 摸鱼专区
+- [V2EX](https://v2ex.com) 
+- [小宇宙](https://xiaoyuzhoufm.com)
 </script>
 
 <script id="markdown-secret" type="text/plain">
 ## 成人导航
 - [国际导航](https://theporndude.com/ja)  
 - [文尼导航](https://biglist.xyz/)  
-- [大全导航](https://whichav.video)  
-- [17321导航](https://17321.xyz)  
-- [三多媒体](https://3dmt.xyz/)  
-- [91导航](https://c7c.kfrbhdf.xyz/)
-- [网站大全](https://qingse.one/)
-- [娇色导航](https://jiao.se/)
-- [色p计划](https://spplan.pages.dev/)
-- [酮体的秘密](https://www.dongti.me/)
-- [导航](https://dagesite.com/cn/)
-- [pornlinks](https://zh-cn.thepornlinks.com/)
-- [翻墙撸](https://www.fanqianglu.com/)
-- [第一福利导航](https://onefuli.cc/)
-- [集芳云](https://jifangge.cc/)
-- [花心吧](https://huaxinba.com/)
-- [色界吧](https://sejie80.com/)
-- [老黄吧](https://laohuangba.com/)
-- [pornlinks](https://zh-cn.thepornlinks.com/)    
-- [thepornmap](https://thepornmap.com/zh-CN/)    
-- [141JJ](https://141jj.com/)
-
-
-
-    
-    
-## 论坛
-- [草榴社区](https://www.t66y.com/)
-- [色中色](http://sexinsex.net/)
-- [1024社区](https://10018.c6027bk.cc/pw/)
-- [福利吧](https://fuliba2023.net/)
-
-    
-
-## 成人网站
-- [Pornhub](https://www.pornhub.com/)  
-- [XVIDEOS](https://www.xvideos.com/)  
-- [XNXX](https://www.xnxx.com/)  
-- [Xhamster](https://zh.xhamster.com/)  
-- [Thumbzilla](https://www.thumbzilla.com/)
-- [Eporner](https://www.eporner.com/)  
-- [Noodlemagazine](https://noodlemagazine.com/new-video)  
-- [Beeg](https://beeg.com/)
-- [YOUPORN](https://www.youporn.com/)
-- [REDTUBE](https://www.redtube.com/)
-- [Tube8](https://www.tube8.com/)
-- [sharesome](https://sharesome.com)
-- [xflow](https://www.xxxfollow.com)  
-- [fapeza](https://fapeza.com/)     
-- [Pornbaker](https://pornbaker.com/)   
-
-
-
-    
-## 日本
-
-- [Missav360](https://missav.ai/dm221/ja)
-- [Avx 360](https://avx16.com/cn)
-- [AV55 360](https://av55.com/cn) 
-- [supjav360](https://seboby.com/zh) 
-- [MissAVt](https://missavt.com/)
-- [Jable](https://jable.tv/)
-- [Avtoday](https://avtoday.io/index) 
-- [Javsb](https://jav.sb/)
-- [鉴黄](https://www.javrate.com/)
-- [hello av](https://www.helloavgirls.com/)  
-- [Jav777](https://www.jav777.xyz/) 
-- [91jav](https://91jav7.com/)
-- [JavTREE](https://javtree.com/) 
-- [Javxx360](https://javxx.com/cn) 
-- [AVTOP10 360](https://avtop10.com/)
-- [kissav](https://kissav.me/)
-- [NOWAV](https://nowav.tv/)
-- [24av](https://24av.net/zh)
-- [7mmtv](https://7mmtv.sx/zh/)
-
-    
-## 国产
-- [笔盒](https://bh62609.vip/)
-- [四虎](https://4h.tv/)
-- [熊猫影视](https://91xm.tv/)
-- [黑料网](https://hlwn20.com/)
-- [黄色仓库](http://143ck.cc/)
-- [好色TV](https://chair.ffymijog.com)
-- [91porn](https://91porna.com)  
-- [肉视频](https://rou.pub/dizhi)  
-- [91porn](https://www.91porn.com)  
-- [ptt.co](https://ptt.co/)
-- [KKAV](https://www.22mmvv.com/home.htm)
-- [porntv](https://porntv35.com/)
-- [91吃瓜网](https://www.91cg1.com/)
-- [玩物社区](https://wanwuu.pages.dev/)
-- [探花AV](https://tanhuaav.com/)
-- [去色TV](https://qsetv.cc/)
-- [500im](https://500.im/xvxn/)
-
-
-
 </script>
 
 <script id="markdown-private" type="text/plain">
-## 工具/发现
-- [偷懒爱好者周刊](https://toolight.zhubai.love/)  
-- [偷懒工具](https://toolight.cn/)  
-- [有趣网址之家](https://youquhome.com/)    
-- [ababtools](https://ababtools.com/)  
-- [DocHub 分享优质文档](https://www.dochub.wiki/)  
-- [合集网](https://233heji.com/)  
-- [虫部落](https://www.chongbuluo.com)  
-- [app喵](https://www.appmiu.com/)  
-- [奇趣网站](https://qiqu.dreamthere.cn/)  
-- [HSL](https://haoshangle.com/)  
-- [新趣集](https://xinquji.com/)  
-- [有意思的小周刊](https://www.fengxiaoqiang.com/yys/)  
-- [酷口家数字花园](https://weqoocu.com/)  
-- [酷特喵](https://www.kutmd.com/)  
-- [发现有趣的东西](https://iui.su/3093/)  
-- [比格张](https://bigezhang.com/)  
-- [HuntScreens](https://huntscreens.com/zh)  
-- [1000UserGuide](https://1000userguide.com/#/)  
-- [indie-hackers-guide](https://indie-hackers-guide.pages.dev/#/) 
-- [有趣网址之家](https://youquhome.com/)  
-- [产品分享社区](https://www.partnershare.cn/)  
-- [decohack](https://decohack.com/)
-- [科技师](https://www.3kjs.com/)
-- [小众软件](https://www.appinn.com/)
-- [Solo4A](https://www.solo4a.com/)
-- [大眼仔旭](https://www.dayanzai.me/)    
-- [PartneShare](https://www.partnershare.cn/)  
-- [AlternativeTo](https://alternativeto.net/) 
-- [PPbuzz](https://ppbuzz.com/) 
-- [Applnn](https://www.applnn.com/) 
-- [只读](https://www.rdonly.com/) 
-- [异次元软件世界](https://www.iplaysoft.com) 
-- [如有乐享](https://51.ruyo.net) 
-- [懒得勤快](https://masuit.net/) 
-- [酷库博客](https://www.zxki.cn/) 
-- [ZAPRO](https://tmioe.com/)
-- [北城分享社](https://www.bccfxs.com/)
-- [FMHY](https://fmhy.pages.dev/)
-- [VPS大玩家](https://www.vpsdawanjia.com/)
-- [文武科技柜](https://www.wangdu.site/)
-- [网站合集](https://www.207788.xyz/)
-- [挖互联网](https://tigg.cc/)
-- [小昇](https://xiaoyi.vc/)
-- [行书指南](https://xszn.org/)
-- [逆光开源](https://www.lgboxs.com/)   
-- [softpedia软件](https://www.softpedia.com) 
-- [AlternativeTo](https://alternativeto.net) 
-- [Product Hunt](https://www.producthunt.com)     
-- [onehack](https://onehack.us/)  羊毛线报资源    
-- [HackerNews 中文版](https://hn.aimaker.dev) 
-- [Single-Serving Sites](https://singleservingsites.cool) 
-- [APP热](https://apphot.cc/27447.html) 
-- [小木屋](https://wechalet.cn/)
-- [橘子资源](https://www.juzia.cn/)
-- [个人笔记](https://www.8uid.com/)
-
-
-
-
-    
-## 知识文档
-- [梁靠谱](https://ar16e47fvw.feishu.cn/docx/HQChdmaxroqAzvxhP0icUXGhnug)  
-- [生财第9期](https://www.kdocs.cn/l/cobMuvRvILND)
-- [小红书知识库数字乐园](https://my.feishu.cn/wiki/JU7KwfZkuiJmlzkRc5ZcOwwrnxd)
-- [互联网知识地图](https://yunyinghui.feishu.cn/wiki/QrvDwaNt4icE2qkZTPSccNKInhh)
-
-
-    
-    
-## 副业赚钱
-- [不上班研究所](https://www.toocool.cc/)
-- [前途日历](https://qianturili.ababtools.com/?url=heeee.com)
-
-    
-    
-## 博客
-- [浪海导航](https://www.langhai.net/)  
-- [发现博客](https://bf.zzxworld.com/)  
-- [利器](https://liqi.io/)  
-- [出海研习社](https://indiehackertools.net/)  
-- [博客园](https://www.cnblogs.com/)  
-- [Xlog](https://xlog.app/)  
-- [水星投资博客](https://mercurychong.blogspot.com/)  
-- [博友圈](https://www.boyouquan.com/home)
-- [ooh.directory](https://ooh.directory)
-- [BlogRoll](https://blogroll.notion.site)
-- [集博栈](https://www.zhblogs.net)
-- [HN Popularity Contest](https://refactoringenglish.com/tools/hn-popularity)
-- [博客录](https://boke.lu)    
-
-
-
-
-
+## 私密资源
+- [QiuQuan's Blog](http://www.qiuquan.cc/)  
+- [MEFCL](https://www.mefcl.com/)
 </script>
 
 <script defer>
 const SECRET_PWD  = "709394"; 
 const PRIVATE_PWD = "abcd"; 
-const MOBILE_LIMIT = 10;
+const MOBILE_LIMIT = 9999; 
 const DESKTOP_LIMIT = 9999; 
 
 function getDisplayLimit() { return window.innerWidth <= 850 ? MOBILE_LIMIT : DESKTOP_LIMIT; }
@@ -929,7 +312,6 @@ function render(id) {
 const sidebarEl = document.getElementById('sidebar');
 const overlayEl = document.getElementById('sidebarOverlay');
 
-// 【修复1逻辑补充】：打开关闭时动态加锁
 function openSidebar() { 
     sidebarEl.classList.add('open'); 
     overlayEl.classList.add('active'); 
@@ -1179,7 +561,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth !== lastWidth) {
             lastWidth = window.innerWidth;
             
-            // 响应窗口改变时，解除可能存在的滚动锁定
             if (window.innerWidth >= 850) {
                 document.body.classList.remove('no-scroll');
             }
