@@ -2,24 +2,315 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>我的主页</title>
-<style>body{background:#F6F5F0;margin:0;padding:0;opacity:0;transition:opacity .2s;}</style>
 <style>
-:root{--bg-main:#F6F5F0;--bg-card:#FFFFFF;--color-text:#34433A;--color-border:#E1DFD5;--color-link-btn:#8C7C61;--color-active-bg:#EDEBE0}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth;overscroll-behavior-y:auto}body{opacity:1;background:var(--bg-main);color:var(--color-text);font-family:Arial,sans-serif;margin:0;padding:0;overscroll-behavior-y:auto}body.no-scroll{overflow:hidden}#unlockBtn{position:fixed;bottom:12px;right:12px;width:12px;height:12px;border-radius:50%;border:none;background:rgba(140,124,97,.3);cursor:pointer;padding:0;z-index:999}#unlockBtn:hover{background:rgba(140,124,97,.6)}.links-group{display:grid;gap:12px;margin-top:10px}.link-card{background:var(--bg-card);border-radius:6px;padding:0 6px 0 10px;border:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center;font-size:14px;height:100%;box-sizing:border-box;transition:transform .1s ease,background .2s}.link-card:hover{background:#FAF9F6}.link-card:active{transform:scale(.96)}.link-card a{color:inherit;text-decoration:none;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;min-width:0;flex:1;margin-right:5px;outline:none}.copy-btn{cursor:pointer;color:#BCB9B1;display:flex;align-items:center;justify-content:center;padding:6px;border-radius:4px;transition:all .2s}.copy-btn:hover{color:var(--color-link-btn);background:rgba(140,124,97,.1)}.copy-btn:active{transform:scale(.85)}.links-group.collapsed .link-card.hidden-by-limit{display:none}@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}.mobile-top-bar{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg-main);z-index:990;display:flex;justify-content:space-between;align-items:center;padding:0 16px;border-bottom:1px solid var(--color-border)}.mobile-top-bar .top-title{position:absolute;left:50%;transform:translateX(-50%);font-size:18px;font-weight:bold;user-select:none;white-space:nowrap}.menu-btn{background:none;border:none;color:var(--color-text);padding:0;display:flex;align-items:center;cursor:pointer}body.secret #mobileAdminBtn{display:none!important}.sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(43,45,42,.4);z-index:998;opacity:0;visibility:hidden;transition:opacity .3s ease;touch-action:none}.sidebar-overlay.active{opacity:1;visibility:visible}.sidebar{position:fixed;top:0;bottom:0;left:0;width:75%;max-width:320px;background:var(--bg-main);z-index:999;transform:translateX(-105%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:40px 20px 80px 20px;overflow-y:auto;box-shadow:4px 0 15px rgba(0,0,0,.1);display:flex;flex-direction:column;overscroll-behavior-y:contain}.sidebar.open{transform:translateX(0)}.sidebar h1,.sidebar .back-btn{display:none}.mobile-search-bar{display:flex;flex-direction:column;gap:10px;margin-bottom:30px;margin-top:10px}.mobile-search-bar select,.mobile-search-bar input,.mobile-search-bar button{height:40px;border-radius:8px;border:1px solid var(--color-border);padding:0 10px;font-size:14px;background:var(--bg-card);color:var(--color-text)}.mobile-search-bar button{background:var(--color-text);color:var(--bg-main);font-weight:bold;transition:transform .1s;border:none}.mobile-search-bar button:active{transform:scale(.95)}.desktop-search-bar{display:none}.nav-menu{display:flex;flex-direction:column;gap:8px}.nav-item{padding:12px 16px;border-radius:8px;cursor:pointer;color:var(--color-text);font-size:15px;font-weight:bold;transition:transform .1s ease,background .2s;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.nav-item:hover{background:rgba(140,124,97,.1)}.nav-item.active{background:var(--color-active-bg);color:var(--color-link-btn)}.nav-item:active{transform:scale(.96)}@media(max-width:849px){body.mode-secret .sidebar{padding-bottom:24px}body.mode-secret .nav-menu{margin-top:auto;display:flex;flex-direction:column-reverse}}.layout-wrapper{display:block;padding:66px 16px 80px;max-width:1200px;margin:0 auto}.group-section{display:none;margin-bottom:40px}.group-section.active{display:block;animation:fadeIn .3s ease}.group-header{position:sticky;top:55px;background:var(--bg-main);z-index:10;padding:22px 0 10px 0;margin-top:0;border-bottom:none}.group-header h2{font-size:16px;margin:0;font-weight:800}.toggle-btn{display:none!important}.links-group{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:38px}@media(min-width:850px){.mobile-top-bar,.sidebar-overlay,.mobile-search-bar{display:none!important}.layout-wrapper{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start;padding:0}.sidebar{position:sticky;top:0;left:0;transform:none;width:220px;max-width:none;height:100vh;bottom:auto;overflow-y:auto;background:transparent;box-shadow:none;z-index:1;border-right:1px solid var(--color-border);padding:30px 20px;box-sizing:border-box;display:block;overscroll-behavior-y:auto}#pageTitle{user-select:none;cursor:default;font-weight:bold}.sidebar h1{display:block;text-align:left;margin:0 0 30px;font-size:24px}.sidebar .back-btn{display:block;margin:0 0 30px 0;text-align:left;background:none;border:none;color:var(--color-link-btn);padding:8px 16px;font-size:14px;cursor:pointer;width:fit-content;border-radius:4px;transition:transform .1s}.sidebar .back-btn:hover{background:rgba(140,124,97,.1);text-decoration:underline}.sidebar .back-btn:active{transform:scale(.95)}.nav-item{border-left:3px solid transparent;font-weight:normal;border-radius:4px}.nav-item.active{font-weight:bold;background:var(--color-active-bg);color:var(--color-link-btn);border-left:3px solid var(--color-link-btn)}.main-content{flex:1;padding:30px 50px;min-width:0}.desktop-search-bar{display:flex!important;justify-content:center;align-items:center;gap:6px;margin:0 auto 40px;max-width:600px}.desktop-search-bar select,.desktop-search-bar input,.desktop-search-bar button{height:36px;padding:0 10px;border:1px solid var(--color-border);border-radius:4px;background:var(--bg-card);color:var(--color-text);font-size:14px;transition:all .3s}.desktop-search-bar select,.desktop-search-bar button{flex-shrink:0}.desktop-search-bar input{flex:1}.desktop-search-bar input:focus,.desktop-search-bar select:focus{outline:none;border-color:var(--color-link-btn)}.desktop-search-bar button{background:var(--color-text);color:var(--bg-main);font-weight:bold;cursor:pointer;border:none}.desktop-search-bar button:active{transform:scale(.95)}.group-header{position:relative;top:0;padding:0;border-bottom:none;margin-top:0;background:transparent;margin-bottom:12px}.group-header h2{font-size:16px}.toggle-btn{display:inline-block!important;background:none;border:none;color:var(--color-link-btn);padding:0 5px;font-size:14px;cursor:pointer}.links-group{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));grid-auto-rows:36px}.admin-box.editor-mode{max-width:1000px!important;padding:30px 40px!important}.quick-add-card{flex-direction:row!important;align-items:center;padding:16px 20px!important;gap:16px!important}.quick-add-card .flex-row{flex:1;gap:12px!important}.editor-header select{height:42px!important;font-size:15px}.editor-header button{height:42px!important;padding:0 24px!important}}@media(min-width:1200px){.links-group{grid-template-columns:repeat(7,minmax(0,1fr))}}.admin-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(52,67,58,.6);z-index:2000;display:flex;justify-content:center;align-items:center}.admin-box{background:var(--bg-main);padding:24px 28px;border-radius:12px;width:90%;max-width:320px;box-shadow:0 10px 30px rgba(0,0,0,.15);transition:all .3s ease}.mask-pwd{-webkit-text-security:disc;text-security:disc}.admin-box h3{margin:0 0 18px;font-size:18px;text-align:center;font-weight:bold}.admin-box input,.admin-box select{width:100%;height:42px;margin-bottom:12px;border-radius:6px;border:1px solid var(--color-border);padding:0 12px;font-size:14px;background:var(--bg-card);color:var(--color-text)}.admin-box input:focus,.admin-box select:focus,#editorTextarea:focus{outline:none;border-color:var(--color-link-btn)}.admin-btn-group{display:flex;gap:10px;margin-top:10px;flex-shrink:0}.admin-btn-group button{flex:1;height:40px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:14px;transition:opacity .2s,transform .1s}.admin-btn-group button:hover{opacity:.9}.admin-btn-group button:active{transform:scale(.96)}.btn-primary{background:var(--color-text);color:var(--bg-main)}.btn-cancel{background:transparent;border:1px solid var(--color-border)!important;color:var(--color-text)}.reset-link{display:block;text-align:center;margin-top:16px;font-size:12px;color:var(--color-link-btn);text-decoration:none}.admin-box.editor-mode{max-width:800px;width:95%;height:85vh;display:flex;flex-direction:column;padding:20px}.editor-header{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;flex-shrink:0}.editor-header select{margin-bottom:0;flex:1;font-weight:bold;min-width:150px;height:42px;border-radius:6px;border:1px solid var(--color-border)}.editor-header button{height:42px;padding:0 16px;border-radius:6px}.quick-add-card{background:rgba(140,124,97,.05);border:1px dashed var(--color-border);padding:12px;border-radius:6px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;flex-shrink:0}.quick-add-card .flex-row{display:flex;gap:8px}.quick-add-card input,.quick-add-card select{margin-bottom:0;height:38px;border-radius:4px;font-size:14px;flex:1;min-width:0;border:1px solid var(--color-border);padding:0 10px;background:var(--bg-card)}.quick-add-card .btn-insert{height:38px;background:var(--color-text);color:var(--bg-main);border:none;border-radius:4px;cursor:pointer;font-weight:bold;padding:0 12px;white-space:nowrap;transition:transform .1s}.quick-add-card .btn-insert:active{transform:scale(.96)}.quick-add-card .btn-newcat{height:38px;background:transparent;border:1px solid var(--color-border);border-radius:4px;cursor:pointer;padding:0 12px;color:var(--color-text);transition:transform .1s}.quick-add-card .btn-newcat:active{transform:scale(.96)}.textarea-title{font-size:12px;color:var(--color-link-btn);margin-bottom:4px;font-weight:bold;flex-shrink:0}#editorTextarea{flex:1;width:100%;min-height:0;resize:none;border-radius:6px;padding:12px;border:1px solid var(--color-border);font-family:monospace;font-size:14px;background:var(--bg-card);color:var(--color-text);line-height:1.5;margin-bottom:0}#editorStatus{font-size:12px;text-align:center;margin-top:10px;color:var(--color-link-btn);font-weight:bold;flex-shrink:0}@media(max-width:849px){.admin-modal{padding:0}.admin-box.editor-mode{width:100vw;height:100dvh;max-height:100dvh;max-width:100vw;border-radius:0;padding:16px;padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}}
+/* ===== 默认主题：高级大地色系 ===== */
+:root {
+    --bg-main: #F6F5F0;     
+    --bg-card: #FFFFFF;     
+    --color-text: #34433A;  
+    --color-border: #E1DFD5;
+    --color-link-btn: #8C7C61; 
+    --color-active-bg: #EDEBE0;
+}
+
+/* 彻底干掉手机端点击时的默认灰色暗影 */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
+
+/* 开启手机原生下拉刷新功能 */
+html { scroll-behavior: smooth; overscroll-behavior-y: auto; } 
+body { background: var(--bg-main); color: var(--color-text); font-family: Arial, sans-serif; margin: 0; padding: 0; overscroll-behavior-y: auto; }
+
+body.no-scroll { overflow: hidden; }
+
+#unlockBtn { position: fixed; bottom: 12px; right: 12px; width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(140, 124, 97, 0.3); cursor: pointer; padding: 0; z-index: 999; }
+#unlockBtn:hover { background: rgba(140, 124, 97, 0.6); }
+
+.links-group { display: grid; gap: 12px; margin-top: 10px; }
+/* 卡片圆角及按压反馈 */
+.link-card { background: var(--bg-card); border-radius: 6px; padding: 0 6px 0 10px; border: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; font-size: 14px; height: 100%; box-sizing: border-box; transition: transform 0.1s ease, background 0.2s; }
+.link-card:hover { background: #FAF9F6; }
+.link-card:active { transform: scale(0.96); } 
+
+.link-card a { color: inherit; text-decoration: none; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; flex: 1; margin-right: 5px; outline: none; }
+
+/* 极简矢量复制按钮样式 */
+.copy-btn { cursor: pointer; color: #BCB9B1; display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 4px; transition: all 0.2s; }
+.copy-btn:hover { color: var(--color-link-btn); background: rgba(140, 124, 97, 0.1); }
+.copy-btn:active { transform: scale(0.85); }
+
+.links-group.collapsed .link-card.hidden-by-limit { display: none; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =========================================================
+   布局 1：移动端优先
+   ========================================================= */
+.mobile-top-bar { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: var(--bg-main); z-index: 990; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; border-bottom: 1px solid var(--color-border); }
+
+/* 【拒绝偷懒】：通过绝对定位把标题死死钉在正中心 */
+.mobile-top-bar .top-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: bold; user-select: none; white-space: nowrap; }
+
+.menu-btn { background: none; border: none; color: var(--color-text); padding: 0; display: flex; align-items: center; cursor: pointer; }
+
+/* 【拒绝偷懒】：彻底物理消除齿轮按钮，连一像素的位置都不留给它 */
+body.secret #mobileAdminBtn { display: none !important; }
+
+.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 45, 42, 0.4); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; touch-action: none; }
+.sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+.sidebar { 
+    position: fixed; top: 0; bottom: 0; left: 0; 
+    width: 75%; max-width: 320px; 
+    background: var(--bg-main); z-index: 999; 
+    transform: translateX(-105%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    padding: 40px 20px 80px 20px; 
+    overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.1); 
+    display: flex; flex-direction: column; 
+    overscroll-behavior-y: contain; 
+}
+.sidebar.open { transform: translateX(0); }
+.sidebar h1 { display: none; } 
+.sidebar .back-btn { display: none; }
+
+.mobile-search-bar { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; margin-top: 10px; }
+.mobile-search-bar select, .mobile-search-bar input, .mobile-search-bar button { height: 40px; border-radius: 8px; border: 1px solid var(--color-border); padding: 0 10px; font-size: 14px; background: var(--bg-card); color: var(--color-text); }
+.mobile-search-bar button { background: var(--color-text); color: var(--bg-main); font-weight: bold; transition: transform 0.1s; border: none;}
+.mobile-search-bar button:active { transform: scale(0.95); }
+
+.desktop-search-bar { display: none; }
+
+.nav-menu { display: flex; flex-direction: column; gap: 8px; }
+
+/* 侧边栏菜单彻底禁用长按和文字选中 */
+.nav-item { 
+    padding: 12px 16px; border-radius: 8px; cursor: pointer; color: var(--color-text); 
+    font-size: 15px; font-weight: bold; transition: transform 0.1s ease, background 0.2s; 
+    user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+.nav-item:hover { background: rgba(140, 124, 97, 0.1); }
+.nav-item.active { background: var(--color-active-bg); color: var(--color-link-btn); }
+.nav-item:active { transform: scale(0.96); }
+
+/* 私密空间手机端侧边栏菜单彻底沉底 + 321倒序排列 */
+@media (max-width: 849px) {
+    body.mode-secret .sidebar {
+        padding-bottom: 24px; 
+    }
+    body.mode-secret .nav-menu {
+        margin-top: auto; 
+        display: flex;
+        flex-direction: column-reverse; 
+    }
+}
+
+.layout-wrapper { display: block; padding: 66px 16px 80px; max-width: 1200px; margin: 0 auto; }
+.group-section { display: none; margin-bottom: 40px; } 
+.group-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+.group-header { position: sticky; top: 55px; background: var(--bg-main); z-index: 10; padding: 22px 0 10px 0; margin-top: 0; border-bottom: none; }
+.group-header h2 { font-size: 16px; margin: 0; font-weight: 800; }
+
+.toggle-btn { display: none !important; } 
+.links-group { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 38px; }
+
+
+/* =========================================================
+   布局 2：电脑端 
+   ========================================================= */
+@media (min-width: 850px) {
+    .mobile-top-bar, .sidebar-overlay, .mobile-search-bar { display: none !important; }
+    
+    .layout-wrapper { display: flex; max-width: 1400px; margin: 0 auto; align-items: flex-start; padding: 0; }
+    
+    .sidebar { 
+        position: sticky; top: 0; left: 0; transform: none; width: 220px; max-width: none; 
+        height: 100vh; bottom: auto;
+        overflow-y: auto; background: transparent; box-shadow: none; z-index: 1; 
+        border-right: 1px solid var(--color-border); padding: 30px 20px; box-sizing: border-box; 
+        display: block; overscroll-behavior-y: auto; 
+    }
+    
+    #pageTitle { user-select: none; cursor: default; font-weight: bold; }
+    
+    .sidebar h1 { display: block; text-align: left; margin: 0 0 30px; font-size: 24px; }
+    .sidebar .back-btn { display: block; margin: 0 0 30px 0; text-align: left; background: none; border: none; color: var(--color-link-btn); padding: 8px 16px; font-size: 14px; cursor: pointer; width: fit-content; border-radius: 4px; transition: transform 0.1s;}
+    .sidebar .back-btn:hover { background: rgba(140, 124, 97, 0.1); text-decoration: underline; }
+    .sidebar .back-btn:active { transform: scale(0.95); }
+    
+    .nav-item { border-left: 3px solid transparent; font-weight: normal; border-radius: 4px;}
+    .nav-item.active { font-weight: bold; background: var(--color-active-bg); color: var(--color-link-btn); border-left: 3px solid var(--color-link-btn);}
+
+    .main-content { flex: 1; padding: 30px 50px; min-width: 0; }
+    .desktop-search-bar { display: flex !important; justify-content: center; align-items: center; gap: 6px; margin: 0 auto 40px; max-width: 600px; }
+    .desktop-search-bar select, .desktop-search-bar input, .desktop-search-bar button { height: 36px; padding: 0 10px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--bg-card); color: var(--color-text); font-size: 14px; transition: all 0.3s; }
+    .desktop-search-bar select, .desktop-search-bar button { flex-shrink: 0; }
+    .desktop-search-bar input { flex: 1; }
+    .desktop-search-bar input:focus, .desktop-search-bar select:focus { outline: none; border-color: var(--color-link-btn); }
+    .desktop-search-bar button { background: var(--color-text); color: var(--bg-main); font-weight: bold; cursor: pointer; border: none;}
+    .desktop-search-bar button:active { transform: scale(0.95); }
+
+    .group-header { position: relative; top: 0; padding: 0; border-bottom: none; margin-top: 0; background: transparent; margin-bottom: 12px; }
+    .group-header h2 { font-size: 16px; }
+    
+    .toggle-btn { display: inline-block !important; background: none; border: none; color: var(--color-link-btn); padding: 0 5px; font-size: 14px; cursor: pointer; }
+    .links-group { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); grid-auto-rows: 36px; }
+
+    /* 电脑端后台横向自适应铺满 */
+    .admin-box.editor-mode { max-width: 1000px !important; padding: 30px 40px !important; }
+    .quick-add-card { flex-direction: row !important; align-items: center; padding: 16px 20px !important; gap: 16px !important;}
+    .quick-add-card .flex-row { flex: 1; gap: 12px !important; }
+    .editor-header select { height: 42px !important; font-size: 15px; }
+    .editor-header button { height: 42px !important; padding: 0 24px !important; }
+}
+
+@media (min-width: 1200px) { .links-group { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+
+/* =========================================================
+   【精装版】开发者后台 Modal 样式
+   ========================================================= */
+.admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(52, 67, 58, 0.6); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+.admin-box { background: var(--bg-main); padding: 24px 28px; border-radius: 12px; width: 90%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+
+/* 密码变黑点类，防止浏览器自动弹密码框 */
+.mask-pwd { -webkit-text-security: disc; text-security: disc; }
+
+.admin-box h3 { margin: 0 0 18px; font-size: 18px; text-align: center; font-weight: bold; }
+.admin-box input, .admin-box select { width: 100%; height: 42px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--color-border); padding: 0 12px; font-size: 14px; background: var(--bg-card); color: var(--color-text); }
+.admin-box input:focus, .admin-box select:focus, #editorTextarea:focus { outline: none; border-color: var(--color-link-btn); }
+.admin-btn-group { display: flex; gap: 10px; margin-top: 10px; flex-shrink: 0; }
+.admin-btn-group button { flex: 1; height: 40px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: opacity 0.2s, transform 0.1s; }
+.admin-btn-group button:hover { opacity: 0.9; }
+.admin-btn-group button:active { transform: scale(0.96); }
+.btn-primary { background: var(--color-text); color: var(--bg-main); }
+.btn-cancel { background: transparent; border: 1px solid var(--color-border) !important; color: var(--color-text); }
+.reset-link { display: block; text-align: center; margin-top: 16px; font-size: 12px; color: var(--color-link-btn); text-decoration: none; }
+
+/* 编辑器满屏及结构布局 */
+.admin-box.editor-mode { max-width: 800px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 20px; }
+.editor-header { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
+.editor-header select { margin-bottom: 0; flex: 1; font-weight: bold; min-width: 150px; height: 42px; border-radius: 6px; border: 1px solid var(--color-border); }
+.editor-header button { height: 42px; padding: 0 16px; border-radius: 6px; }
+
+/* 智能快捷操作微型控制台 */
+.quick-add-card { background: rgba(140, 124, 97, 0.05); border: 1px dashed var(--color-border); padding: 12px; border-radius: 6px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+.quick-add-card .flex-row { display: flex; gap: 8px; }
+.quick-add-card input, .quick-add-card select { margin-bottom: 0; height: 38px; border-radius: 4px; font-size: 14px; flex: 1; min-width: 0; border: 1px solid var(--color-border); padding: 0 10px; background: var(--bg-card); }
+.quick-add-card .btn-insert { height: 38px; background: var(--color-text); color: var(--bg-main); border: none; border-radius: 4px; cursor: pointer; font-weight: bold; padding: 0 12px; white-space: nowrap; transition: transform 0.1s;}
+.quick-add-card .btn-insert:active { transform: scale(0.96); }
+.quick-add-card .btn-newcat { height: 38px; background: transparent; border: 1px solid var(--color-border); border-radius: 4px; cursor: pointer; padding: 0 12px; color: var(--color-text); transition: transform 0.1s;}
+.quick-add-card .btn-newcat:active { transform: scale(0.96); }
+
+.textarea-title { font-size: 12px; color: var(--color-link-btn); margin-bottom: 4px; font-weight: bold; flex-shrink: 0;}
+#editorTextarea { flex: 1; width: 100%; min-height: 0; resize: none; border-radius: 6px; padding: 12px; border: 1px solid var(--color-border); font-family: monospace; font-size: 14px; background: var(--bg-card); color: var(--color-text); line-height: 1.5; margin-bottom: 0; }
+#editorStatus { font-size: 12px; text-align: center; margin-top: 10px; color: var(--color-link-btn); font-weight: bold; flex-shrink: 0;}
+
+/* 手机端强制全屏显示后台 */
+@media (max-width: 849px) {
+    .admin-modal { padding: 0; }
+    .admin-box.editor-mode { width: 100vw; height: 100dvh; max-height: 100dvh; max-width: 100vw; border-radius: 0; padding: 16px; padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
 </style>
 </head>
 <body>
-<div class="mobile-top-bar" id="mobileTopBar"><button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button><span class="top-title" id="mobilePageTitle">我的主页</span><button class="menu-btn" id="mobileAdminBtn"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button></div>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="layout-wrapper">
-<aside class="sidebar" id="sidebar"><h1 id="pageTitle">我的主页</h1><div class="mobile-search-bar" id="mobileSearchBar"><select id="m_engine"><option value="local">站内</option><option value="https://www.google.com/search?q=">Google</option><option value="https://www.baidu.com/s?wd=">百度</option><option value="https://www.bing.com/search?q=">Bing</option></select><input type="text" id="m_searchInput" placeholder="搜索..." autocomplete="off"><button id="m_searchButton">搜索</button></div><nav class="nav-menu" id="navMenu"></nav></aside>
-<main class="main-content"><div class="desktop-search-bar" id="searchBar"><select id="engine"><option value="local">站内</option><option value="https://www.google.com/search?q=">Google</option><option value="https://www.baidu.com/s?wd=">百度</option><option value="https://www.bing.com/search?q=">Bing</option></select><input type="text" id="searchInput" placeholder="搜索..." autocomplete="off"><button id="searchButton">搜索</button></div><div id="links"></div></main>
+
+<div class="mobile-top-bar" id="mobileTopBar">
+    <button class="menu-btn" id="menuBtn">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <span class="top-title" id="mobilePageTitle">我的主页</span>
+    <button class="menu-btn" id="mobileAdminBtn">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button> 
 </div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="layout-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <h1 id="pageTitle">我的主页</h1>
+        <div class="mobile-search-bar" id="mobileSearchBar">
+            <select id="m_engine">
+                <option value="https://www.google.com/search?q=">Google</option>
+                <option value="https://www.baidu.com/s?wd=">百度</option>
+                <option value="https://www.bing.com/search?q=">Bing</option>
+            </select>
+            <input type="text" id="m_searchInput" placeholder="搜索网络..." autocomplete="off">
+            <button id="m_searchButton">搜索</button>
+        </div>
+        <nav class="nav-menu" id="navMenu"></nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="desktop-search-bar" id="searchBar">
+            <select id="engine">
+                <option value="https://www.google.com/search?q=">Google</option>
+                <option value="https://www.baidu.com/s?wd=">百度</option>
+                <option value="https://www.bing.com/search?q=">Bing</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="搜索..." autocomplete="off">
+            <button id="searchButton">搜索</button>
+        </div>
+        <div id="links"></div>
+    </main>
+</div>
+
 <button id="unlockBtn"></button>
-<div id="adminModal" class="admin-modal" style="display:none;"><div class="admin-box" id="adminBox"><div id="adminSetupView" style="display:none;"><h3>🛠️ 初始仓库配置</h3><input type="text" id="setupPwd" class="mask-pwd" placeholder="设置后台短密码" autocomplete="off"><input type="text" id="setupUser" placeholder="GitHub 用户名" autocomplete="off"><input type="text" id="setupRepo" placeholder="仓库名" autocomplete="off"><input type="text" id="setupToken" class="mask-pwd" placeholder="GitHub PAT" autocomplete="off"><div class="admin-btn-group"><button class="btn-cancel" onclick="closeAdmin()">取消</button><button class="btn-primary" onclick="saveAdminConfig()">加密保存</button></div></div><div id="adminLoginView" style="display:none;"><h3>🔒 验证身份</h3><input type="text" id="loginPwd" class="mask-pwd" placeholder="输入后台短密码" autocomplete="off"><div class="admin-btn-group"><button class="btn-cancel" onclick="closeAdmin()">取消</button><button class="btn-primary" onclick="verifyAdmin()">进入后台</button></div><a href="#" class="reset-link" onclick="resetAdminConfig()">重置 GitHub 配置</a></div><div id="adminEditorView" style="display:none;height:100%;flex-direction:column;"><div class="editor-header"><select id="editorSelect" onchange="switchEditorTab()"><option value="markdown-main">👉 编辑：主页书签</option><option value="markdown-secret">👉 编辑：私藏页面</option><option value="markdown-private">👉 编辑：个人空间</option></select><button class="btn-cancel" onclick="closeAdmin()">退出</button></div><div class="quick-add-card"><div class="flex-row"><input type="text" id="quickName" placeholder="名称(如: 淘宝)" autocomplete="off"><input type="text" id="quickUrl" placeholder="网址(https://...)" autocomplete="off"></div><div class="flex-row"><select id="quickCategory"><option value="">-- 选择目标分类 --</option></select><button class="btn-insert" onclick="insertQuickLink()">➕ 自动添加</button><button class="btn-newcat" onclick="insertQuickCategory()" title="新建分类">📁</button></div></div><div class="textarea-title">📄 底层代码区 (支持直接修改)</div><textarea id="editorTextarea" spellcheck="false" placeholder="拉取数据中..." oninput="debounceUpdateCat()"></textarea><div class="admin-btn-group" style="padding-top:10px;"><button class="btn-primary" id="pushBtn" onclick="pushToGitHub()">🚀 保存并推送到 GitHub</button></div><div id="editorStatus"></div></div></div></div>
 
-
+<div id="adminModal" class="admin-modal" style="display:none;">
+    <div class="admin-box" id="adminBox">
+        <div id="adminSetupView" style="display:none;">
+            <h3>🛠️ 初始仓库配置</h3>
+            <input type="text" id="setupPwd" class="mask-pwd" placeholder="设置一个后台短密码" autocomplete="off">
+            <input type="text" id="setupUser" placeholder="GitHub 用户名" autocomplete="off">
+            <input type="text" id="setupRepo" placeholder="仓库名" autocomplete="off">
+            <input type="text" id="setupToken" class="mask-pwd" placeholder="GitHub PAT" autocomplete="off">
+            <div class="admin-btn-group"><button class="btn-cancel" onclick="closeAdmin()">取消</button><button class="btn-primary" onclick="saveAdminConfig()">加密保存</button></div>
+        </div>
+        
+        <div id="adminLoginView" style="display:none;">
+            <h3>🔒 验证身份</h3>
+            <input type="text" id="loginPwd" class="mask-pwd" placeholder="输入后台短密码" autocomplete="off">
+            <div class="admin-btn-group"><button class="btn-cancel" onclick="closeAdmin()">取消</button><button class="btn-primary" onclick="verifyAdmin()">进入后台</button></div>
+            <a href="#" class="reset-link" onclick="resetAdminConfig()">重置 GitHub 配置</a>
+        </div>
+        
+        <div id="adminEditorView" style="display:none; height:100%; flex-direction:column;">
+            <div class="editor-header">
+                <select id="editorSelect" onchange="switchEditorTab()">
+                    <option value="markdown-main">👉 编辑：主页书签</option>
+                    <option value="markdown-secret">👉 编辑：私藏页面</option>
+                    <option value="markdown-private">👉 编辑：个人空间</option>
+                </select>
+                <button class="btn-cancel" onclick="closeAdmin()">退出</button>
+            </div>
+            
+            <div class="quick-add-card">
+                <div class="flex-row">
+                    <input type="text" id="quickName" placeholder="名称(如: 淘宝)" autocomplete="off">
+                    <input type="text" id="quickUrl" placeholder="网址(https://...)" autocomplete="off">
+                </div>
+                <div class="flex-row">
+                    <select id="quickCategory">
+                        <option value="">-- 选择目标分类 --</option>
+                    </select>
+                    <button class="btn-insert" onclick="insertQuickLink()">➕ 自动添加</button>
+                    <button class="btn-newcat" onclick="insertQuickCategory()" title="新建分类">📁</button>
+                </div>
+            </div>
+            
+            <div class="textarea-title">📄 底层代码区 (支持直接修改)</div>
+            <textarea id="editorTextarea" spellcheck="false" placeholder="拉取数据中..." oninput="debounceUpdateCat()"></textarea>
+            
+            <div class="admin-btn-group" style="padding-top: 10px;">
+                <button class="btn-primary" id="pushBtn" onclick="pushToGitHub()">🚀 保存并推送到 GitHub</button>
+            </div>
+            <div id="editorStatus"></div>
+        </div>
+    </div>
+</div>
 
 <script id="markdown-main" type="text/plain">
 ## 门户站
@@ -171,8 +462,6 @@
 - [橘子资源](https://www.juzia.cn/)
 - [咖喱君的资源](https://link3.cc/galijun)
 - [颜资源](https://yanziyuan.xyz/)
-
-
 
 
 
@@ -616,23 +905,62 @@
 <script id="markdown-private" type="text/plain">
 ## 工具/发现
 - [偷懒工具](https://toolight.cn/)  
+   
+
 - [DocHub 分享优质文档](https://www.dochub.wiki/)  
+
 - [虫部落](https://www.chongbuluo.com)  
+
 - [奇趣网站](https://qiqu.dreamthere.cn/)  
+ 
+ 
 - [有意思的小周刊](https://www.fengxiaoqiang.com/yys/)  
 - [酷口家数字花园](https://weqoocu.com/)  
+
 - [发现有趣的东西](https://iui.su/3093/)  
 - [比格张](https://bigezhang.com/)  
+ 
 - [1000UserGuide](https://1000userguide.com/#/)  
 - [indie-hackers-guide](https://indie-hackers-guide.pages.dev/#/) 
+ 
+
 - [decohack](https://decohack.com/)
+
+
 - [Solo4A](https://www.solo4a.com/)
+
+
+
+
+
+
+
+
+
+
+
 - [VPS大玩家](https://www.vpsdawanjia.com/)
+
+
+
+
+
+   
+
 - [AlternativeTo](https://alternativeto.net) 
+  
 - [onehack](https://onehack.us/)  羊毛线报资源    
 - [HackerNews 中文版](https://hn.aimaker.dev) 
 
 
+
+
+
+
+
+
+
+    
 ## 知识文档
 - [梁靠谱](https://ar16e47fvw.feishu.cn/docx/HQChdmaxroqAzvxhP0icUXGhnug)  
 - [生财第9期](https://www.kdocs.cn/l/cobMuvRvILND)
@@ -640,6 +968,8 @@
 - [互联网知识地图](https://yunyinghui.feishu.cn/wiki/QrvDwaNt4icE2qkZTPSccNKInhh)
 
 
+    
+    
 ## 副业赚钱
 - [不上班研究所](https://www.toocool.cc/)
 - [前途日历](https://qianturili.ababtools.com/?url=heeee.com)
@@ -663,15 +993,276 @@
 </script>
 
 <script defer>
-const SECRET_PWD="709394",PRIVATE_PWD="abcd",MOBILE_LIMIT=9999,DESKTOP_LIMIT=9999,ICON_COPY='<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',ICON_CHECK='<svg viewBox="0 0 24 24" width="14" height="14" stroke="#5C8D73" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',ICON_ERR='<svg viewBox="0 0 24 24" width="14" height="14" stroke="#D97A7A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';function getDisplayLimit(){return window.innerWidth<=850?MOBILE_LIMIT:DESKTOP_LIMIT}function hashCode(e){let t=0;for(let n=0,i=e.length;n<i;n++){let i=e.charCodeAt(n);t=(t<<5)-t+i,t|=0}return t.toString()}function parseMarkdown(e){const t=e.split("\n");let n="",i="",a="",o=[];const d=getDisplayLimit();let r=!0,l=0;function s(){if(!a||0===o.length)return;const e=`cat-${l++}`,t=r?"active":"";i+=`<div class="nav-item ${t}" data-target="${e}">${a}</div>`,n+=`<section class="group-section ${t}" id="section-${e}"><div class="group-header"><h2>${a}</h2></div><div class="links-group" id="links-${e}">`,o.forEach(t=>{n+=`<div class="link-card"><a href="${t[2]}" target="_blank" rel="noopener noreferrer" title="${t[1]}">${t[1]}</a><span class="copy-btn" onclick="copyLink('${t[2]}', this)">${ICON_COPY}</span></div>`}),n+="</div></section>",a="",o=[],r=!1}return t.forEach(e=>{e=e.trim(),e&&(e.startsWith("##")?(s(),a=e.replace(/^##+/,"").trim()):e.startsWith("- [")&&(e=e.match(/- \[(.*?)\]\((.*?)\)/),e&&o.push(e)))}),s(),{html:n,navHtml:i}}function render(e){const t=document.getElementById(e).textContent;let n=parseMarkdown(t);document.getElementById("links").innerHTML=n.html,document.getElementById("navMenu").innerHTML=n.navHtml,bindNavEvents()}const sidebarEl=document.getElementById("sidebar"),overlayEl=document.getElementById("sidebarOverlay");function openSidebar(){sidebarEl.classList.add("open"),overlayEl.classList.add("active"),document.body.classList.add("no-scroll")}function closeSidebar(){sidebarEl.classList.remove("open"),overlayEl.classList.remove("active"),document.body.classList.remove("no-scroll")}document.getElementById("menuBtn").addEventListener("click",openSidebar),document.addEventListener("click",e=>{window.innerWidth>=850||!sidebarEl.classList.contains("open")||e.target.closest("#menuBtn")||e.target.closest("#mobileSearchBar")||closeSidebar()});function bindNavEvents(){document.querySelectorAll(".nav-item").forEach(e=>{e.addEventListener("click",e=>{document.querySelectorAll(".nav-item").forEach(e=>e.classList.remove("active")),e.currentTarget.classList.add("active");const t=e.currentTarget.getAttribute("data-target"),n=document.getElementById(`section-${t}`);document.querySelectorAll(".group-section").forEach(e=>e.classList.remove("active")),n&&n.classList.add("active"),window.innerWidth<850?window.scrollTo({top:0,behavior:"smooth"}):document.getElementById("searchInput").focus()})})}function doSearch(e=!1){const t=e?"m_":"",n=document.getElementById(t+"engine").value,i=document.getElementById(t+"searchInput").value.trim().toLowerCase();document.querySelectorAll(".group-section").forEach(e=>{e.style.display="",e.querySelectorAll(".link-card").forEach(e=>e.style.display="")});if("local"===n){if(i)document.querySelectorAll(".group-section").forEach(e=>{let t=!1;e.querySelectorAll(".link-card").forEach(e=>{e.textContent.toLowerCase().includes(i)?(e.style.display="flex",t=!0):e.style.display="none"}),e.style.display=t?"block":"none"});e&&closeSidebar()}else i&&(window.open(n+encodeURIComponent(i),"_blank"),e&&closeSidebar())}async function copyLink(e,t){try{await navigator.clipboard.writeText(e),t.innerHTML=ICON_CHECK}catch(e){t.innerHTML=ICON_ERR}setTimeout(()=>t.innerHTML=ICON_COPY,1e3)}window.addEventListener("popstate",e=>{backToHomeUI()});function backToHomeUI(){const e=document.getElementById("backBtn");e&&e.remove(),render("markdown-main"),document.getElementById("pageTitle").innerText="我的主页",document.getElementById("mobilePageTitle").innerText="我的主页",document.getElementById("searchBar").style.visibility="visible",document.getElementById("mobileSearchBar").style.display="flex",document.getElementById("unlockBtn").style.display="block",document.body.className="",window.scrollTo({top:0})}function unlockSecret(){const e=prompt("请输入密码查看内容：");e===SECRET_PWD?(document.body.className="mode-secret",render("markdown-secret"),history.pushState({page:"secret"},"","#secret"),enterMode("私藏页面","mode-secret")):e===PRIVATE_PWD?(document.body.className="",render("markdown-private"),history.pushState({page:"private"},"","#private"),enterMode("个人空间","mode-private")):alert("密码错误！")}function enterMode(e,t){document.getElementById("unlockBtn").style.display="none",document.getElementById("searchBar").style.visibility="hidden",document.getElementById("mobileSearchBar").style.display="none",document.getElementById("pageTitle").innerText=e,document.getElementById("mobilePageTitle").innerText=e,document.body.classList.add("secret"),t&&document.body.classList.add(t),window.scrollTo({top:0});const n=document.getElementById("backBtn");n&&n.remove();const i=document.createElement("button");i.id="backBtn",i.className="back-btn",i.innerText="← 返回主页",i.addEventListener("click",()=>{history.back()}),document.getElementById("pageTitle").parentNode.insertBefore(i,document.getElementById("pageTitle").nextSibling)}let touchStartX=0,touchStartY=0,touchEndX=0,touchEndY=0;document.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0].screenX,touchStartY=e.changedTouches[0].screenY},{passive:!0}),document.addEventListener("touchend",e=>{touchEndX=e.changedTouches[0].screenX,touchEndY=e.changedTouches[0].screenY,handleGesture()},{passive:!0});function handleGesture(){if(window.innerWidth>=850)return;const e=touchEndX-touchStartX,t=touchEndY-touchStartY;Math.abs(e)>Math.abs(t)+10&&(e>20&&!sidebarEl.classList.contains("open")?openSidebar():e<-20&&sidebarEl.classList.contains("open")&&closeSidebar())}function utf8_to_b64(e){return window.btoa(unescape(encodeURIComponent(e)))}function b64_to_utf8(e){return decodeURIComponent(escape(window.atob(e)))}function encryptData(e,t){let n="";for(let i=0;i<e.length;i++)n+=String.fromCharCode(e.charCodeAt(i)^t.charCodeAt(i%t.length));return utf8_to_b64(n)}function decryptData(e,t){try{let n=b64_to_utf8(e),i="";for(let e=0;e<n.length;e++)i+=String.fromCharCode(n.charCodeAt(e)^t.charCodeAt(e%t.length));return i}catch(e){return null}}let ghData=null,currentFullHtml="",currentFileSha="",currentTabId="markdown-main",mdContents={"markdown-main":"","markdown-secret":"","markdown-private":""};function showStatus(e,t="var(--color-link-btn)"){const n=document.getElementById("editorStatus");n.innerText=e,n.style.color=t}function openAdmin(){document.getElementById("adminModal").style.display="flex";const e=localStorage.getItem("gh_admin_config");e?(document.getElementById("adminSetupView").style.display="none",document.getElementById("adminEditorView").style.display="none",document.getElementById("adminLoginView").style.display="block",document.getElementById("adminBox").classList.remove("editor-mode"),setTimeout(()=>document.getElementById("loginPwd").focus(),100)):(document.getElementById("adminLoginView").style.display="none",document.getElementById("adminEditorView").style.display="none",document.getElementById("adminSetupView").style.display="block",document.getElementById("adminBox").classList.remove("editor-mode")),document.body.classList.add("no-scroll")}function closeAdmin(){document.getElementById("adminModal").style.display="none",document.getElementById("setupPwd").value="",document.getElementById("loginPwd").value="",document.getElementById("adminBox").classList.remove("editor-mode"),document.body.classList.remove("no-scroll")}function saveAdminConfig(){const e=document.getElementById("setupPwd").value.trim(),t=document.getElementById("setupUser").value.trim(),n=document.getElementById("setupRepo").value.trim(),i=document.getElementById("setupToken").value.trim();if(!e||!t||!n||!i)return alert("各项参数不能为空！");const a=JSON.stringify({user:t,repo:n,token:i}),o=encryptData(a,e);localStorage.setItem("gh_admin_config",o),alert("配置已保存！"),closeAdmin()}function resetAdminConfig(){confirm("重置配置？")&&(localStorage.removeItem("gh_admin_config"),openAdmin())}function verifyAdmin(){const e=document.getElementById("loginPwd").value.trim();if(!e)return;const t=localStorage.getItem("gh_admin_config"),n=decryptData(t,e);n&&n.includes("token")?(ghData=JSON.parse(n),document.getElementById("adminLoginView").style.display="none",document.getElementById("adminEditorView").style.display="flex",document.getElementById("adminBox").classList.add("editor-mode"),fetchFromGitHub()):(alert("密码错误！"),document.getElementById("loginPwd").value="")}let catUpdateTimer;function debounceUpdateCat(){clearTimeout(catUpdateTimer),catUpdateTimer=setTimeout(updateCategoryDropdown,300)}function updateCategoryDropdown(){const e=document.getElementById("editorTextarea").value.split("\n"),t=document.getElementById("quickCategory"),n=t.value;t.innerHTML='<option value="">-- 选择目标分类 --</option>',e.forEach(e=>{if(e.trim().startsWith("##")){const n=e.replace(/^##\s+/,"").trim(),i=document.createElement("option");i.value=n,i.textContent=n,t.appendChild(i)}}),[...t.options].some(e=>e.value===n)&&(t.value=n)}
+const SECRET_PWD  = "709394"; 
+const PRIVATE_PWD = "abcd"; 
+const MOBILE_LIMIT = 9999; 
+const DESKTOP_LIMIT = 9999; 
 
-async function fetchFromGitHub(){showStatus("📡 正在连接 GitHub..."),document.getElementById("editorTextarea").disabled=!0;try{const e=`https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`,t=await fetch(e,{headers:{Authorization:`token ${ghData.token}`,Accept:"application/vnd.github.v3+json"}});if(!t.ok)throw new Error("连接失败！请检查配置");const n=await t.json();currentFileSha=n.sha,currentFullHtml=b64_to_utf8(n.content.replace(/\n/g,"")),["markdown-main","markdown-secret","markdown-private"].forEach(e=>{let t=`<script id="${e}" type="text/plain">`;currentFullHtml.includes(t)&&(mdContents[e]=currentFullHtml.split(t)[1].split("<\/script>")[0].trim())}),document.getElementById("editorTextarea").disabled=!1,currentTabId="markdown-main",document.getElementById("editorSelect").value=currentTabId,document.getElementById("editorTextarea").value=mdContents[currentTabId],updateCategoryDropdown(),showStatus("✅ 拉取成功，可以编辑了！")}catch(e){showStatus("❌ "+e.message,"red")}}
+// SVG 矢量图标
+const ICON_COPY = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+const ICON_CHECK = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#5C8D73" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+const ICON_ERR = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#D97A7A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
-function switchEditorTab(){mdContents[currentTabId]=document.getElementById("editorTextarea").value,currentTabId=document.getElementById("editorSelect").value,document.getElementById("editorTextarea").value=mdContents[currentTabId],updateCategoryDropdown()}function insertQuickLink(){const e=document.getElementById("quickName"),t=document.getElementById("quickUrl"),n=document.getElementById("quickCategory");let i=e.value.trim(),a=t.value.trim(),o=n.value;if(!i||!a)return alert("请填入名称和网址");if(!o)return alert("请先选择一个目标分类！\n(如果没有想要的分类，请先点击'📁'新建分类)");a.startsWith("http")||(a="https://"+a);const d=`- [${i}](${a})`,r=document.getElementById("editorTextarea");let l=r.value.split("\n"),s=-1;for(let e=0;e<l.length;e++)if(l[e].trim().startsWith("##")&&l[e].replace(/^##\s+/,"").trim()===o){s=e;break}if(-1!==s){let t=s+1;for(;t<l.length&&!l[t].trim().startsWith("##");)t++;for(;t>0&&""===l[t-1].trim();)t--;l.splice(t,0,d),r.value=l.join("\n"),e.value="",t.value="",showStatus(`✅ 已成功添加到 [${o}] 分类底部！`,"var(--color-link-btn)")}else alert("找不到该分类代码，请检查！")}function insertQuickCategory(){const e=prompt("请输入新分类名称：");if(e&&e.trim()){const t=document.getElementById("editorTextarea"),n=`\n## ${e.trim()}\n`;t.value=t.value.trim()+"\n"+n,t.scrollTop=t.scrollHeight,updateCategoryDropdown(),document.getElementById("quickCategory").value=e.trim(),showStatus(`📁 新分类 [${e.trim()}] 创建成功！`,"var(--color-link-btn)")}}
+function getDisplayLimit() { return window.innerWidth <= 850 ? MOBILE_LIMIT : DESKTOP_LIMIT; }
+function hashCode(str) { let hash = 0; for (let i = 0, len = str.length; i < len; i++) { let chr = str.charCodeAt(i); hash = (hash << 5) - hash + chr; hash |= 0; } return hash.toString(); }
 
-async function pushToGitHub(){mdContents[currentTabId]=document.getElementById("editorTextarea").value;const e=document.getElementById("pushBtn");e.disabled=!0,e.innerText="正在推送...";try{let t=currentFullHtml;["markdown-main","markdown-secret","markdown-private"].forEach(e=>{let n=`<script id="${e}" type="text/plain">`;if(t.includes(n)){let a=t.split(n),r=a[1].indexOf("<\/script>");t=a[0]+n+"\n"+mdContents[e]+"\n"+a[1].substring(r)}});const n=await fetch(`https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`,{method:"PUT",headers:{Authorization:`token ${ghData.token}`,"Content-Type":"application/json"},body:JSON.stringify({message:"Update via Visual Editor",content:utf8_to_b64(t),sha:currentFileSha})});if(!n.ok)throw new Error("推送失败");alert("🎉 推送成功！大约30秒后刷新生效。"),closeAdmin()}catch(t){showStatus("❌ "+t.message,"red")}finally{e.disabled=!1,e.innerText="🚀 保存并推送到 GitHub"}}
+function parseMarkdown(md) {
+    const lines = md.split("\n"); let html = "", navHtml = "", currentGroupName = "", currentLinks = [];
+    const displayLimit = getDisplayLimit(); let isFirstGroup = true, groupIndex = 0; 
+    function flushGroup() {
+        if (!currentGroupName || currentLinks.length === 0) return;
+        const groupId = `cat-${groupIndex++}`; const activeClass = isFirstGroup ? 'active' : ''; 
+        navHtml += `<div class="nav-item ${activeClass}" data-target="${groupId}">${currentGroupName}</div>`;
+        html += `<section class="group-section ${activeClass}" id="section-${groupId}"><div class="group-header"><h2>${currentGroupName}</h2></div>`;
+        html += `<div class="links-group" id="links-${groupId}">`;
+        currentLinks.forEach((m) => {
+            html += `<div class="link-card"><a href="${m[2]}" target="_blank" rel="noopener noreferrer" title="${m[1]}">${m[1]}</a><span class="copy-btn" onclick="copyLink('${m[2]}', this)">${ICON_COPY}</span></div>`;
+        });
+        html += `</div></section>`; currentGroupName = ""; currentLinks = []; isFirstGroup = false; 
+    }
+    lines.forEach(line => {
+        line = line.trim(); if (!line) return;
+        if (line.startsWith("##")) { flushGroup(); currentGroupName = line.replace(/^##+/, "").trim(); } 
+        else if (line.startsWith("- [")) { const m = line.match(/- \[(.*?)\]\((.*?)\)/); if (m) currentLinks.push(m); }
+    });
+    flushGroup(); return { html, navHtml }; 
+}
 
-let pressTimer;document.getElementById("pageTitle").addEventListener("mousedown",e=>{0===e.button&&(pressTimer=setTimeout(openAdmin,3e3))}),document.getElementById("pageTitle").addEventListener("mouseup",()=>clearTimeout(pressTimer)),document.getElementById("mobileAdminBtn").addEventListener("click",openAdmin);document.addEventListener("DOMContentLoaded",()=>{render("markdown-main"),document.getElementById("searchButton").addEventListener("click",()=>doSearch(!1)),document.getElementById("searchInput").addEventListener("keypress",e=>{"Enter"===e.key&&doSearch(!1)}),document.getElementById("m_searchButton").addEventListener("click",()=>doSearch(!0)),document.getElementById("m_searchInput").addEventListener("keypress",e=>{"Enter"===e.key&&doSearch(!0)}),document.getElementById("unlockBtn").addEventListener("click",unlockSecret),document.getElementById("loginPwd").addEventListener("keypress",e=>{"Enter"===e.key&&verifyAdmin()})});
+function render(id) {
+    const md = document.getElementById(id).textContent;
+    let parsed = parseMarkdown(md);
+    document.getElementById("links").innerHTML = parsed.html; 
+    document.getElementById("navMenu").innerHTML = parsed.navHtml;
+    bindNavEvents(); 
+}
+
+const sidebarEl = document.getElementById('sidebar');
+const overlayEl = document.getElementById('sidebarOverlay');
+
+function openSidebar() { sidebarEl.classList.add('open'); overlayEl.classList.add('active'); document.body.classList.add('no-scroll'); }
+function closeSidebar() { sidebarEl.classList.remove('open'); overlayEl.classList.remove('active'); document.body.classList.remove('no-scroll'); }
+
+document.getElementById('menuBtn').addEventListener('click', openSidebar);
+document.addEventListener('click', (e) => {
+    if (window.innerWidth >= 850) return; 
+    if (sidebarEl.classList.contains('open')) {
+        if (e.target.closest('#menuBtn') || e.target.closest('#mobileSearchBar')) return;
+        closeSidebar();
+    }
+});
+
+function bindNavEvents() {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); e.currentTarget.classList.add('active');
+            const targetId = e.currentTarget.getAttribute('data-target'); const targetElement = document.getElementById(`section-${targetId}`);
+            document.querySelectorAll('.group-section').forEach(sec => sec.classList.remove('active')); if (targetElement) targetElement.classList.add('active');
+            if (window.innerWidth < 850) { window.scrollTo({ top: 0, behavior: 'smooth' }); } else { document.getElementById("searchInput").focus(); }
+        });
+    });
+}
+
+function doSearch(isMobile = false) {
+    const prefix = isMobile ? 'm_' : ''; const engine = document.getElementById(prefix + "engine").value; const keyword = document.getElementById(prefix + "searchInput").value.trim();
+    if (keyword) { window.open(engine + encodeURIComponent(keyword), "_blank"); if (isMobile) closeSidebar(); }
+}
+
+async function copyLink(url, el) { 
+    try { 
+        await navigator.clipboard.writeText(url); 
+        el.innerHTML = ICON_CHECK; 
+    } catch (err) { 
+        el.innerHTML = ICON_ERR; 
+    } 
+    setTimeout(() => el.innerHTML = ICON_COPY, 1000); 
+}
+
+window.addEventListener('popstate', (event) => { backToHomeUI(); });
+
+function backToHomeUI() {
+    const backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.remove();
+    render("markdown-main");
+    document.getElementById("pageTitle").innerText = "我的主页"; document.getElementById("mobilePageTitle").innerText = "我的主页";
+    document.getElementById("searchBar").style.visibility = "visible"; document.getElementById("mobileSearchBar").style.display = "flex";  
+    document.getElementById("unlockBtn").style.display = "block"; 
+    document.body.className = ''; window.scrollTo({ top: 0 }); 
+}
+
+function unlockSecret() {
+    const pwd = prompt("请输入密码查看内容：");
+    if (pwd === SECRET_PWD) { document.body.className = 'mode-secret'; render("markdown-secret"); history.pushState({ page: 'secret' }, "", "#secret"); enterMode("私藏页面", "mode-secret"); } 
+    else if (pwd === PRIVATE_PWD) { document.body.className = ''; render("markdown-private"); history.pushState({ page: 'private' }, "", "#private"); enterMode("个人空间", "mode-private"); } 
+    else { alert("密码错误！"); }
+}
+
+function enterMode(title, modeClass) {
+    document.getElementById("unlockBtn").style.display = "none"; document.getElementById("searchBar").style.visibility = "hidden"; document.getElementById("mobileSearchBar").style.display = "none"; 
+    document.getElementById("pageTitle").innerText = title; document.getElementById("mobilePageTitle").innerText = title;
+    document.body.classList.add("secret"); if(modeClass) document.body.classList.add(modeClass); window.scrollTo({ top: 0 }); 
+    const oldBackBtn = document.getElementById('backBtn'); if (oldBackBtn) oldBackBtn.remove();
+    const backBtn = document.createElement('button'); backBtn.id = 'backBtn'; backBtn.className = 'back-btn'; backBtn.innerText = '← 返回主页'; backBtn.addEventListener('click', () => { history.back(); });
+    document.getElementById("pageTitle").parentNode.insertBefore(backBtn, document.getElementById("pageTitle").nextSibling);
+}
+
+// 灵敏侧滑手势
+let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, { passive: true });
+document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; touchEndY = e.changedTouches[0].screenY; handleGesture(); }, { passive: true });
+
+function handleGesture() {
+    if (window.innerWidth >= 850) return; 
+    const deltaX = touchEndX - touchStartX; const deltaY = touchEndY - touchStartY;
+    if (Math.abs(deltaX) > Math.abs(deltaY) + 10) {
+        if (deltaX > 20 && !sidebarEl.classList.contains('open')) openSidebar();
+        else if (deltaX < -20 && sidebarEl.classList.contains('open')) closeSidebar();
+    }
+}
+
+// =======================
+// 后台 API 与智能分类引擎
+// =======================
+function utf8_to_b64(str) { return window.btoa(unescape(encodeURIComponent(str))); }
+function b64_to_utf8(str) { return decodeURIComponent(escape(window.atob(str))); }
+function encryptData(text, key) { let result = ''; for(let i = 0; i < text.length; i++) { result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length)); } return utf8_to_b64(result); }
+function decryptData(hash, key) { try { let str = b64_to_utf8(hash); let result = ''; for(let i = 0; i < str.length; i++) { result += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length)); } return result; } catch(e) { return null; } }
+
+let ghData = null, currentFullHtml = "", currentFileSha = "", currentTabId = "markdown-main";
+let mdContents = { "markdown-main": "", "markdown-secret": "", "markdown-private": "" };
+
+function showStatus(text, color = "var(--color-link-btn)") { const el = document.getElementById('editorStatus'); el.innerText = text; el.style.color = color; }
+function openAdmin() { document.getElementById('adminModal').style.display = 'flex'; const config = localStorage.getItem('gh_admin_config'); if (config) { document.getElementById('adminSetupView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminLoginView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); setTimeout(() => document.getElementById('loginPwd').focus(), 100); } else { document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminSetupView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); } document.body.classList.add('no-scroll'); }
+function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; document.getElementById('setupPwd').value = ''; document.getElementById('loginPwd').value = ''; document.getElementById('adminBox').classList.remove('editor-mode'); document.body.classList.remove('no-scroll'); }
+function saveAdminConfig() { const pwd = document.getElementById('setupPwd').value.trim(), user = document.getElementById('setupUser').value.trim(), repo = document.getElementById('setupRepo').value.trim(), token = document.getElementById('setupToken').value.trim(); if (!pwd || !user || !repo || !token) return alert("各项参数不能为空！"); const rawData = JSON.stringify({ user, repo, token }), encryptedText = encryptData(rawData, pwd); localStorage.setItem('gh_admin_config', encryptedText); alert("配置已保存！"); closeAdmin(); }
+function resetAdminConfig() { if(confirm("重置配置？")) { localStorage.removeItem('gh_admin_config'); openAdmin(); } }
+
+function verifyAdmin() {
+    const pwd = document.getElementById('loginPwd').value.trim(); if(!pwd) return;
+    const hash = localStorage.getItem('gh_admin_config'); const decryptedText = decryptData(hash, pwd);
+    if (decryptedText && decryptedText.includes('token')) { ghData = JSON.parse(decryptedText); document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'flex'; document.getElementById('adminBox').classList.add('editor-mode'); fetchFromGitHub(); } else { alert("密码错误！"); document.getElementById('loginPwd').value = ''; }
+}
+
+let catUpdateTimer;
+function debounceUpdateCat() { clearTimeout(catUpdateTimer); catUpdateTimer = setTimeout(updateCategoryDropdown, 300); }
+
+function updateCategoryDropdown() {
+    const text = document.getElementById("editorTextarea").value;
+    const lines = text.split('\n');
+    const catSelect = document.getElementById("quickCategory");
+    const currentVal = catSelect.value; 
+    
+    catSelect.innerHTML = '<option value="">-- 选择目标分类 --</option>';
+    lines.forEach(line => {
+        if (line.trim().startsWith('##')) {
+            const catName = line.replace(/^##\s+/, '').trim();
+            const opt = document.createElement('option');
+            opt.value = catName; opt.textContent = catName;
+            catSelect.appendChild(opt);
+        }
+    });
+    if([...catSelect.options].some(o => o.value === currentVal)) { catSelect.value = currentVal; }
+}
+
+async function fetchFromGitHub() {
+    showStatus("📡 正在连接 GitHub..."); document.getElementById("editorTextarea").disabled = true;
+    try {
+        const url = `https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`;
+        const res = await fetch(url, { headers: { "Authorization": `token ${ghData.token}`, "Accept": "application/vnd.github.v3+json" } });
+        if (!res.ok) throw new Error("连接失败！请检查配置");
+        const data = await res.json(); currentFileSha = data.sha; currentFullHtml = b64_to_utf8(data.content.replace(/\n/g, ''));
+        ['markdown-main', 'markdown-secret', 'markdown-private'].forEach(id => { const regex = new RegExp(`(<script id="${id}" type="text\\/plain">)([\\s\\S]*?)(<\\/script>)`); const match = currentFullHtml.match(regex); if (match) mdContents[id] = match[2].trim(); });
+        
+        document.getElementById("editorTextarea").disabled = false; 
+        currentTabId = "markdown-main"; 
+        document.getElementById("editorSelect").value = currentTabId; 
+        document.getElementById("editorTextarea").value = mdContents[currentTabId]; 
+        
+        updateCategoryDropdown();
+        showStatus("✅ 拉取成功，可以编辑了！");
+    } catch (err) { showStatus("❌ " + err.message, "red"); }
+}
+
+function switchEditorTab() { 
+    mdContents[currentTabId] = document.getElementById("editorTextarea").value; 
+    currentTabId = document.getElementById("editorSelect").value; 
+    document.getElementById("editorTextarea").value = mdContents[currentTabId]; 
+    updateCategoryDropdown();
+}
+
+function insertQuickLink() { 
+    const nameEl = document.getElementById('quickName'), urlEl = document.getElementById('quickUrl'), catEl = document.getElementById('quickCategory'); 
+    let name = nameEl.value.trim(), url = urlEl.value.trim(), cat = catEl.value; 
+    
+    if(!name || !url) return alert("请填入名称和网址"); 
+    if(!cat) return alert("请先选择一个目标分类！\n(如果没有想要的分类，请先点击'📁'新建分类)");
+    
+    if(!url.startsWith('http')) url = 'https://' + url; 
+    const mdStr = `- [${name}](${url})`; 
+    
+    const textarea = document.getElementById('editorTextarea');
+    let lines = textarea.value.split('\n');
+    let targetIdx = -1;
+    
+    for(let i = 0; i < lines.length; i++) {
+        if(lines[i].trim().startsWith('##') && lines[i].replace(/^##\s+/, '').trim() === cat) {
+            targetIdx = i; break;
+        }
+    }
+    
+    if (targetIdx !== -1) {
+        let insertIdx = targetIdx + 1;
+        while (insertIdx < lines.length && !lines[insertIdx].trim().startsWith('##')) {
+            insertIdx++;
+        }
+        while (insertIdx > 0 && lines[insertIdx - 1].trim() === '') {
+            insertIdx--;
+        }
+        
+        lines.splice(insertIdx, 0, mdStr);
+        textarea.value = lines.join('\n');
+        
+        nameEl.value = ''; urlEl.value = '';
+        showStatus(`✅ 已成功添加到 [${cat}] 分类底部！`, "var(--color-link-btn)");
+    } else {
+        alert("找不到该分类代码，请检查！");
+    }
+}
+
+function insertQuickCategory() { 
+    const name = prompt("请输入新分类名称："); 
+    if(name && name.trim()) { 
+        const textarea = document.getElementById('editorTextarea');
+        const mdStr = `\n## ${name.trim()}\n`;
+        textarea.value = textarea.value.trim() + '\n' + mdStr;
+        textarea.scrollTop = textarea.scrollHeight; 
+        updateCategoryDropdown();
+        document.getElementById('quickCategory').value = name.trim(); 
+        showStatus(`📁 新分类 [${name.trim()}] 创建成功！`, "var(--color-link-btn)");
+    } 
+}
+
+async function pushToGitHub() {
+    mdContents[currentTabId] = document.getElementById("editorTextarea").value; const pushBtn = document.getElementById("pushBtn"); pushBtn.disabled = true; pushBtn.innerText = "正在推送...";
+    try {
+        let newHtml = currentFullHtml; ['markdown-main', 'markdown-secret', 'markdown-private'].forEach(id => { const regex = new RegExp(`(<script id="${id}" type="text\\/plain">)([\\s\\S]*?)(<\\/script>)`); newHtml = newHtml.replace(regex, `$1\n${mdContents[id]}\n$3`); });
+        const res = await fetch(`https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`, { method: "PUT", headers: { "Authorization": `token ${ghData.token}`, "Content-Type": "application/json" }, body: JSON.stringify({ message: "Update via Visual Editor", content: utf8_to_b64(newHtml), sha: currentFileSha }) });
+        if (!res.ok) throw new Error("推送失败"); alert("🎉 推送成功！大约30秒后刷新生效。"); closeAdmin();
+    } catch (err) { showStatus("❌ " + err.message, "red"); } finally { pushBtn.disabled = false; pushBtn.innerText = "🚀 保存并推送到 GitHub"; }
+}
+
+let pressTimer;
+document.getElementById('pageTitle').addEventListener('mousedown', (e) => { if (e.button === 0) pressTimer = setTimeout(openAdmin, 3000); });
+document.getElementById('pageTitle').addEventListener('mouseup', () => clearTimeout(pressTimer));
+document.getElementById('mobileAdminBtn').addEventListener('click', openAdmin);
+
+document.addEventListener('DOMContentLoaded', () => {
+    render("markdown-main");
+    document.getElementById("searchButton").addEventListener('click', () => doSearch(false));
+    document.getElementById("searchInput").addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(false); });
+    document.getElementById("m_searchButton").addEventListener('click', () => doSearch(true));
+    document.getElementById("m_searchInput").addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(true); });
+    document.getElementById("unlockBtn").addEventListener('click', unlockSecret);
+    document.getElementById("loginPwd").addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyAdmin(); });
+});
 </script>
 </body>
 </html>
