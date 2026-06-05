@@ -11,11 +11,12 @@
     --bg-card: #FFFFFF;     
     --color-text: #34433A;  
     --color-border: #E1DFD5;
+    --color-border-light: rgba(225, 223, 213, 0.5); /* 骨架感：通透的半透明分隔线 */
     --color-link-btn: #8C7C61; 
-    --color-active-bg: #EDEBE0;
+    --color-active-bg: #EDEBE0; /* 激活时独立小方块的浅色大地色底色 */
 }
 
-/* 彻底干掉手机端点击时的默认灰色暗影 */
+/* 彻底干掉点击时的默认灰色暗影 */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
 
 /* 开启手机原生下拉刷新功能 */
@@ -24,6 +25,7 @@ body { background: var(--bg-main); color: var(--color-text); font-family: Arial,
 
 body.no-scroll { overflow: hidden; }
 
+/* 隐藏页解密入口小圆点 */
 #unlockBtn { position: fixed; bottom: 12px; right: 12px; width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(140, 124, 97, 0.3); cursor: pointer; padding: 0; z-index: 999; }
 #unlockBtn:hover { background: rgba(140, 124, 97, 0.6); }
 
@@ -42,22 +44,19 @@ body.no-scroll { overflow: hidden; }
 
 .links-group.collapsed .link-card.hidden-by-limit { display: none; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 
 /* =========================================================
    布局 1：移动端优先
    ========================================================= */
 .mobile-top-bar { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: var(--bg-main); z-index: 990; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; border-bottom: 1px solid var(--color-border); }
-
-/* 【拒绝偷懒】：通过绝对定位把标题死死钉在正中心 */
 .mobile-top-bar .top-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: bold; user-select: none; white-space: nowrap; }
 
 .menu-btn { background: none; border: none; color: var(--color-text); padding: 0; display: flex; align-items: center; cursor: pointer; }
 
-/* 【拒绝偷懒】：彻底物理消除齿轮按钮，连一像素的位置都不留给它 */
 body.secret #mobileAdminBtn { display: none !important; }
 
-.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 45, 42, 0.4); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; touch-action: none; }
+.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 45, 42, 0.4); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; touch-action: none; will-change: opacity; }
 .sidebar-overlay.active { opacity: 1; visibility: visible; }
 
 .sidebar { 
@@ -65,99 +64,242 @@ body.secret #mobileAdminBtn { display: none !important; }
     width: 75%; max-width: 320px; 
     background: var(--bg-main); z-index: 999; 
     transform: translateX(-105%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    padding: 40px 20px 80px 20px; 
+    padding: 40px 20px 80px 20px; /* 舒展的 20px 缓冲边距 */
     overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.1); 
     display: flex; flex-direction: column; 
     overscroll-behavior-y: contain; 
+    will-change: transform;
 }
 .sidebar.open { transform: translateX(0); }
 .sidebar h1 { display: none; } 
 .sidebar .back-btn { display: none; }
 
-.mobile-search-bar { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; margin-top: 10px; }
-.mobile-search-bar select, .mobile-search-bar input, .mobile-search-bar button { height: 40px; border-radius: 8px; border: 1px solid var(--color-border); padding: 0 10px; font-size: 14px; background: var(--bg-card); color: var(--color-text); }
-.mobile-search-bar button { background: var(--color-text); color: var(--bg-main); font-weight: bold; transition: transform 0.1s; border: none;}
-.mobile-search-bar button:active { transform: scale(0.95); }
+/* 移动端搜索栏像素级对齐线 */
+.mobile-search-bar { 
+    display: flex; flex-direction: column; gap: 10px; 
+    margin-bottom: 24px; margin-top: 10px; width: auto; 
+    margin-left: -4px; margin-right: -4px; 
+    box-sizing: border-box; position: relative;
+}
+.mobile-custom-select-trigger {
+    width: 100%; height: 40px; border-radius: 8px; 
+    border: 1px solid var(--color-border); padding: 0 14px; 
+    font-size: 14px; background: var(--bg-card); color: var(--color-text);
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; font-weight: bold;
+}
+.mobile-custom-select-trigger .arrow-icon {
+    font-size: 12px; color: #BCB9B1; font-style: normal;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease;
+    display: inline-block; transform: rotate(0deg);
+}
+/* 手机端点击唤醒状态：小箭头顺时针旋转90°并高亮变色 */
+.mobile-search-bar.dropdown-open .mobile-custom-select-trigger .arrow-icon {
+    transform: rotate(90deg); color: var(--color-link-btn);
+}
+
+/* 移动端定制一体化大地色引擎列表浮窗 */
+.mobile-custom-dropdown-options {
+    position: absolute; top: 44px; left: 0; right: 0;
+    background: var(--bg-card); border: 1px solid var(--color-border);
+    border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    z-index: 1000; padding: 4px; display: none; flex-direction: column; gap: 2px;
+    max-height: 280px; overflow-y: auto; /* 保证选项增多时能够优雅滚动且不爆框 */
+}
+.mobile-custom-dropdown-options div {
+    padding: 10px 12px; font-size: 14px; color: var(--color-text);
+    font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.2s;
+}
+.mobile-custom-dropdown-options div.active {
+    background: var(--color-active-bg);
+    color: var(--color-link-btn);
+}
+
+.mobile-search-bar input, .mobile-search-bar button { 
+    width: 100%; height: 40px; border-radius: 8px; 
+    border: 1px solid var(--color-border); padding: 0 12px; 
+    font-size: 14px; background: var(--bg-card); color: var(--color-text);
+    outline: none; box-sizing: border-box; display: block;
+}
+.mobile-search-bar input:focus { border-color: var(--color-link-btn); }
+.mobile-search-bar button { background: var(--color-text); color: var(--bg-main); font-weight: bold; transition: transform 0.1s; border: none; cursor: pointer;}
+.mobile-search-bar button:active { transform: scale(0.97); }
 
 .desktop-search-bar { display: none; }
 
-.nav-menu { display: flex; flex-direction: column; gap: 8px; }
+/* 树状手风琴菜单基础结构 */
+.nav-menu { display: flex; flex-direction: column; gap: 2px; user-select: none; -webkit-user-select: none; width: 100%; }
+.nav-parent-group { display: flex; flex-direction: column; width: 100%; }
 
-/* 侧边栏菜单彻底禁用长按和文字选中 */
-.nav-item { 
-    padding: 12px 16px; border-radius: 8px; cursor: pointer; color: var(--color-text); 
-    font-size: 15px; font-weight: bold; transition: transform 0.1s ease, background 0.2s; 
-    user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+.nav-item.parent-toggle, .nav-item.flat-item { 
+    padding: 12px 14px; cursor: pointer; color: var(--color-text); 
+    font-size: 15px; font-weight: bold; transition: all 0.2s ease; 
+    display: flex; justify-content: space-between; align-items: center; width: 100%;
+    background: transparent; border-radius: 0;
 }
-.nav-item:hover { background: rgba(140, 124, 97, 0.1); }
-.nav-item.active { background: var(--color-active-bg); color: var(--color-link-btn); }
-.nav-item:active { transform: scale(0.96); }
+.nav-item.parent-toggle:hover, .nav-item.flat-item:hover { background: transparent; color: var(--color-link-btn); }
+.nav-item.parent-toggle::after { content: '▸'; font-size: 12px; color: #BCB9B1; transition: transform 0.2s; }
+.nav-parent-group.open .nav-item.parent-toggle::after { transform: rotate(90deg); color: var(--color-link-btn); }
+.nav-parent-group.open .nav-item.parent-toggle { color: var(--color-link-btn); }
 
-/* 私密空间手机端侧边栏菜单彻底沉底 + 321倒序排列 */
+.nav-item.flat-item.active { background: transparent; color: var(--color-link-btn); font-weight: 800; }
+
+.nav-sub-menu { 
+    display: none; flex-direction: column; gap: 2px; 
+    padding: 2px 0 6px 14px; width: 100%; 
+    background: transparent; 
+}
+.nav-parent-group.open .nav-sub-menu { display: flex; animation: fadeIn 0.15s ease; }
+
+.nav-sub-item { 
+    padding: 10px 14px; cursor: pointer; color: var(--color-text); 
+    font-size: 14px; opacity: 0.85; transition: all 0.2s ease; width: 100%;
+    font-weight: bold; background: transparent; border-radius: 0;
+}
+.nav-sub-item:hover { background: transparent; opacity: 1; color: var(--color-link-btn); }
+
+/* 完美的极简纯文字激活样式 */
+.nav-sub-item.active { 
+    background: transparent; 
+    color: var(--color-link-btn); 
+    font-weight: 800; 
+    opacity: 1; 
+}
+
 @media (max-width: 849px) {
-    body.mode-secret .sidebar {
-        padding-bottom: 24px; 
-    }
-    body.mode-secret .nav-menu {
-        margin-top: auto; 
-        display: flex;
-        flex-direction: column-reverse; 
-    }
+    body.mode-secret .sidebar { padding-bottom: 24px; }
+    body.mode-secret .nav-menu { margin-top: auto; display: flex; flex-direction: column-reverse; }
 }
 
 .layout-wrapper { display: block; padding: 66px 16px 80px; max-width: 1200px; margin: 0 auto; }
 .group-section { display: none; margin-bottom: 40px; } 
 .group-section.active { display: block; animation: fadeIn 0.3s ease; }
 
+/* 开启硬件加速提效主内容区 */
+.group-section.active .link-card { will-change: transform, opacity; }
+
 .group-header { position: sticky; top: 55px; background: var(--bg-main); z-index: 10; padding: 22px 0 10px 0; margin-top: 0; border-bottom: none; }
-.group-header h2 { font-size: 16px; margin: 0; font-weight: 800; }
+.group-header h2 { font-size: 16px; margin: 0; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+
+/* 全双端对齐：子分类标记颜色 */
+.group-header h2 .sub-title-mark { font-size: 14px; font-weight: normal; color: var(--color-link-btn); opacity: 0.9; margin-left: 4px; }
 
 .toggle-btn { display: none !important; } 
-.links-group { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 38px; }
+.links-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 38px; }
 
 
 /* =========================================================
-   布局 2：电脑端 
+   布局 2：电脑端精修版（经典 Google 胶囊组 + 锁死 7 列） 
    ========================================================= */
 @media (min-width: 850px) {
     .mobile-top-bar, .sidebar-overlay, .mobile-search-bar { display: none !important; }
     
     .layout-wrapper { display: flex; max-width: 1400px; margin: 0 auto; align-items: flex-start; padding: 0; }
     
+    /* 1. 左侧侧边栏高级骨架感 */
     .sidebar { 
-        position: sticky; top: 0; left: 0; transform: none; width: 220px; max-width: none; 
-        height: 100vh; bottom: auto;
-        overflow-y: auto; background: transparent; box-shadow: none; z-index: 1; 
-        border-right: 1px solid var(--color-border); padding: 30px 20px; box-sizing: border-box; 
-        display: block; overscroll-behavior-y: auto; 
+        position: sticky; top: 0; left: 0; transform: none; width: 240px; max-width: none; 
+        height: 100vh; bottom: auto; display: block; overscroll-behavior-y: auto; z-index: 1; 
+        padding: 40px 24px; box-sizing: border-box; background: transparent; box-shadow: none;
+        border-right: 1px solid var(--color-border-light); 
     }
     
     #pageTitle { user-select: none; cursor: default; font-weight: bold; }
+    .sidebar h1 { display: block; text-align: left; margin: 0 0 32px; font-size: 24px; }
     
-    .sidebar h1 { display: block; text-align: left; margin: 0 0 30px; font-size: 24px; }
     .sidebar .back-btn { display: block; margin: 0 0 30px 0; text-align: left; background: none; border: none; color: var(--color-link-btn); padding: 8px 16px; font-size: 14px; cursor: pointer; width: fit-content; border-radius: 4px; transition: transform 0.1s;}
     .sidebar .back-btn:hover { background: rgba(140, 124, 97, 0.1); text-decoration: underline; }
     .sidebar .back-btn:active { transform: scale(0.95); }
+
+    .nav-item.parent-toggle, .nav-item.flat-item, .nav-sub-item {
+        transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease, opacity 0.25s ease;
+    }
+
+    .main-content { flex: 1; padding: 40px 60px; min-width: 0; }
     
-    .nav-item { border-left: 3px solid transparent; font-weight: normal; border-radius: 4px;}
-    .nav-item.active { font-weight: bold; background: var(--color-active-bg); color: var(--color-link-btn); border-left: 3px solid var(--color-link-btn);}
-
-    .main-content { flex: 1; padding: 30px 50px; min-width: 0; }
-    .desktop-search-bar { display: flex !important; justify-content: center; align-items: center; gap: 6px; margin: 0 auto 40px; max-width: 600px; }
-    .desktop-search-bar select, .desktop-search-bar input, .desktop-search-bar button { height: 36px; padding: 0 10px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--bg-card); color: var(--color-text); font-size: 14px; transition: all 0.3s; }
-    .desktop-search-bar select, .desktop-search-bar button { flex-shrink: 0; }
-    .desktop-search-bar input { flex: 1; }
-    .desktop-search-bar input:focus, .desktop-search-bar select:focus { outline: none; border-color: var(--color-link-btn); }
-    .desktop-search-bar button { background: var(--color-text); color: var(--bg-main); font-weight: bold; cursor: pointer; border: none;}
-    .desktop-search-bar button:active { transform: scale(0.95); }
-
-    .group-header { position: relative; top: 0; padding: 0; border-bottom: none; margin-top: 0; background: transparent; margin-bottom: 12px; }
-    .group-header h2 { font-size: 16px; }
+    /* 💻 电脑端隐藏页卡片整体下移专用样式：预留顶部充足呼吸空间，防止布局顶头太高 */
+    body.secret .main-content { 
+        padding-top: 120px; 
+    }
     
-    .toggle-btn { display: inline-block !important; background: none; border: none; color: var(--color-link-btn); padding: 0 5px; font-size: 14px; cursor: pointer; }
-    .links-group { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); grid-auto-rows: 36px; }
+    /* 2. 经典 Google 胶囊组合 */
+    .desktop-search-bar { 
+        display: flex; justify-content: center; align-items: center; gap: 0; 
+        margin: 0 auto 48px; max-width: 660px; 
+        background: var(--bg-card); border: 1px solid var(--color-border);
+        border-radius: 24px; padding: 2px 6px; box-sizing: border-box;
+        box-shadow: 0 2px 10px rgba(52, 67, 58, 0.03); 
+        position: relative; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .desktop-search-bar:focus-within {
+        border-color: var(--color-link-btn);
+        box-shadow: 0 4px 16px rgba(140, 124, 97, 0.12);
+    }
+    
+    /* 去原生化定制下拉皮肤 */
+    .desktop-custom-select-trigger {
+        flex-shrink: 0; padding: 0 12px 0 20px; height: 38px;
+        display: flex; align-items: center; gap: 4px;
+        cursor: pointer; color: var(--color-link-btn); font-weight: bold; font-size: 14px;
+        user-select: none; -webkit-user-select: none;
+    }
+    .desktop-custom-select-trigger::after {
+        content: '▸'; font-size: 11px; color: #BCB9B1; display: inline-block;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .desktop-search-bar.pc-dropdown-open .desktop-custom-select-trigger::after {
+        transform: rotate(90deg);
+    }
 
-    /* 电脑端后台横向自适应铺满 */
+    /* 电脑端一体式气泡浮窗 */
+    .desktop-custom-dropdown-options {
+        position: absolute; top: 46px; left: 16px; width: 140px;
+        background: var(--bg-card); border: 1px solid var(--color-border);
+        border-radius: 12px; box-shadow: 0 6px 20px rgba(52, 67, 58, 0.1);
+        z-index: 1000; padding: 6px; display: none; flex-direction: column; gap: 3px;
+        animation: fadeIn 0.18s ease;
+        max-height: 280px; overflow-y: auto; /* 保证选项增多时能够优雅滚动且不爆框 */
+    }
+    .desktop-custom-dropdown-options div {
+        padding: 8px 12px; font-size: 14px; color: var(--color-text);
+        font-weight: bold; border-radius: 6px; cursor: pointer;
+        transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease;
+    }
+    .desktop-custom-dropdown-options div:hover {
+        background: rgba(140, 124, 97, 0.05);
+    }
+    .desktop-custom-dropdown-options div.active {
+        background: var(--color-active-bg);
+        color: var(--color-link-btn);
+    }
+
+    .desktop-search-bar input { 
+        flex: 1; height: 38px; border: none !important; background: transparent !important;
+        color: var(--color-text); font-size: 14px; padding: 0 16px; outline: none !important;
+    }
+    .desktop-search-bar button { 
+        flex-shrink: 0; height: 38px; border: none !important; background: transparent !important;
+        padding: 0 20px; font-weight: bold; cursor: pointer; color: var(--color-link-btn); font-size: 14px;
+    }
+    .desktop-search-bar button:hover { opacity: 0.8; }
+
+    /* 4. 灰阶文字杂志级层次视差 */
+    .group-header { position: relative; top: 0; padding: 0; border-bottom: none; margin-top: 0; background: transparent; margin-bottom: 16px; }
+    .group-header h2 { font-size: 16px; font-weight: 800; color: var(--color-text); letter-spacing: 0.5px;}
+    
+    /* 🛠️ 电脑端灰阶层次同步切换为复古金 */
+    .group-header h2 .sub-title-mark { font-size: 14px; font-weight: 500; color: var(--color-link-btn); margin-left: 6px; opacity: 0.9; }
+    
+    .toggle-btn { display: inline-block !important; background: none; border: none; color: var(--color-link-btn); padding: 0; font-size: 14px; cursor: pointer; }
+    
+    /* 中等屏幕自适应退防规格 */
+    .links-group { grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); grid-auto-rows: 36px; }
+
+    /* 电脑端复制按钮悬停滑出 */
+    .copy-btn { opacity: 0; transform: translateX(5px); pointer-events: none; transition: all 0.2s ease; }
+    .link-card:hover .copy-btn { opacity: 1; transform: translateX(0); pointer-events: auto; }
+
+    /* 后台全屏铺满适配 */
     .admin-box.editor-mode { max-width: 1000px !important; padding: 30px 40px !important; }
     .quick-add-card { flex-direction: row !important; align-items: center; padding: 16px 20px !important; gap: 16px !important;}
     .quick-add-card .flex-row { flex: 1; gap: 12px !important; }
@@ -165,35 +307,43 @@ body.secret #mobileAdminBtn { display: none !important; }
     .editor-header button { height: 42px !important; padding: 0 24px !important; }
 }
 
-@media (min-width: 1200px) { .links-group { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+/* 🛠️ 大显示器下，锁死为 7 列 */
+@media (min-width: 1200px) { 
+    .links-group { grid-template-columns: repeat(7, minmax(0, 1fr)); } 
+}
+
+/* 💻 电脑端隐藏页面：瞬间隐藏且停用任何缓动过渡，达到零毫秒瞬间关闭搜索栏的效果 */
+body.secret .desktop-search-bar {
+    display: none !important;
+    transition: none !important;
+}
 
 /* =========================================================
-   【精装版】开发者后台 Modal 样式
+   【统一皮肤】开发者配置 / 主题信封化解密弹窗 Modal 
    ========================================================= */
-.admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(52, 67, 58, 0.6); z-index: 2000; display: flex; justify-content: center; align-items: center; }
-.admin-box { background: var(--bg-main); padding: 24px 28px; border-radius: 12px; width: 90%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: all 0.3s ease; }
+.admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(52, 67, 58, 0.5); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+.admin-box { background: var(--bg-main); padding: 24px 28px; border-radius: 12px; width: 90%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: all 0.3s ease; border: 1px solid var(--color-border); }
 
-/* 密码变黑点类，防止浏览器自动弹密码框 */
 .mask-pwd { -webkit-text-security: disc; text-security: disc; }
 
-.admin-box h3 { margin: 0 0 18px; font-size: 18px; text-align: center; font-weight: bold; }
-.admin-box input, .admin-box select { width: 100%; height: 42px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--color-border); padding: 0 12px; font-size: 14px; background: var(--bg-card); color: var(--color-text); }
-.admin-box input:focus, .admin-box select:focus, #editorTextarea:focus { outline: none; border-color: var(--color-link-btn); }
+.admin-box h3 { margin: 0 0 18px; font-size: 16px; text-align: center; font-weight: 800; color: var(--color-text); }
+.admin-box input, .admin-box select { width: 100%; height: 42px; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--color-border); padding: 0 12px; font-size: 14px; background: var(--bg-card); color: var(--color-text); outline: none; }
+.admin-box input:focus, .admin-box select:focus, #editorTextarea:focus { border-color: var(--color-link-btn); }
 .admin-btn-group { display: flex; gap: 10px; margin-top: 10px; flex-shrink: 0; }
-.admin-btn-group button { flex: 1; height: 40px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: opacity 0.2s, transform 0.1s; }
+.admin-btn-group button { flex: 1; height: 40px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: opacity 0.2s, transform 0.1s; }
 .admin-btn-group button:hover { opacity: 0.9; }
 .admin-btn-group button:active { transform: scale(0.96); }
 .btn-primary { background: var(--color-text); color: var(--bg-main); }
 .btn-cancel { background: transparent; border: 1px solid var(--color-border) !important; color: var(--color-text); }
 .reset-link { display: block; text-align: center; margin-top: 16px; font-size: 12px; color: var(--color-link-btn); text-decoration: none; }
 
-/* 编辑器满屏及结构布局 */
+/* 编辑器布局 */
 .admin-box.editor-mode { max-width: 800px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 20px; }
 .editor-header { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
 .editor-header select { margin-bottom: 0; flex: 1; font-weight: bold; min-width: 150px; height: 42px; border-radius: 6px; border: 1px solid var(--color-border); }
 .editor-header button { height: 42px; padding: 0 16px; border-radius: 6px; }
 
-/* 智能快捷操作微型控制台 */
+/* 智能快捷添加控制台 */
 .quick-add-card { background: rgba(140, 124, 97, 0.05); border: 1px dashed var(--color-border); padding: 12px; border-radius: 6px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
 .quick-add-card .flex-row { display: flex; gap: 8px; }
 .quick-add-card input, .quick-add-card select { margin-bottom: 0; height: 38px; border-radius: 4px; font-size: 14px; flex: 1; min-width: 0; border: 1px solid var(--color-border); padding: 0 10px; background: var(--bg-card); }
@@ -206,7 +356,6 @@ body.secret #mobileAdminBtn { display: none !important; }
 #editorTextarea { flex: 1; width: 100%; min-height: 0; resize: none; border-radius: 6px; padding: 12px; border: 1px solid var(--color-border); font-family: monospace; font-size: 14px; background: var(--bg-card); color: var(--color-text); line-height: 1.5; margin-bottom: 0; }
 #editorStatus { font-size: 12px; text-align: center; margin-top: 10px; color: var(--color-link-btn); font-weight: bold; flex-shrink: 0;}
 
-/* 手机端强制全屏显示后台 */
 @media (max-width: 849px) {
     .admin-modal { padding: 0; }
     .admin-box.editor-mode { width: 100vw; height: 100dvh; max-height: 100dvh; max-width: 100vw; border-radius: 0; padding: 16px; padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); }
@@ -232,13 +381,18 @@ body.secret #mobileAdminBtn { display: none !important; }
     <aside class="sidebar" id="sidebar">
         <h1 id="pageTitle">我的主页</h1>
         <div class="mobile-search-bar" id="mobileSearchBar">
-            <select id="m_engine">
-                <option value="local">站内书签</option>
-                <option value="https://www.google.com/search?q=">Google</option>
-                <option value="https://www.baidu.com/s?wd=">百度</option>
-                <option value="https://www.bing.com/search?q=">Bing</option>
-            </select>
-            <input type="text" id="m_searchInput" placeholder="搜索网络..." autocomplete="off">
+            <div class="mobile-custom-select-trigger" id="m_selectTrigger" onclick="toggleMobileEngineDropdown(event)">站内书签 <i class="arrow-icon">▸</i></div>
+            <div class="mobile-custom-dropdown-options" id="m_selectOptions">
+                <div class="active" data-value="local" onclick="selectMobileEngine('local', '站内书签')">站内书签</div>
+                <div data-value="https://www.google.com/search?q=" onclick="selectMobileEngine('https://www.google.com/search?q=', 'Google')">Google</div>
+                <div data-value="https://www.baidu.com/s?wd=" onclick="selectMobileEngine('https://www.baidu.com/s?wd=', '百度')">百度</div>
+                <div data-value="https://www.bing.com/search?q=" onclick="selectMobileEngine('https://www.bing.com/search?q=', 'Bing')">Bing</div>
+                <div data-value="https://duckduckgo.com/?q=" onclick="selectMobileEngine('https://duckduckgo.com/?q=', 'DuckDuckGo')">DuckDuckGo</div>
+                <div data-value="https://yandex.com/search/?text=" onclick="selectMobileEngine('https://yandex.com/search/?text=', 'Yandex')">Yandex</div>
+                <div data-value="https://search.brave.com/search?q=" onclick="selectMobileEngine('https://search.brave.com/search?q=', 'Brave')">Brave</div>
+            </div>
+            
+            <input type="text" id="m_searchInput" placeholder="搜索站内书签..." autocomplete="off" oninput="debounceFilter(this.value)">
             <button id="m_searchButton">搜索</button>
         </div>
         <nav class="nav-menu" id="navMenu"></nav>
@@ -246,13 +400,18 @@ body.secret #mobileAdminBtn { display: none !important; }
 
     <main class="main-content">
         <div class="desktop-search-bar" id="searchBar">
-            <select id="engine">
-                <option value="local">站内书签</option>
-                <option value="https://www.google.com/search?q=">Google</option>
-                <option value="https://www.baidu.com/s?wd=">百度</option>
-                <option value="https://www.bing.com/search?q=">Bing</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="搜索..." autocomplete="off">
+            <div class="desktop-custom-select-trigger" id="pc_selectTrigger" onclick="toggleDesktopEngineDropdown(event)">站内书签</div>
+            <div class="desktop-custom-dropdown-options" id="pc_selectOptions">
+                <div class="active" data-value="local" onclick="selectDesktopEngine('local', '站内书签')">站内书签</div>
+                <div data-value="https://www.google.com/search?q=" onclick="selectDesktopEngine('https://www.google.com/search?q=', 'Google')">Google</div>
+                <div data-value="https://www.baidu.com/s?wd=" onclick="selectDesktopEngine('https://www.baidu.com/s?wd=', '百度')">百度</div>
+                <div data-value="https://www.bing.com/search?q=" onclick="selectDesktopEngine('https://www.bing.com/search?q=', 'Bing')">Bing</div>
+                <div data-value="https://duckduckgo.com/?q=" onclick="selectDesktopEngine('https://duckduckgo.com/?q=', 'DuckDuckGo')">DuckDuckGo</div>
+                <div data-value="https://yandex.com/search/?text=" onclick="selectDesktopEngine('https://yandex.com/search/?text=', 'Yandex')">Yandex</div>
+                <div data-value="https://search.brave.com/search?q=" onclick="selectDesktopEngine('https://search.brave.com/search?q=', 'Brave')">Brave</div>
+            </div>
+            
+            <input type="text" id="searchInput" placeholder="搜索站内书签..." autocomplete="off" oninput="debounceFilter(this.value)">
             <button id="searchButton">搜索</button>
         </div>
         <div id="links"></div>
@@ -263,8 +422,17 @@ body.secret #mobileAdminBtn { display: none !important; }
 
 <div id="adminModal" class="admin-modal" style="display:none;">
     <div class="admin-box" id="adminBox">
+        <div id="customPromptView" style="display:none;">
+            <h3 id="customPromptTitle">🔑 身份验证</h3>
+            <input type="text" id="customPromptInput" class="mask-pwd" placeholder="密码" autocomplete="off">
+            <div class="admin-btn-group">
+                <button class="btn-cancel" onclick="closeCustomPrompt(false)">取消</button>
+                <button class="btn-primary" onclick="closeCustomPrompt(true)">确定</button>
+            </div>
+        </div>
+
         <div id="adminSetupView" style="display:none;">
-            <h3>🛠️ 初始仓库配置</h3>
+            <h3>初始仓库配置</h3>
             <input type="text" id="setupPwd" class="mask-pwd" placeholder="设置一个后台短密码" autocomplete="off">
             <input type="text" id="setupUser" placeholder="GitHub 用户名" autocomplete="off">
             <input type="text" id="setupRepo" placeholder="仓库名" autocomplete="off">
@@ -314,616 +482,30 @@ body.secret #mobileAdminBtn { display: none !important; }
     </div>
 </div>
 
-
-
 <script id="markdown-main" type="text/plain">
 ## 门户网站
 - [联合早报](https://www.zaobao.com/)
 - [环球网](https://www.huanqiu.com/)
-- [澎湃新闻](https://www.thepaper.cn/)
-- [36氪](https://36kr.com/)
-- [理想生活实验室](https://www.toodaylab.com/)
-- [晚点](https://www.latepost.com/site/index)
-- [爱范儿](https://www.ifanr.com/)
-- [动点科技](https://cn.technode.com/)
-- [品玩](https://www.pingwest.com/)
-- [虎嗅网](https://www.huxiu.com/)
-- [少数派](https://sspai.com/)
-- [极客公园](https://www.geekpark.net/)
-- [界面新闻](https://www.jiemian.com/)
-- [Readhub](https://readhub.cn/)
-- [数英网](https://www.digitaling.com/)
-- [澎湃社](https://www.buzzing.cc/)
 
-##影视资源
-- [NO视频](https://findno.tv/) 
-- [LIBVIO](https://www.libvio.app) 
-- [4k影视](https://4kvm.site)  
-- [热播之家](https://rebozj.vip/)
-- [注视影视](https://gaze.host/)
-- [厂长资源](https://www.cz01.vip/)
-- [嘀嗒影视](https://www.didahd.pro/)
-- [电影人生](https://www.dyrshd.com/)
-- [飞流视频](https://www.flixflop.com/)
-- [kimivod](https://kimivod.sodanav.com/)
-- [雪落影视](https://xlys.me)
-- [HDmoli](https://HDmo.li/)    
-- [B站](https://www.bilibili.com/)
-- [TVB云播](http://www.hktvyb.cc/)
-- [GoFilm](https://m.mubai.link/index)
-- [麦田影视](https://www.mtyy5.com/)    
-- [电影天堂资源](http://dyttzyw.tv/)     
-- [N奈飞工厂](https://www.netflixgc.com)     
-- [网飞猫](https://www.ncat21.com)  
-- [皮皮蛋影视](https://cddys1.me)  
-- [蛋蛋兔](https://www.dandantu.vip/)    
-- [百思派影视网](https://www.bestpipe.cn)  
-- [vidhub](https://121310.xyz)  
-- [爱一帆](https://www.iyf.lv)  
-- [8号影院](http://www.bahaotv.com)
-- [inmi](https://www.inmi.app/)
-- [粤正影视](https://m.939394.xyz/)
-- [港剧屋](http://m.gangju5.cc/)
-- [爱看港剧](https://www.hkgjw.com/)
-- [港剧发烧友](https://www.gjfsy.com/)    
-- [共青春](https://ting.cool/)
-- [Free OK](https://link3.cc/freeok)
-- [dramas线上看](https://dramasq.com.tr/)
-- [毒舌电影](https://dl.dushe03.com/?ref=juzyw.com)
-- [豌豆pro](https://www.wdoo.net/)  
-- [简单tv](https://jiandantv.com)  
-- [影猫仓库](https://ymck.pro/)  
-- [寻找最佳类似电影](https://leisidianying.com/)
-- [A控屋](https://akongwu.com/)  
-- [站长资源](https://www.zzzypro.com/)  
-- [飞快TV](https://feikuai.tv/)
-- [兄弟影视](https://xdys.vip/)    
-- [爱看机器人](https://v.ikanbot.com) 
-- [粤爱看](https://www.yueak.top/)    
-- [求职信](https://h5v1.cibnabg.com) 
-- [低端影视1](https://ddys.io/)  
-- [低端影视2](https://www.ddys.diy/)      
-- [QuickVod](https://www.quickvod.vip/)  
-- [袋鼠影视](https://dsdytv.com/) 
-- [visiontv](https://www.visiontv.club/) 
-- [美剧窝](https://www.1mj.cc/) 
-- [123tv](https://a123tv.com/) 
-- [达达影漫](https://www.dddym.com/) 
-- [247看](https://247kan.com/app) 
-- [Lai影院](https://www.laisd.com/) 
-- [开心影院](https://www.kxyytv.com/) 
-- [粤漫之家](https://www.ymvid.com/) 
-- [粤语屋](https://yueyuwu.top/) 
-- [白嫖者联盟](https://198mv.com/) 
-- [五五短剧](https://www.duanju55.com/) 
-- [独播库](https://www.dbku.tv/) 
-- [大米影视](https://www.dmysw.cc/)
-- [天空影视](https://skyysw.com/)
-- [耐看点播](https://www.nkdvd.vip/)
-- [太乙影视](https://taiee.pages.dev/)
-- [七味网](https://www.qn63.com/)
-- [Auete影视](https://auete.pro/)
-- [乐兔影视](https://www.letu.me/)
-- [蓝光影院](https://www.touhaos.cc/)
-- [Moovie](https://moovie.c2v2.com/)
-- [喵TV](https://miaotv.net/)
-- [农民影视](https://www.nmdvd.top/)
-- [PPnix](https://www.ppnix.com/cn/)
-
-## AI
-- [AI研究所](https://www.aiyjs.com/)  
-- [AI工具集](https://ai-bot.cn/)      
-- [halotool](https://halotool.com/)    
-- [AI NavHub](https://ainavhub.com/cn)   
-- [ai工具导航](https://promptchoose.com/)         
-- [TOOLIFY](https://www.toolify.ai/zh/) 
-- [Hugging Face](https://huggingface.co/)     
-- [攻壳智能体](https://gongke.net/) 
-- [GPT DEMO](https://www.gptdemo.net/) 
-- [TryAii](https://tryaii.com) 
-- [AI邮报](https://www.aiposthub.com/)  
-- [AI今日热榜](https://aihot.today)  
-- [copilot](https://copilot.microsoft.com/)  
-- [GPT](https://chatgpt.com)  
-- [Deepseek](https://www.deepseek.com)  
-- [LMArena](https://arena.ai/zh)  
-- [MossAI](https://mossai.org/cn)  
-- [通往AGI之路](https://www.waytoagi.com/zh)     
-- [Perplexity](https://www.perplexity.ai/)  
-- [AI产品创造101](https://fancyteams.bonjour.bio/)  
-- [ai分享圈](https://aisharenet.com/)  
-- [aibase基地](https://www.aibase.com/zh) 
-- [aitop10](https://aitop10.tools/zh) 
-- [AIDirs](https://aidirs.org/) 
-- [Tap4 AI](https://tap4.ai/cn/) 
-- [ailibri](https://ailibri.com/) 
-- [人工智能网](https://navs.site/) 
-- [新工具](https://newtool.site/) 
-- [酷特喵](https://www.kutmd.com/)  
-- [HuntScreens](https://huntscreens.com/zh) 
-- [产品分享社区](https://www.partnershare.cn/)  
-- [AI星球](https://www.aixq.cc/)
-- [Latent Box](https://latentbox.com/zh/awesome-ai-products?ref=a.cool)
-- [SeekTool.AI](https://seektool.ai/cn)
-- [DiffMind](https://www.diffmind.ai/)
-- [AIbase](https://top.aibase.com/)
-- [ai日报](https://hex2077.dev/)
-
-## 资源发现
-- [applnn](https://www.applnn.com)  
-- [ababtools](https://ababtools.com/)
-- [软件库](https://www.ligonggong.com/)
-- [资源帝](https://ziyuandi.cn/)    
-- [那些免费的砖](https://www.thosefree.com/)
-- [有趣网址之家](https://youquhome.com/) 
-- [合集网](https://233heji.com/)  
-- [app喵](https://www.appmiu.com/)  
-- [HSL](https://haoshangle.com/) 
-- [新趣集](https://xinquji.com/) 
-- [科技师](https://www.3kjs.com/)
-- [小众软件](https://www.appinn.com/)
-- [PPbuzz](https://ppbuzz.com/) 
-- [只读](https://www.rdonly.com/) 
-- [如有乐享](https://51.ruyo.net) 
-- [酷库博客](https://www.zxki.cn/) 
-- [ZAPRO](https://tmioe.com/)
-- [北城分享社](https://www.bccfxs.com/)
-- [FMHY](https://fmhy.pages.dev/)
-- [文武科技柜](https://www.wangdu.site/)
-- [好网站不私藏](https://www.207788.xyz/)
-- [挖互联网](https://tigg.cc/)
-- [小昇](https://xiaoyi.vc/)
-- [Product Hunt](https://www.producthunt.com)   
-- [Single-Serving Sites](https://singleservingsites.cool) 
-- [小木屋](https://wechalet.cn/)
-- [橘子资源](https://www.juzia.cn/)
-- [咖喱君的资源](https://link3.cc/galijun)
-- [颜资源](https://yanziyuan.xyz/)
-- [发现更多的网站](https://personalwebsites.org/)
-- [夜雨聆风](https://www.yeyulingfeng.com/)
-- [TG资源分享网](https://www.fuliziyuan.top/?m=1)
-- [水木资源](https://shuimu123.com/)
-
-## 周刊分享博客
-- [软鸭资源库](https://ruanyazyk.com)
-- [哎哟不错](https://aiyoubucuo.com/)  
-- [不死鸟](https://iui.su/)  
-- [小棉袄的百味人生](https://haikuoshijie.cn/)  
-- [二丫讲梵](https://wiki.eryajf.net) 
-- [潮流周刊](https://weekly.tw93.fun) 
-- [DecoHack](https://decohack.com/) 
-- [龙爪槐守望者](https://www.ftium4.com/)
-- [月球背面](https://moonvy.com/blog/)
-- [阮一峰的网络日志](http://www.ruanyifeng.com/?ref=n.mumingfang.com)
-- [BMPI](https://www.bmpi.dev/)
-
-## 网盘资源
-- [海搜](https://haisou.cc/) 
-- [网盘资源避难所](https://suenen.com/) 
-- [盘基地资源论坛](https://dizhi.123156.xyz/)
-- [资源共享站](https://www.kitgrove.site/)
-
-## 软件
-- [423down](https://www.423down.com/)
-- [殁漂遥](https://www.mpyit.com/)
-- [开源软件站](https://www.openapk.net/zh/) 
-- [易破解](https://www.ypojie.com/)
-- [MEFCL](https://www.mefcl.com/)
-- [QiuQuan's Blog](http://www.qiuquan.cc/)  
-- [分享迷](https://www.fenxm.com/)
-- [工具集](https://gongjuji.org/)
-- [Puresys](https://www.puresys.net/)
-- [真下载](https://www.zhenxz.com/)
-- [爱纯净博客](https://www.aichunjing.cn/) 
-- [轻狂志唯一](https://www.flighty.cn) 
-- [软盘](https://123.isharepc.com/)
-- [佛系软件](https://foxirj.com/)
-- [大眼仔旭](https://www.dayanzai.me/)  
-- [AlternativeTo](https://alternativeto.net/) 
-- [异次元软件世界](https://www.iplaysoft.com) 
-- [懒得勤快](https://masuit.net/) 
-- [行书指南](https://xszn.org/)
-- [逆光开源](https://www.lgboxs.com/)
-- [softpedia软件](https://www.softpedia.com) 
-- [APP热](https://apphot.cc/27447.html) 
-- [个人笔记](https://www.8uid.com/)
-- [技术巢](https://js.vmccc.com/)
-- [黑域基地](https://www.hybase.com/)
-- [谷歌浏览器](https://www.iplaysoft.com/tools/chrome/)
-- [方舟下载](https://www.fzxz.com/)
-
-## 投资金融
-- [投资导航](http://value500.com)  
-- [雪球导航](https://xueqiu.com/dh)
-- [投资干货](https://news.futunn.com/news-topics/127/investment-practical-information-collection)
-- [投资界](https://m.pedaily.cn)  
-- [发现报告](https://www.fxbaogao.com/)      
-- [有为财经](https://upsort.com/)
-- [股票热力图](https://map.wenyuanw.me/)
-
-## GitHub
-- [HelloGitHub](https://hellogithub.com)
-- [Zread](https://zread.ai)
-- [Gitcode](https://gitcode.com)
-- [trendingrepos](https://trendingrepos.glup3.dev/?time=daily)
-- [Deepwiki](https://deepwiki.com)
-- [Openlsle](https://www.open-isle.com) 
-- [GitHub Star Tracker](https://www.1kgithub.com) 
-- [Open Source Daily](https://opensourcedaily.blog) 
-- [rising repo](https://yanggggjie.github.io/rising-repo/) 
-- [中国独立开发者项目](https://github.com/1c7/chinese-independent-developer)
-
-## 综合导航
-- [喜欢书签](https://www.likebookmark.com)  
-- [神秘的热心网友](https://imyshare.com)  
-- [noise 导航](https://www.noisedh.link)  
-- [Tbox导航](https://www.tboxn.com/) 
-- [jay资源库](https://www.lovejay.top)  
-- [酷啦鱼](https://www.kulayu.com/)  
-- [图欧学习导航](https://tuostudy.upnb.top)  
-- [叛逆草导航](https://www.pncao.com)   
-- [考拉新媒体导航](https://www.kaolamedia.com) 
-- [爱达杂货铺](https://adzhp.xyz)  
-- [宝站](https://bao.ink)  
-- [阿威导航](https://rjawei.vip)  
-- [开源精选](https://www.ossnav.com)  
-- [网址之家](https://www.urlzj.com)  
-- [下次一定](https://www.iiice.cn)  
-- [小众技术](https://www.xiaozhongjishu.com)  
-- [i8k影视导航](https://i8k.tv/)  
-- [新媒体导航](https://nav.newrank.cn)  
-- [cooltool](https://cooltools.top)  
-- [芙蓉导航 国外新闻资讯](https://www.navs.cc)  
-- [标题系网址](https://nav.cnxiaobai.com)  
-- [霂明导航](https://n.mumingfang.com)  
-- [阿酷导航](https://www.a.cool)  
-- [爱寻迷](https://www.aixunni.com)  
-- [剪映迷](https://nav.jianjimi.cn)
-- [影视森林](https://www.tvtv.cc/)  
-- [可乐影视](https://klyingshi.top/)  
-- [影视收藏夹](https://a.ysscj.site/)  
-- [好狗导航](https://www.howgo.cc/watch)  
-- [硬核影视](https://yinghezhinan.com/)  
-- [蛋蛋影视](https://cddys.com/)  
-- [电影导航](https://www.f7s.net/)  
-- [影视宝藏导航](https://tv.baozangdh.com/)  
-- [磁力天堂](https://cilitiantang.co/)  
-- [4a影视导航](https://www.4abyte.com/)  
-- [影剧搜](https://link3.cc/bababa888#=klyingshi1.com)  
-- [来不及等待](https://tgdriver.com/)
-- [影视采集站](https://www.zzzypro.com/)
-- [思菲影视](https://www.sfeii.com/)
-- [蜗牛个人导航](https://s.eallion.com/)
-- [快嘴科技](https://kkzui.com/)
-- [挂梯子](https://guatizi.com)
-- [Clash](https://www.clash.la/)
-- [MJJ导盲犬](https://www.idcquery.com/)    
-- [Yiove](https://www.yiove.com/)
-- [福利吧](https://fuliba123.com/)
-- [新电影导航](https://www.xdy.me/)
-- [白漂](https://baipiao.top/)
-- [资源分享网](https://www.ziyuan.tv/)      
-- [二叔导航](https://2sdh.com/) 
-- [自媒体家园](https://www.zmthome.com/)
-- [一个框导航](https://yigekuang.cn/)
-- [懂窝](https://www.ddddwo.com/)
-- [星书导航](https://www.star8.cn/)
-- [无峰导航](https://www.8kmm.com/)
-- [终极导航](https://www.zjnav.cc/)
-- [egouz](https://www.egouz.com)
-- [媒帮派导航](https://123.meibp.com/)    
-- [公子墨](https://xydh.fun/%E5%85%AC%E5%AD%90%E5%A2%A8)      
-- [集知盒子](https://www.jizhihezi.com/)  
-- [开发者导航](https://codernav.com/)
-- [小众技术工具库](https://www.xiaozhongjishu.com/)
-- [柒夜导航](https://nav.qinight.com/)
-- [国际站常用](https://daohang.zzhvip.cn/)
-- [一糖导航](https://iitang.com/)
-- [星云导航](https://www.xygalaxy.com/)
-- [导航蟹](https://daohangxie.com/)
-- [爱思链池](https://www.a4lc.com/)
-- [小帅同学](https://xydh.fun/gmengshuai)
-- [玲珑导航](https://open-navigation.blendviewer.com/?mode=dark)
-- [TGNAV](https://tgnav.github.io/group/)
-- [188导航](https://www.188dh.cn)
-- [全网导航](https://www.webnav.net/)
-- [安逸导航](https://anee.cc/)
-- [观影导航](https://www.guannav.com/)
-- [聚收集导航网](https://sjsdhw.com/)
-- [秋水网](https://www.qiushui.vip/)
-- [迷鹿导航](https://www.plnav.com/)
-- [学生优惠汇](https://nav.edumails.cn/)
-- [维度导航](https://www.weidus.com/)    
-- [发现之门](https://faxianx.com/) 
-- [资源网](https://heeee.com/)
-- [自动秒录](https://www.wxhao.cn/)
-- [奇心导航](https://nav.qixinpro.com/)
-- [墨鱼手记](https://ddgksf2013.top/)
-- [i For AI](https://iforai.com/)
-- [PanHunt](https://panhunt.com/)
-
-## 书籍
-- [电子书导航](https://shu.baozangdh.com/)  
-- [阅读指南Readzn](https://readzn.com/)  
-- [数字素养网](https://szsyw.cn/book)  
-- [ywebook](https://ywebook.com/)  
-- [熊猫搜书](https://xmsoushu.com/#/)  
-- [z-library](https://zh.z-library.sk/)  
-- [苦瓜书盘](http://www.kgbook.com/)  
-- [安娜的档案](https://annas-archive.gl/)  
-- [mobi图书网](http://mobitushu.com/)  
-- [恩京书房](https://www.enjing.net/)  
-- [读书派](https://www.dushupai.com/)  
-- [偶书](https://obook.cc/)  
-- [小力盘](https://www.xiaolipan.com/index.html)  
-- [24h搜书](https://24hsoushu.ggonav.com/)  
-- [sobook](https://sobooks.cc/)  
-- [雅书](https://yabook.blog/)  
-- [宝阳阅读网](https://www.mq59.com/)  
-- [图书库图书库](https://www.tbookk.com/)  
-- [飞库文学](https://www.feiku6.com/index.html)
-- [SaltyLeo的书架](https://tstrs.me/)
-- [书葵网](https://www.shukui.net/)
-- [一单书](https://yidanshu.com/)    
-- [多读书，读好书](https://http561856124.wordpress.com/)
-- [慧眼看](https://www.huiyankan.com)
-- [鹿鸣川](https://lunarora.com/)
-- [WELIB](http://welib.org/)
-- [予尔书](https://www.ershu.top/)
-- [推书阁](http://www.tuishuge.com/)
-- [电子书之家](https://honeypdf.com/index.html)
-- [nmod](https://www.nmod.net/)
-- [文渊阁](https://wenyuange.org/)
-- [汇书网](https://www.huibooks.com/)
-
-## 电视盒子
-- [聚玩盒子](https://www.juwanhezi.com/)  
-- [盒子派](https://www.hezipie.com/)  
-- [优质电视盒子应用分享](https://app.iyouhun.com/)  
-- [强大的iptv直播源](https://iptv.hacks.tools/)  
-- [影用仓库](https://www.wmdz.com/)  
-- [APTV直播源](http://profile.aptvapp.com/)  
-- [7080影视搜](https://7080.wang/)  
-- [IPTV 直播源](https://github.com/yuanzl77/IPTV)
-- [IPTVKK云视界](https://www.iptvkk.com/)
-- [淘IPTV](https://taoiptv.com/)
-- [小盒子工具箱](https://xhztv.pro/)
-- [zdns电视软件](https://www.znds.com)   
-- [IPTVindex](https://iptvindex.com/)  
-- [饭太硬](https://www.xn--sss604efuw.com/)
-- [免费电视节目表](https://epg.pw/index.html?lang=zh-hant)
-- [黑猫影视](https://www.heimao.app/)
-- [iptv](https://live.zhi35.com/)
-- [裤佬书签收藏](https://down.nigx.cn/jsnzkpg.github.io/)
-- [影视仓接口](https://api.starlink.fan/)
-- [荐片官网](https://jianpian23.com/#/home)
-- [影视仓接口](https://api.starlink.fan/index.php)
-
-## 生活健康
-- [原研药目录](https://medicine.lvwzhen.com/)  
-- [WIKIHOW](https://zh.wikihow.com/%E9%A6%96%E9%A1%B5)  
-- [城市租房生存指南](https://zufang.ababtools.com/)  
-- [鸭小组](https://yaxiaozu.ababtools.com/)  
-- [家庭药房](https://apothecary.tips/zh)  
-- [医保政策导航](https://yibao.233h.com/)  
-- [家庭妙招](https://comeworlds.com/)  
-- [ai就诊问问](https://ask.nocode.com/)  
-- [情感](https://www.lovepanky.com/)  
-- [ifxit免费修理手册](https://zh.ifixit.com/)  
-- [心理学网站导航](https://kuakua.app/zh-CN/explore)  
-- [健康前线](https://www.healthline.com/)  
-- [练习](https://www.lianjingshu.com)  
-- [俱乐部](https://sexpositions.club/)     
-- [性教育网](https://xingjiaoyu.com)      
-- [默沙东诊疗手册](https://www.msdmanuals.cn/)  
-- [乡间郎中](https://www.xjlz365.com/)  
-- [中国医药信息查询平台](https://m.dayi.org.cn/)
-- [Wonder How To](https://www.wonderhowto.com)
-- [Brain.fm](https://www.brain.fm)
-- [Health](https://www.health.com)  
-- [喜欢浪漫](https://likeromance.com)  
-- [急救指南](https://m.youlai.cn/jijiu)  
-- [Kuakua夸夸](https://kuakua.app/zh-Hans)      
-- [FreeMind](https://freemind.fit/)     
-
-## 系统
-- [风林火山](http://www.zrkj.net/)
-- [不忘初心](https://www.pc528.net/)
-- [青苹果家园](http://www.pggho.com/)
-- [远航技术](http://www.far123.com)
-- [格子家园](http://www.gzoso.com)
-- [深度系统](http://www.deepinghost.com)
-- [pcos技术精品](https://www.pcosw.com)
-- [宋永志博客](http://www.songyongzhi.com/)
-
-## 无分类
-- [电报值得看](https://dbzdk.com/)    
-- [在线转盘](https://wheelpage.com/zh/) 
-- [工具帮](https://cn.piliapp.com/)    
-- [行为同意书](https://001.123408.xyz/) 
-- [天涯](https://tianya.im) 
-- [虫部落](https://www.chongbuluo.com/) 
-- [MD转卡片](https://simple.md2card.cc/) 
-- [OSCHINA](https://www.oschina.net/) 
-- [AUTODESK](https://www.instructables.com) 
-- [极客洞察](https://newshacker.me)  
-- [论坛整理网站](https://www.forumdirectory.com)  
-- [书签地球](https://www.bookmarkearth.cn)  
-- [老爸建站](https://blog.naibabiji.com)  
-- [Failory](https://www.failory.com)  
-- [Zapier MCP](https://zapier.com/mcp) 
-- [Classcentral](https://www.classcentral.com) 
-- [灵感电波](https://www.linggandianbo.com) 
-- [外国资讯](https://immersivetranslate.com/docs/sites/) 
-- [酷站](https://ruby-china.org/sites) 
-- [前瞻网](https://xw.qianzhan.com) 
-- [登链社区](https://www.learnblockchain.cn/) 
-- [fn精选](https://foresightnews.pro)
-- [超链接](https://href.host)
-- [外国博客平台](https://medium.com) 
-- [Fagan Finder](https://www.faganfinder.com) 搜索引擎合集
-- [BrowseBase](https://browsebase.pages.dev)
-- [linux.do](https://linux.do)
-- [独立开发出海工具箱](https://indiehackertools.net)
-- [figma配色](https://www.figma.com/colors/)
-- [DeepSoga](https://www.deepsoga.com/)
-- [DownloadHD](https://downloadhd.net/)
-- [cutcut](https://cutcut.top/)
-- [通用媒体下载器](https://downloader.bhwa233.com/zh)
-- [GreenVideo 视频下载](https://greenvideo.cc/)
-- [在线视频压缩](https://videocompressors.com/zh)
-- [App Stacks](https://appstacks.club/)
-- [Appteka](https://appteka.store/)
-- [花百科](https://www.huabaike.com/)
-- [morerss](https://morerss.com/zh)   
-- [crx搜搜](https://www.crxsoso.com/)   
-- [BetaList](https://betalist.com/)   
-- [DEV 社区](https://dev.to/)   
-- [IPIP0](https://ipip0.net/)
-- [Ping0](https://ping0.cc/)
-- [youtube下载](https://app.ytdown.to/en16/)
-- [YTD.APP](https://ytd.app/zh-CN)
-- [tg下载器](https://tg-video-downloader.net/cn) 
-- [tg視頻下載](https://telegrabber.com/zh) 
-- [Bestfolios](https://www.bestfolios.com/home)
-- [nthlink](https://www.nthlink.com/)
+## 带有子目的分类
+### 科技资讯
+- [TechCrunch](https://techcrunch.com/)
+- [IT之家](https://www.ithome.com/)
+### 线上开发
+- [GitHub](https://github.com/)
+- [V2EX](https://v2ex.com/)
 </script>
 
 <script id="markdown-secret" type="text/plain">
-## 成人导航
+## 资源导航
+### 常用综合
 - [国际导航](https://theporndude.com/ja)  
 - [文尼导航](https://biglist.xyz/)  
-- [大全导航](https://whichav.video)  
-- [17321导航](https://17321.xyz)  
-- [三多媒体](https://3dmt.xyz/)  
-- [91导航](https://c7c.kfrbhdf.xyz/)
-- [网站大全](https://qingse.one/)
-- [娇色导航](https://jiao.se/)
-- [色p计划](https://spplan.pages.dev/)
-- [酮体的秘密](https://www.dongti.me/)
-- [导航](https://dagesite.com/cn/)
-- [pornlinks](https://zh-cn.thepornlinks.com/)
-- [翻墙撸](https://www.fanqianglu.com/)
-- [第一福利导航](https://onefuli.cc/)
-- [集芳云](https://jifangge.cc/)
-- [花心吧](https://huaxinba.com/)
-- [色界吧](https://sejie80.com/)
-- [老黄吧](https://laohuangba.com/)
-- [pornlinks](https://zh-cn.thepornlinks.com/)    
-- [thepornmap](https://thepornmap.com/zh-CN/)    
-- [141JJ](https://141jj.com/)
-- [52导航](https://28e.ifdnzuuo.cc/)
-
-## 论坛
-- [草榴社区](https://www.t66y.com/)
-- [色中色](http://sexinsex.net/)
-- [1024社区](https://10018.c6027bk.cc/pw/)
-- [福利吧](https://fuliba2023.net/)
-
-## 成人网站
-- [Pornhub](https://www.pornhub.com/)  
-- [XVIDEOS](https://www.xvideos.com/)  
-- [XNXX](https://www.xnxx.com/)  
-- [Xhamster](https://zh.xhamster.com/)  
-- [Thumbzilla](https://www.thumbzilla.com/)
-- [Eporner](https://www.eporner.com/)  
-- [Noodlemagazine](https://noodlemagazine.com/new-video)  
-- [Beeg](https://beeg.com/)
-- [YOUPORN](https://www.youporn.com/)
-- [REDTUBE](https://www.redtube.com/)
-- [Tube8](https://www.tube8.com/)
-- [sharesome](https://sharesome.com)
-- [xflow](https://www.xxxfollow.com)  
-- [fapeza](https://fapeza.com/)     
-- [Pornbaker](https://pornbaker.com/)   
-
-## 日本
-- [Missav360](https://missav.ai/dm221/ja)
-- [Avx 360](https://avx16.com/cn)
-- [AV55 360](https://av55.com/cn) 
-- [supjav360](https://seboby.com/zh) 
-- [MissAVt](https://missavt.com/)
-- [Jable](https://jable.tv/)
-- [Avtoday](https://avtoday.io/index) 
-- [Javsb](https://jav.sb/)
-- [鉴黄](https://www.javrate.com/)
-- [hello av](https://www.helloavgirls.com/)  
-- [Jav777](https://www.jav777.xyz/) 
-- [91jav](https://91jav7.com/)
-- [JavTREE](https://javtree.com/) 
-- [Javxx360](https://javxx.com/cn) 
-- [AVTOP10 360](https://avtop10.com/)
-- [kissav](https://kissav.me/)
-- [NOWAV](https://nowav.tv/)
-- [24av](https://24av.net/zh)
-- [7mmtv](https://7mmtv.sx/zh/)
-- [AVhub](https://avhuba16.com/)
-- [whosTV](https://whos.tv/)
-
-
-## 国产
-- [笔盒](https://bh62609.vip/)
-- [四虎](https://4h.tv/)
-- [熊猫影视](https://91xm.tv/)
-- [黑料网](https://hlwn20.com/)
-- [黄色仓库](http://143ck.cc/)
-- [好色TV](https://chair.ffymijog.com)
-- [91porn](https://91porna.com)  
-- [肉视频](https://rou.pub/dizhi)  
-- [91porn](https://www.91porn.com)  
-- [ptt.co](https://ptt.co/)
-- [KKAV](https://www.22mmvv.com/home.htm)
-- [porntv](https://porntv35.com/)
-- [91吃瓜网](https://www.91cg1.com/)
-- [玩物社区](https://wanwuu.pages.dev/)
-- [探花AV](https://tanhuaav.com/)
-- [去色TV](https://qsetv.cc/)
-- [500im](https://500.im/xvxn/)
 </script>
 
 <script id="markdown-private" type="text/plain">
-## 工具/发现
+## 工具发现
 - [偷懒工具](https://toolight.cn/)  
-- [DocHub 分享优质文档](https://www.dochub.wiki/)  
-- [虫部落](https://www.chongbuluo.com)  
-- [奇趣网站](https://qiqu.dreamthere.cn/)  
-- [有意思的小周刊](https://www.fengxiaoqiang.com/yys/)  
-- [酷口家数字花园](https://weqoocu.com/)  
-- [发现有趣的东西](https://iui.su/3093/)  
-- [比格张](https://bigezhang.com/)  
-- [1000UserGuide](https://1000userguide.com/#/)  
-- [indie-hackers-guide](https://indie-hackers-guide.pages.dev/#/) 
-- [Solo4A](https://www.solo4a.com/)
-- [VPS大玩家](https://www.vpsdawanjia.com/)
-- [AlternativeTo](https://alternativeto.net) 
-- [onehack](https://onehack.us/)  羊毛线报资源    
-- [HackerNews 中文版](https://hn.aimaker.dev) 
-- [机场资源](https://yydsmc.com/)
-
-## 知识文档
-- [梁靠谱](https://ar16e47fvw.feishu.cn/docx/HQChdmaxroqAzvxhP0icUXGhnug)  
-- [生财第9期](https://www.kdocs.cn/l/cobMuvRvILND)
-- [小红书知识库数字乐园](https://my.feishu.cn/wiki/JU7KwfZkuiJmlzkRc5ZcOwwrnxd)
-- [互联网知识地图](https://yunyinghui.feishu.cn/wiki/QrvDwaNt4icE2qkZTPSccNKInhh)
-
-## 副业赚钱
-- [不上班研究所](https://www.toocool.cc/)
-- [前途日历](https://qianturili.ababtools.com/?url=heeee.com)
-
-## 博客
-- [浪海导航](https://www.langhai.net/)  
-- [发现博客](https://bf.zzxworld.com/)  
-- [利器](https://liqi.io/)  
-- [出海研习社](https://indiehackertools.net/)  
-- [博客园](https://www.cnblogs.com/)  
-- [Xlog](https://xlog.app/)  
-- [水星投资博客](https://mercurychong.blogspot.com/)  
-- [博友圈](https://www.boyouquan.com/home)
-- [ooh.directory](https://ooh.directory)
-- [BlogRoll](https://blogroll.notion.site)
-- [集博栈](https://www.zhblogs.net)
-- [HN Popularity Contest](https://refactoringenglish.com/tools/hn-popularity)
-- [博客录](https://boke.lu)
 </script>
 
 <script defer>
@@ -932,34 +514,96 @@ const PRIVATE_PWD = "abcd";
 const MOBILE_LIMIT = 9999; 
 const DESKTOP_LIMIT = 9999; 
 
-// SVG 矢量图标
 const ICON_COPY = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
 const ICON_CHECK = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#5C8D73" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 const ICON_ERR = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#D97A7A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
-function getDisplayLimit() { return window.innerWidth <= 850 ? MOBILE_LIMIT : DESKTOP_LIMIT; }
-function hashCode(str) { let hash = 0; for (let i = 0, len = str.length; i < len; i++) { let chr = str.charCodeAt(i); hash = (hash << 5) - hash + chr; hash |= 0; } return hash.toString(); }
+let currentSelectedEngineValue = "local"; 
+let promptCallback = null;
 
+function getDisplayLimit() { return window.innerWidth <= 850 ? MOBILE_LIMIT : DESKTOP_LIMIT; }
+
+// ===== 智能架构树生成 =====
 function parseMarkdown(md) {
-    const lines = md.split("\n"); let html = "", navHtml = "", currentGroupName = "", currentLinks = [];
-    const displayLimit = getDisplayLimit(); let isFirstGroup = true, groupIndex = 0; 
-    function flushGroup() {
-        if (!currentGroupName || currentLinks.length === 0) return;
-        const groupId = `cat-${groupIndex++}`; const activeClass = isFirstGroup ? 'active' : ''; 
-        navHtml += `<div class="nav-item ${activeClass}" data-target="${groupId}">${currentGroupName}</div>`;
-        html += `<section class="group-section ${activeClass}" id="section-${groupId}"><div class="group-header"><h2>${currentGroupName}</h2></div>`;
-        html += `<div class="links-group" id="links-${groupId}">`;
-        currentLinks.forEach((m) => {
-            html += `<div class="link-card"><a href="${m[2]}" target="_blank" rel="noopener noreferrer" title="${m[1]}">${m[1]}</a><span class="copy-btn" onclick="copyLink('${m[2]}', this)">${ICON_COPY}</span></div>`;
-        });
-        html += `</div></section>`; currentGroupName = ""; currentLinks = []; isFirstGroup = false; 
-    }
+    const lines = md.split("\n");
+    let html = ""; let navHtml = "";
+    let currentParent = null; let currentSub = null;    
+    let parentIndex = 0; let subIndex = 0;
+    let tree = [];
+
     lines.forEach(line => {
-        line = line.trim(); if (!line) return;
-        if (line.startsWith("##")) { flushGroup(); currentGroupName = line.replace(/^##+/, "").trim(); } 
-        else if (line.startsWith("- [")) { const m = line.match(/- \[(.*?)\]\((.*?)\)/); if (m) currentLinks.push(m); }
+        line = line.trim();
+        if (!line) return;
+
+        if (line.startsWith("##") && !line.startsWith("###")) {
+            currentParent = { name: line.replace(/^##\s*/, "").trim(), id: `p-${parentIndex++}`, subs: [], links: [] };
+            currentSub = null;
+            tree.push(currentParent);
+        } else if (line.startsWith("###")) {
+            if (!currentParent) return; 
+            currentSub = { name: line.replace(/^###\s*/, "").trim(), id: `s-${subIndex++}`, links: [] };
+            currentParent.subs.push(currentSub);
+        } else if (line.startsWith("- [")) {
+            const m = line.match(/- \[(.*?)\]\((.*?)\)/);
+            if (m) {
+                if (currentSub) { currentSub.links.push(m); } 
+                else if (currentParent) { currentParent.links.push(m); }
+            }
+        }
     });
-    flushGroup(); return { html, navHtml }; 
+
+    let isFirstNodeActivated = false;
+
+    tree.forEach((p) => {
+        const hasSubCategories = p.subs.length > 0;
+        
+        if (hasSubCategories) {
+            const shouldOpen = !isFirstNodeActivated ? 'open' : '';
+            navHtml += `<div class="nav-parent-group ${shouldOpen}" id="nav-group-${p.id}">`;
+            navHtml += `<div class="nav-item parent-toggle" onclick="toggleNavGroup('${p.id}')">${p.name}</div>`;
+            navHtml += `<div class="nav-sub-menu">`;
+            
+            if (p.links.length > 0) {
+                const isActive = !isFirstNodeActivated ? 'active' : '';
+                isFirstNodeActivated = true;
+                navHtml += `<div class="nav-sub-item ${isActive}" data-target="${p.id}" onclick="activeSubItem(this)">全部内容</div>`;
+            }
+            p.subs.forEach((s) => {
+                const isActive = !isFirstNodeActivated ? 'active' : '';
+                isFirstNodeActivated = true;
+                navHtml += `<div class="nav-sub-item ${isActive}" data-target="${s.id}" onclick="activeSubItem(this)">${s.name}</div>`;
+            });
+            navHtml += `</div></div>`;
+        } else {
+            const isActive = !isFirstNodeActivated ? 'active' : '';
+            if (!isFirstNodeActivated) isFirstNodeActivated = true;
+            navHtml += `<div class="nav-item flat-item ${isActive}" id="flat-item-${p.id}" data-target="${p.id}" onclick="activeFlatItem(this)">${p.name}</div>`;
+        }
+
+        if (p.links.length > 0) {
+            const activeClass = html === "" ? 'active' : '';
+            html += `<section class="group-section ${activeClass}" id="section-${p.id}">
+                        <div class="group-header"><h2>${p.name}</h2></div>
+                        <div class="links-group">`;
+            p.links.forEach(m => {
+                html += `<div class="link-card" data-name="${m[1].toLowerCase()}"><a href="${m[2]}" target="_blank" rel="noopener noreferrer" title="${m[1]}">${m[1]}</a><span class="copy-btn" onclick="copyLink('${m[2]}', this)">${ICON_COPY}</span></div>`;
+            });
+            html += `</div></section>`;
+        }
+
+        p.subs.forEach((s) => {
+            const activeClass = html === "" ? 'active' : '';
+            html += `<section class="group-section ${activeClass}" id="section-${s.id}">
+                        <div class="group-header"><h2>${p.name} <span class="sub-title-mark">/ ${s.name}</span></h2></div>
+                        <div class="links-group">`;
+            s.links.forEach(m => {
+                html += `<div class="link-card" data-name="${m[1].toLowerCase()}"><a href="${m[2]}" target="_blank" rel="noopener noreferrer" title="${m[1]}">${m[1]}</a><span class="copy-btn" onclick="copyLink('${m[2]}', this)">${ICON_COPY}</span></div>`;
+            });
+            html += `</div></section>`;
+        });
+    });
+
+    return { html, navHtml }; 
 }
 
 function render(id) {
@@ -967,81 +611,298 @@ function render(id) {
     let parsed = parseMarkdown(md);
     document.getElementById("links").innerHTML = parsed.html; 
     document.getElementById("navMenu").innerHTML = parsed.navHtml;
-    bindNavEvents(); 
+    resetSearchState();
+}
+
+// 性能优化：搜索框硬件级防抖封装
+let searchDebounceTimer;
+function debounceFilter(val) {
+    // 🔍 修复交互漏洞：若当前选择的不是“站内书签(local)”，直接拦截并退出，不触发任何本地书签过滤
+    if (currentSelectedEngineValue !== 'local') return;
+    
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+        doLocalFilter(val);
+    }, 80); 
+}
+
+// 性能优化：精准洗牌 DOM，消除重排产生的顿挫感
+function doLocalFilter(val) {
+    const keyword = val.trim().toLowerCase();
+    
+    if (!keyword) {
+        const activeSub = document.querySelector('.nav-sub-item.active');
+        const activeFlat = document.querySelector('.nav-item.flat-item.active');
+        const activeEl = activeSub || activeFlat;
+        
+        document.querySelectorAll('.group-section').forEach(sec => sec.classList.remove('active'));
+        if (activeEl) {
+            const targetId = activeEl.getAttribute('data-target');
+            const currentSec = document.getElementById(`section-${targetId}`);
+            if (currentSec) currentSec.classList.add('active');
+        } else {
+            const firstSec = document.querySelector('.group-section');
+            if (firstSec) firstSec.classList.add('active');
+        }
+        document.querySelectorAll('.link-card').forEach(card => {
+            if(card.style.display !== 'flex') card.style.display = 'flex';
+        });
+        return;
+    }
+
+    document.querySelectorAll('.group-section').forEach(section => {
+        let hasMatch = false;
+        const cards = section.querySelectorAll('.link-card');
+        
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name') || '';
+            if (name.includes(keyword)) {
+                if(card.style.display !== 'flex') card.style.display = 'flex';
+                hasMatch = true;
+            } else {
+                if(card.style.display !== 'none') card.style.display = 'none';
+            }
+        });
+
+        if (hasMatch) {
+            section.classList.add('active');
+        } else {
+            section.classList.remove('active');
+        }
+    });
+}
+
+// 搜索主控 logic：支持站内检索和跳转外部引擎
+function doSearch(isMobile) {
+    const inputId = isMobile ? "m_searchInput" : "searchInput";
+    const val = document.getElementById(inputId).value.trim();
+    if (currentSelectedEngineValue === "local") {
+        doLocalFilter(val);
+    } else {
+        if (val) {
+            window.open(currentSelectedEngineValue + encodeURIComponent(val), "_blank");
+        }
+    }
+}
+
+function toggleNavGroup(id) {
+    const targetGroup = document.getElementById(`nav-group-${id}`);
+    const isOpen = targetGroup.classList.contains('open');
+    document.querySelectorAll('.nav-parent-group').forEach(g => g.classList.remove('open'));
+    document.querySelectorAll('.nav-item.flat-item').forEach(i => i.classList.remove('active'));
+    
+    if (!isOpen) targetGroup.classList.add('open');
+}
+
+// 二级分类点击后手机端侧边栏即刻缩回
+function activeSubItem(el) {
+    clearSearchInputs();
+    document.querySelectorAll('.nav-sub-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.nav-item.flat-item').forEach(item => item.classList.remove('active'));
+    el.classList.add('active');
+    
+    const targetId = el.getAttribute('data-target');
+    const targetElement = document.getElementById(`section-${targetId}`);
+    document.querySelectorAll('.group-section').forEach(sec => sec.classList.remove('active'));
+    if (targetElement) targetElement.classList.add('active');
+    
+    document.querySelectorAll('.link-card').forEach(card => {
+        if(card.style.display !== 'flex') card.style.display = 'flex';
+    });
+    
+    if (window.innerWidth < 850) { 
+        closeSidebar(); 
+    } else { 
+        document.getElementById("searchInput").focus(); 
+    }
+}
+
+function activeFlatItem(el) {
+    clearSearchInputs();
+    document.querySelectorAll('.nav-sub-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.nav-parent-group').forEach(g => g.classList.remove('open'));
+    document.querySelectorAll('.nav-item.flat-item').forEach(item => item.classList.remove('active'));
+    el.classList.add('active');
+    
+    const targetId = el.getAttribute('data-target');
+    const targetElement = document.getElementById(`section-${targetId}`);
+    document.querySelectorAll('.group-section').forEach(sec => sec.classList.remove('active'));
+    if (targetElement) targetElement.classList.add('active');
+    
+    document.querySelectorAll('.link-card').forEach(card => {
+        if(card.style.display !== 'flex') card.style.display = 'flex';
+    });
+    
+    if (window.innerWidth < 850) { 
+        closeSidebar();
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    } else { 
+        document.getElementById("searchInput").focus(); 
+    }
+}
+
+function clearSearchInputs() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('m_searchInput').value = '';
+}
+
+// ===== 🛠️ 移动端定制皮肤化下拉引擎交互 =====
+function toggleMobileEngineDropdown(e) {
+    e.stopPropagation();
+    const bar = document.getElementById('mobileSearchBar');
+    const optionsPanel = document.getElementById('m_selectOptions');
+    const isShowing = optionsPanel.style.display === 'flex';
+    
+    if (isShowing) {
+        optionsPanel.style.display = 'none';
+        bar.classList.remove('dropdown-open');
+    } else {
+        optionsPanel.style.display = 'flex';
+        bar.classList.add('dropdown-open');
+    }
+}
+
+function selectMobileEngine(val, name) {
+    currentSelectedEngineValue = val;
+    document.getElementById('m_selectTrigger').innerHTML = `${name} <i class="arrow-icon">▸</i>`;
+    
+    const input = document.getElementById('m_searchInput');
+    input.placeholder = val === 'local' ? "搜索站内书签..." : "搜索网络...";
+    input.value = '';
+    
+    document.querySelectorAll('#m_selectOptions div').forEach(div => {
+        if(div.getAttribute('data-value') === val) div.classList.add('active');
+        else div.classList.remove('active');
+    });
+    
+    document.getElementById('m_selectOptions').style.display = 'none';
+    document.getElementById('mobileSearchBar').classList.remove('dropdown-open');
+    doLocalFilter('');
+}
+
+// ===== 🛠️ 电脑端定制一体式气泡下拉列表交互机制 =====
+function toggleDesktopEngineDropdown(e) {
+    e.stopPropagation();
+    const bar = document.getElementById('searchBar');
+    const pcOptions = document.getElementById('pc_selectOptions');
+    const isShowing = pcOptions.style.display === 'flex';
+    
+    if(isShowing) {
+        pcOptions.style.display = 'none';
+        bar.classList.remove('pc-dropdown-open');
+    } else {
+        pcOptions.style.display = 'flex';
+        bar.classList.add('pc-dropdown-open');
+    }
+}
+
+function selectDesktopEngine(val, name) {
+    currentSelectedEngineValue = val;
+    document.getElementById('pc_selectTrigger').innerText = name;
+    
+    const input = document.getElementById('searchInput');
+    input.placeholder = val === 'local' ? "搜索站内书签..." : "搜索网络...";
+    input.value = '';
+    
+    document.querySelectorAll('#pc_selectOptions div').forEach(div => {
+        if(div.getAttribute('data-value') === val) div.classList.add('active');
+        else div.classList.remove('active');
+    });
+    
+    document.getElementById('pc_selectOptions').style.display = 'none';
+    document.getElementById('searchBar').classList.remove('pc-dropdown-open');
+    doLocalFilter('');
+    input.focus();
+}
+
+function handleEngineChange() {}
+
+function resetSearchState() {
+    currentSelectedEngineValue = "local";
+    document.getElementById('pc_selectTrigger').innerText = "站内书签";
+    document.getElementById('m_selectTrigger').innerHTML = `站内书签 <i class="arrow-icon">▸</i>`;
+    document.getElementById('searchInput').placeholder = "搜索站内书签...";
+    document.getElementById('m_searchInput').placeholder = "搜索站内书签...";
+    
+    document.querySelectorAll('#pc_selectOptions div, #m_selectOptions div').forEach(div => {
+        if(div.getAttribute('data-value') === 'local') div.classList.add('active');
+        else div.classList.remove('active');
+    });
+    document.getElementById('mobileSearchBar').classList.remove('dropdown-open');
+    document.getElementById('searchBar').classList.remove('pc-dropdown-open');
+    clearSearchInputs();
 }
 
 const sidebarEl = document.getElementById('sidebar');
 const overlayEl = document.getElementById('sidebarOverlay');
 
 function openSidebar() { sidebarEl.classList.add('open'); overlayEl.classList.add('active'); document.body.classList.add('no-scroll'); }
-function closeSidebar() { sidebarEl.classList.remove('open'); overlayEl.classList.remove('active'); document.body.classList.remove('no-scroll'); }
+function closeSidebar() { 
+    sidebarEl.classList.remove('open'); 
+    overlayEl.classList.remove('active'); 
+    document.body.classList.remove('no-scroll'); 
+    document.getElementById('m_selectOptions').style.display = 'none';
+    document.getElementById('mobileSearchBar').classList.remove('dropdown-open');
+}
 
 document.getElementById('menuBtn').addEventListener('click', openSidebar);
+
+// 只要侧边栏打开，点击任何非功能性空白地方一律直接缩回
 document.addEventListener('click', (e) => {
+    document.getElementById('m_selectOptions').style.display = 'none';
+    document.getElementById('pc_selectOptions').style.display = 'none';
+    document.getElementById('mobileSearchBar').classList.remove('dropdown-open');
+    document.getElementById('searchBar').classList.remove('pc-dropdown-open');
+    
     if (window.innerWidth >= 850) return; 
     if (sidebarEl.classList.contains('open')) {
         if (e.target.closest('#menuBtn') || e.target.closest('#mobileSearchBar')) return;
+        if (e.target.closest('.nav-item') || e.target.closest('.nav-sub-item')) return;
         closeSidebar();
     }
 });
 
-function bindNavEvents() {
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); e.currentTarget.classList.add('active');
-            const targetId = e.currentTarget.getAttribute('data-target'); const targetElement = document.getElementById(`section-${targetId}`);
-            document.querySelectorAll('.group-section').forEach(sec => sec.classList.remove('active')); if (targetElement) targetElement.classList.add('active');
-            if (window.innerWidth < 850) { window.scrollTo({ top: 0, behavior: 'smooth' }); } else { document.getElementById("searchInput").focus(); }
-        });
-    });
+// ===== 🛠️ 定制统一皮肤的密码解密面板逻辑 =====
+function openCustomPrompt(title, callback) {
+    promptCallback = callback;
+    document.getElementById('customPromptTitle').innerText = title;
+    document.getElementById('customPromptInput').value = '';
+    
+    document.getElementById('adminModal').style.display = 'flex';
+    document.getElementById('adminSetupView').style.display = 'none';
+    document.getElementById('adminLoginView').style.display = 'none';
+    document.getElementById('adminEditorView').style.display = 'none';
+    document.getElementById('customPromptView').style.display = 'block';
+    document.getElementById('adminBox').classList.remove('editor-mode');
+    document.body.classList.add('no-scroll');
+    setTimeout(() => document.getElementById('customPromptInput').focus(), 150);
 }
 
-function doSearch(isMobile = false) {
-    const prefix = isMobile ? 'm_' : ''; 
-    const engine = document.getElementById(prefix + "engine").value; 
-    const keyword = document.getElementById(prefix + "searchInput").value.trim();
-
-    if (engine === 'local') {
-        filterLocalLinks(keyword.toLowerCase());
-        if (isMobile) closeSidebar();
-        return; 
-    }
-
-    if (keyword) { 
-        window.open(engine + encodeURIComponent(keyword), "_blank"); 
-        if (isMobile) closeSidebar(); 
+function closeCustomPrompt(isConfirm) {
+    const val = document.getElementById('customPromptInput').value.trim();
+    document.getElementById('adminModal').style.display = 'none';
+    document.getElementById('customPromptView').style.display = 'none';
+    document.body.classList.remove('no-scroll');
+    
+    if (promptCallback) {
+        promptCallback(isConfirm ? val : null);
+        promptCallback = null;
     }
 }
 
-function filterLocalLinks(keyword) {
-    const sections = document.querySelectorAll('.group-section');
-
-    if (!keyword) {
-        sections.forEach(sec => {
-            sec.style.display = ''; 
-            sec.querySelectorAll('.link-card').forEach(card => card.style.display = '');
-        });
-        return;
-    }
-
-    sections.forEach(section => {
-        let hasVisibleLinks = false;
-        const links = section.querySelectorAll('.link-card');
-
-        links.forEach(card => {
-            const anchor = card.querySelector('a');
-            const text = anchor.innerText.toLowerCase(); 
-            const url = anchor.href.toLowerCase();       
-
-            if (text.includes(keyword) || url.includes(keyword)) {
-                card.style.display = ''; 
-                hasVisibleLinks = true;
-            } else {
-                card.style.display = 'none'; 
-            }
-        });
-
-        section.style.display = hasVisibleLinks ? 'block' : 'none';
+// 解密空间入口
+function unlockSecret() {
+    openCustomPrompt("请输入密码查看私藏空间：", (pwd) => {
+        if (!pwd) return;
+        if (pwd === SECRET_PWD) { 
+            document.body.className = 'mode-secret'; render("markdown-secret"); 
+            history.pushState({ page: 'secret' }, "", "#secret"); enterMode("私藏页面", "mode-secret"); 
+        } else if (pwd === PRIVATE_PWD) { 
+            document.body.className = ''; render("markdown-private"); 
+            history.pushState({ page: 'private' }, "", "#private"); enterMode("个人空间", "mode-private"); 
+        } else { 
+            alert("密码错误！"); 
+        }
     });
 }
 
@@ -1061,20 +922,16 @@ function backToHomeUI() {
     const backBtn = document.getElementById('backBtn'); if (backBtn) backBtn.remove();
     render("markdown-main");
     document.getElementById("pageTitle").innerText = "我的主页"; document.getElementById("mobilePageTitle").innerText = "我的主页";
-    document.getElementById("searchBar").style.visibility = "visible"; document.getElementById("mobileSearchBar").style.display = "flex";  
+    document.getElementById("searchBar").style.display = ""; 
+    document.getElementById("mobileSearchBar").style.display = "flex";  
     document.getElementById("unlockBtn").style.display = "block"; 
     document.body.className = ''; window.scrollTo({ top: 0 }); 
 }
 
-function unlockSecret() {
-    const pwd = prompt("请输入密码查看内容：");
-    if (pwd === SECRET_PWD) { document.body.className = 'mode-secret'; render("markdown-secret"); history.pushState({ page: 'secret' }, "", "#secret"); enterMode("私藏页面", "mode-secret"); } 
-    else if (pwd === PRIVATE_PWD) { document.body.className = ''; render("markdown-private"); history.pushState({ page: 'private' }, "", "#private"); enterMode("个人空间", "mode-private"); } 
-    else { alert("密码错误！"); }
-}
-
 function enterMode(title, modeClass) {
-    document.getElementById("unlockBtn").style.display = "none"; document.getElementById("searchBar").style.visibility = "hidden"; document.getElementById("mobileSearchBar").style.display = "none"; 
+    document.getElementById("unlockBtn").style.display = "none"; 
+    document.getElementById("searchBar").style.display = "none"; 
+    document.getElementById("mobileSearchBar").style.display = "none"; 
     document.getElementById("pageTitle").innerText = title; document.getElementById("mobilePageTitle").innerText = title;
     document.body.classList.add("secret"); if(modeClass) document.body.classList.add(modeClass); window.scrollTo({ top: 0 }); 
     const oldBackBtn = document.getElementById('backBtn'); if (oldBackBtn) oldBackBtn.remove();
@@ -1082,9 +939,18 @@ function enterMode(title, modeClass) {
     document.getElementById("pageTitle").parentNode.insertBefore(backBtn, document.getElementById("pageTitle").nextSibling);
 }
 
-// 灵敏侧滑手势
 let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, { passive: true });
+
+// 性能优化：当手机端侧边栏展开时进行划动，锁定阻止原生纵向滚动相互干扰
+document.addEventListener('touchmove', e => {
+    if (window.innerWidth < 850 && sidebarEl.classList.contains('open')) {
+        const currentX = e.touches[0].screenX;
+        const deltaX = currentX - touchStartX;
+        if (Math.abs(deltaX) > 10) e.preventDefault(); 
+    }
+}, { passive: false });
+
 document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; touchEndY = e.changedTouches[0].screenY; handleGesture(); }, { passive: true });
 
 function handleGesture() {
@@ -1097,7 +963,7 @@ function handleGesture() {
 }
 
 // =======================
-// 后台 API 与智能分类引擎
+// 后台 API 与 GitHub 数据流托管
 // =======================
 function utf8_to_b64(str) { return window.btoa(unescape(encodeURIComponent(str))); }
 function b64_to_utf8(str) { return decodeURIComponent(escape(window.atob(str))); }
@@ -1108,7 +974,7 @@ let ghData = null, currentFullHtml = "", currentFileSha = "", currentTabId = "ma
 let mdContents = { "markdown-main": "", "markdown-secret": "", "markdown-private": "" };
 
 function showStatus(text, color = "var(--color-link-btn)") { const el = document.getElementById('editorStatus'); el.innerText = text; el.style.color = color; }
-function openAdmin() { document.getElementById('adminModal').style.display = 'flex'; const config = localStorage.getItem('gh_admin_config'); if (config) { document.getElementById('adminSetupView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminLoginView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); setTimeout(() => document.getElementById('loginPwd').focus(), 100); } else { document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminSetupView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); } document.body.classList.add('no-scroll'); }
+function openAdmin() { document.getElementById('adminModal').style.display = 'flex'; document.getElementById('customPromptView').style.display = 'none'; const config = localStorage.getItem('gh_admin_config'); if (config) { document.getElementById('adminSetupView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminLoginView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); setTimeout(() => document.getElementById('loginPwd').focus(), 100); } else { document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminSetupView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); } document.body.classList.add('no-scroll'); }
 function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; document.getElementById('setupPwd').value = ''; document.getElementById('loginPwd').value = ''; document.getElementById('adminBox').classList.remove('editor-mode'); document.body.classList.remove('no-scroll'); }
 function saveAdminConfig() { const pwd = document.getElementById('setupPwd').value.trim(), user = document.getElementById('setupUser').value.trim(), repo = document.getElementById('setupRepo').value.trim(), token = document.getElementById('setupToken').value.trim(); if (!pwd || !user || !repo || !token) return alert("各项参数不能为空！"); const rawData = JSON.stringify({ user, repo, token }), encryptedText = encryptData(rawData, pwd); localStorage.setItem('gh_admin_config', encryptedText); alert("配置已保存！"); closeAdmin(); }
 function resetAdminConfig() { if(confirm("重置配置？")) { localStorage.removeItem('gh_admin_config'); openAdmin(); } }
@@ -1131,9 +997,11 @@ function updateCategoryDropdown() {
     catSelect.innerHTML = '<option value="">-- 选择目标分类 --</option>';
     lines.forEach(line => {
         if (line.trim().startsWith('##')) {
-            const catName = line.replace(/^##\s+/, '').trim();
+            const isSub = line.trim().startsWith('###');
+            const catName = line.replace(/^##+\s+/, '').trim();
             const opt = document.createElement('option');
-            opt.value = catName; opt.textContent = catName;
+            opt.value = line.trim(); 
+            opt.textContent = (isSub ? '└── ' : '📁 ') + catName;
             catSelect.appendChild(opt);
         }
     });
@@ -1168,10 +1036,10 @@ function switchEditorTab() {
 
 function insertQuickLink() { 
     const nameEl = document.getElementById('quickName'), urlEl = document.getElementById('quickUrl'), catEl = document.getElementById('quickCategory'); 
-    let name = nameEl.value.trim(), url = urlEl.value.trim(), cat = catEl.value; 
+    let name = nameEl.value.trim(), url = urlEl.value.trim(), catRaw = catEl.value; 
     
-    if(!name || !url) return alert("请填入名称和网址"); 
-    if(!cat) return alert("请先选择一个目标分类！\n(如果没有想要的分类，请先点击'📁'新建分类)");
+    if(!name || !url) return alert("请填入名称 and 网址"); 
+    if(!catRaw) return alert("请先选择一个目标分类！");
     
     if(!url.startsWith('http')) url = 'https://' + url; 
     const mdStr = `- [${name}](${url})`; 
@@ -1181,7 +1049,7 @@ function insertQuickLink() {
     let targetIdx = -1;
     
     for(let i = 0; i < lines.length; i++) {
-        if(lines[i].trim().startsWith('##') && lines[i].replace(/^##\s+/, '').trim() === cat) {
+        if(lines[i].trim() === catRaw) {
             targetIdx = i; break;
         }
     }
@@ -1199,22 +1067,22 @@ function insertQuickLink() {
         textarea.value = lines.join('\n');
         
         nameEl.value = ''; urlEl.value = '';
-        showStatus(`✅ 已成功添加到 [${cat}] 分类底部！`, "var(--color-link-btn)");
+        showStatus(`✅ 快捷添加成功！`, "var(--color-link-btn)");
     } else {
         alert("找不到该分类代码，请检查！");
     }
 }
 
 function insertQuickCategory() { 
-    const name = prompt("请输入新分类名称："); 
+    const name = prompt("请输入新分类名称：\n(提示: 输入 '## 名称' 创建大类，输入 '### 名称' 创建小类)"); 
     if(name && name.trim()) { 
         const textarea = document.getElementById('editorTextarea');
-        const mdStr = `\n## ${name.trim()}\n`;
+        const prefix = name.trim().startsWith('#') ? '' : '## ';
+        const mdStr = `\n${prefix}${name.trim()}\n`;
         textarea.value = textarea.value.trim() + '\n' + mdStr;
         textarea.scrollTop = textarea.scrollHeight; 
         updateCategoryDropdown();
-        document.getElementById('quickCategory').value = name.trim(); 
-        showStatus(`📁 新分类 [${name.trim()}] 创建成功！`, "var(--color-link-btn)");
+        showStatus(`📁 新分类创建成功！`, "var(--color-link-btn)");
     } 
 }
 
@@ -1239,27 +1107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("m_searchButton").addEventListener('click', () => doSearch(true));
     document.getElementById("m_searchInput").addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(true); });
     document.getElementById("unlockBtn").addEventListener('click', unlockSecret);
-    document.getElementById("loginPwd").addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyAdmin(); });
-
-    // 站内搜索：实时过滤
-    ['searchInput', 'm_searchInput'].forEach(id => {
-        document.getElementById(id).addEventListener('input', (e) => {
-            const prefix = id.startsWith('m_') ? 'm_' : '';
-            const engine = document.getElementById(prefix + "engine").value;
-            if (engine === 'local') {
-                filterLocalLinks(e.target.value.trim().toLowerCase());
-            }
-        });
-    });
     
-    // 站内搜索：切换引擎时重置页面
-    ['engine', 'm_engine'].forEach(id => {
-        document.getElementById(id).addEventListener('change', (e) => {
-            if (e.target.value !== 'local') {
-                filterLocalLinks(''); 
-            }
-        });
-    });
+    document.getElementById("customPromptInput").addEventListener('keypress', (e) => { if (e.key === 'Enter') closeCustomPrompt(true); });
 });
 </script>
 </body>
