@@ -20,7 +20,7 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
 
 /* 开启手机原生下拉刷新功能 */
-html { scroll-behavior: smooth; overscroll-behavior-y: auto; } 
+html { scroll-behavior: auto; overscroll-behavior-y: auto; } 
 body { background: var(--bg-main); color: var(--color-text); font-family: Arial, sans-serif; margin: 0; padding: 0; overscroll-behavior-y: auto; }
 
 body.no-scroll { overflow: hidden; }
@@ -56,7 +56,7 @@ body.no-scroll { overflow: hidden; }
 
 body.secret #mobileAdminBtn { display: none !important; }
 
-.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 45, 42, 0.4); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; touch-action: none; will-change: opacity; }
+.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 45, 42, 0.4); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.22s ease; touch-action: none; }
 .sidebar-overlay.active { opacity: 1; visibility: visible; }
 
 /* 侧边栏主架构：已隐藏滚动条但完整保留滚动动作 */
@@ -64,12 +64,11 @@ body.secret #mobileAdminBtn { display: none !important; }
     position: fixed; top: 0; bottom: 0; left: 0; 
     width: 75%; max-width: 320px; 
     background: var(--bg-main); z-index: 999; 
-    transform: translateX(-105%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    transform: translateX(-105%); transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1); 
     padding: 40px 20px 80px 20px; /* 舒展的 20px 缓冲边距 */
     overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.1); 
     display: flex; flex-direction: column; 
     overscroll-behavior-y: contain; 
-    will-change: transform;
     scrollbar-width: none;          /* 针对 Firefox 隐藏滚动条 */
     -ms-overflow-style: none;       /* 针对 IE 和 老版 Edge 隐藏滚动条 */
 }
@@ -141,7 +140,7 @@ body.secret #mobileAdminBtn { display: none !important; }
 
 .nav-item.parent-toggle, .nav-item.flat-item { 
     padding: 12px 14px; cursor: pointer; color: var(--color-text); 
-    font-size: 15px; font-weight: bold; transition: all 0.2s ease; 
+    font-size: 15px; font-weight: bold; transition: color 0.12s ease; 
     display: flex; justify-content: space-between; align-items: center; width: 100%;
     background: transparent; border-radius: 0;
 }
@@ -157,7 +156,7 @@ body.secret #mobileAdminBtn { display: none !important; }
     padding: 2px 0 6px 14px; width: 100%; 
     background: transparent; 
 }
-.nav-parent-group.open .nav-sub-menu { display: flex; animation: fadeIn 0.15s ease; }
+.nav-parent-group.open .nav-sub-menu { display: flex; animation: none; }
 
 .nav-sub-item { 
     padding: 10px 14px; cursor: pointer; color: var(--color-text); 
@@ -181,10 +180,9 @@ body.secret #mobileAdminBtn { display: none !important; }
 
 .layout-wrapper { display: block; padding: 66px 16px 80px; max-width: 1200px; margin: 0 auto; }
 .group-section { display: none; margin-bottom: 40px; } 
-.group-section.active { display: block; animation: fadeIn 0.3s ease; }
+.group-section.active { display: block; animation: none; }
 
-/* 开启硬件加速提效主内容区 */
-.group-section.active .link-card { will-change: transform, opacity; }
+/* 避免为全部书签卡片长期分配额外合成层 */
 
 .group-header { position: sticky; top: 55px; background: var(--bg-main); z-index: 10; padding: 22px 0 10px 0; margin-top: 0; border-bottom: none; }
 .group-header h2 { font-size: 16px; margin: 0; font-weight: 800; display: flex; align-items: center; gap: 6px; }
@@ -369,6 +367,20 @@ body.secret .desktop-search-bar {
     .admin-box.editor-mode { width: 100vw; height: 100dvh; max-height: 100dvh; max-width: 100vw; border-radius: 0; padding: 16px; padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); }
 }
 
+
+/* 书签管理后台 v7：仅作用于后台，不改变主页 */
+.admin-box.editor-mode {max-width:1080px!important;width:min(96vw,1080px)!important;height:min(90dvh,900px)!important;padding:0!important;overflow:hidden;position:relative}
+#adminEditorView {min-height:0;color:var(--color-text)}
+.manager-top,.manager-bottom {display:flex;align-items:center;justify-content:space-between;padding:16px 22px;gap:12px;flex-shrink:0}
+.manager-top {border-bottom:1px solid var(--color-border)} .manager-top strong {display:block;font-size:19px}.manager-top small{display:block;color:var(--color-link-btn);margin-top:4px}
+.manager-exit {background:transparent;border:1px solid var(--color-border);border-radius:7px;padding:9px 14px;color:var(--color-text);cursor:pointer}
+.manager-tabs {display:flex;gap:7px;padding:13px 22px 0;overflow-x:auto;flex-shrink:0}.manager-tabs button{white-space:nowrap;cursor:pointer;background:transparent;border:0;border-bottom:2px solid transparent;padding:10px 14px;color:var(--color-text);font-weight:600}.manager-tabs button.selected{color:var(--color-link-btn);border-bottom-color:var(--color-link-btn)}
+.manager-bar {display:flex;gap:10px;padding:15px 22px;flex-shrink:0}.manager-bar input,.manager-bar select{margin:0;min-width:0}.manager-bar input{flex:2}.manager-bar select{flex:1}.manager-bar button,.manager-raw-head button{border:1px solid var(--color-border);border-radius:7px;cursor:pointer;background:var(--bg-card);color:var(--color-text);padding:0 12px;font-weight:600}.manager-bar .manager-add{background:var(--color-text);color:var(--bg-main);border:0;white-space:nowrap}
+.manager-content{padding:0 22px 16px;flex:1;min-height:0;overflow:auto;scrollbar-width:thin}.manager-summary{font-size:12px;color:var(--color-link-btn);padding:3px 0 13px}.manager-group{margin:0 0 17px}.manager-group h4{margin:12px 0 7px;font-size:13px;color:var(--color-link-btn);font-weight:700}.manager-row{display:flex;align-items:center;gap:10px;background:var(--bg-card);border:1px solid var(--color-border);border-radius:8px;margin:6px 0;padding:9px 11px;min-height:53px}.manager-row-icon{width:30px;height:30px;border-radius:7px;background:var(--bg-main);display:flex;align-items:center;justify-content:center;flex-shrink:0}.manager-row-info{min-width:0;flex:1}.manager-row-title{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.manager-row-url{font-size:11px;color:var(--color-link-btn);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px}.manager-row-actions{display:flex;gap:5px;flex-shrink:0}.manager-row-actions button{border:1px solid var(--color-border);background:transparent;color:var(--color-text);border-radius:5px;padding:6px 9px;cursor:pointer}.manager-row-actions button:hover{background:var(--bg-main)}.manager-row-actions .danger{color:#a45244}.manager-empty{padding:25px;text-align:center;color:var(--color-link-btn)}
+.manager-raw-head{display:flex;justify-content:space-between;padding:10px 22px;border-top:1px solid var(--color-border);gap:8px}.manager-raw-head button{padding:7px 9px;background:transparent;font-size:12px}#managerRaw{padding:0 22px 10px;max-height:35%;flex-shrink:0;min-height:0}#managerRaw textarea{width:100%;height:140px;max-height:24vh;border-radius:6px;border:1px solid var(--color-border);padding:10px;font-family:monospace;background:var(--bg-card);color:var(--color-text)}.manager-raw-note{font-size:12px;padding:4px 0 8px;color:var(--color-link-btn)}
+.manager-bottom{border-top:1px solid var(--color-border)}.manager-bottom #editorStatus{margin:0;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.manager-bottom #pushBtn{min-width:155px;padding:0 14px}
+.manager-dialog{position:absolute;inset:0;background:rgba(35,45,37,.48);z-index:12;display:flex;align-items:center;justify-content:center;padding:16px}.manager-dialog-box{background:var(--bg-main);border:1px solid var(--color-border);border-radius:12px;width:min(100%,440px);padding:21px;box-shadow:0 8px 30px #0002}.manager-dialog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.manager-dialog-head strong{font-size:18px}.manager-dialog-head button{background:none;border:none;cursor:pointer;font-size:25px;color:var(--color-text)}.manager-dialog-box label{display:block;font-size:13px;font-weight:600;margin-top:12px}.manager-dialog-box label input,.manager-dialog-box label select{margin:7px 0 0;width:100%}.manager-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}.manager-dialog-actions button{height:40px;border-radius:7px;padding:0 16px;cursor:pointer;border:1px solid var(--color-border);background:var(--bg-card);color:var(--color-text)}.manager-dialog-actions .btn-primary{background:var(--color-text);color:var(--bg-main)}
+@media(max-width:849px){.admin-box.editor-mode{width:100vw!important;height:100dvh!important;max-height:100dvh!important;border-radius:0}.manager-top,.manager-bottom{padding:13px 14px}.manager-tabs{padding:8px 12px 0}.manager-bar{padding:12px 14px;flex-wrap:wrap;gap:7px}.manager-bar input{flex:1 1 100%;height:38px}.manager-bar select{flex:1 1 auto;height:38px}.manager-bar .manager-add{height:38px}.manager-content{padding:0 14px 10px}.manager-raw-head{padding:8px 14px}#managerRaw{padding:0 14px 8px}.manager-row-actions button{padding:8px}.manager-bottom #pushBtn{min-width:130px}}
 </style>
 </head>
 <body>
@@ -456,41 +468,19 @@ body.secret .desktop-search-bar {
         </div>
         
         <div id="adminEditorView" style="display:none; height:100%; flex-direction:column;">
-            <div class="editor-header">
-                <select id="editorSelect" onchange="switchEditorTab()">
-                    <option value="markdown-main">👉 编辑：主页书签</option>
-                    <option value="markdown-secret">👉 编辑：私藏页面</option>
-                    <option value="markdown-private">👉 编辑：个人空间</option>
-                </select>
-                <button class="btn-cancel" onclick="closeAdmin()">退出</button>
-            </div>
-            
-            <div class="quick-add-card">
-                <div class="flex-row">
-                    <input type="text" id="quickName" placeholder="名称(如: 淘宝)" autocomplete="off">
-                    <input type="text" id="quickUrl" placeholder="网址(https://...)" autocomplete="off">
-                </div>
-                <div class="flex-row">
-                    <select id="quickCategory">
-                        <option value="">-- 选择目标分类 --</option>
-                    </select>
-                    <button class="btn-insert" onclick="insertQuickLink()">➕ 自动添加</button>
-                    <button class="btn-newcat" onclick="insertQuickCategory()" title="新建分类">📁</button>
-                </div>
-            </div>
-            
-            <div class="textarea-title">📄 底层代码区 (支持直接修改)</div>
-            <textarea id="editorTextarea" spellcheck="false" placeholder="拉取数据中..." oninput="debounceUpdateCat()"></textarea>
-            
-            <div class="admin-btn-group" style="padding-top: 10px;">
-                <button class="btn-primary" id="pushBtn" onclick="pushToGitHub()">🚀 保存并推送到 GitHub</button>
-            </div>
-            <div id="editorStatus"></div>
+            <div class="manager-top"><div><strong>书签管理</strong><small>轻松整理你的导航网址</small></div><button class="manager-exit" onclick="closeAdmin()">退出</button></div>
+            <div class="manager-tabs" role="tablist"><button class="selected" data-page="markdown-main" onclick="managerSwitchPage('markdown-main')">我的主页</button><button data-page="markdown-secret" onclick="managerSwitchPage('markdown-secret')">私藏页面</button><button data-page="markdown-private" onclick="managerSwitchPage('markdown-private')">个人空间</button></div>
+            <div class="manager-bar"><input id="managerFilter" type="search" placeholder="搜索名称或网址..." oninput="managerRender()"><select id="managerCategoryFilter" onchange="managerRender()"><option value="">全部分类</option></select><button class="manager-add" onclick="managerOpenForm()">＋ 添加网址</button></div>
+            <div class="manager-content" id="managerList" aria-live="polite"></div>
+            <div class="manager-raw-head"><button onclick="managerToggleRaw()" id="managerRawToggle">⌄ 高级：编辑原始文本</button><button onclick="managerAddCategory()">＋ 新建分类</button></div>
+            <div id="managerRaw" style="display:none"><div class="manager-raw-note">高级编辑将直接修改 Markdown。修改后请检查列表，再保存到 GitHub。</div><textarea id="editorTextarea" spellcheck="false" oninput="debounceUpdateCat();managerScheduleRender()"></textarea></div>
+            <select id="editorSelect" style="display:none" onchange="switchEditorTab()"><option value="markdown-main">主页</option><option value="markdown-secret">私藏</option><option value="markdown-private">个人</option></select>
+            <div class="manager-bottom"><span id="editorStatus">尚未连接 GitHub</span><button class="btn-primary" id="pushBtn" onclick="pushToGitHub()">保存到 GitHub</button></div>
+            <div id="managerDialog" class="manager-dialog" style="display:none"><div class="manager-dialog-box"><div class="manager-dialog-head"><strong id="managerDialogTitle">添加网址</strong><button onclick="managerCloseForm()" aria-label="关闭">×</button></div><label>网址名称<input id="managerName" placeholder="例如：少数派"></label><label>网址链接<input id="managerUrl" placeholder="https://example.com"></label><label>所属分类<select id="managerFormCategory"></select></label><div class="manager-dialog-actions"><button onclick="managerCloseForm()">取消</button><button class="btn-primary" onclick="managerSaveLink()">确认保存</button></div></div></div>
         </div>
     </div>
 </div>
 
-<script id="markdown-main" type="text/plain">
 <script id="markdown-main" type="text/plain">
 ## 门户网站
 - [联合早报](https://www.zaobao.com/)
@@ -540,7 +530,9 @@ body.secret .desktop-search-bar {
 - [GoFilm](https://m.mubai.link/index)
 - [麦田影视](https://www.mtyy.tv/)    
 - [vidhub](https://121310.xyz)  
+- [inmi](https://www.inmi.app/)
 - [TVB云播](http://www.hktvyb.cc/)
+- [爱看港剧](https://www.hkgjw.com/) 
 - [共青春](https://ting.cool/)
 - [Free OK](https://link3.cc/freeok)
 - [dramas线上看](https://dramasq.com.tr/)
@@ -577,7 +569,7 @@ body.secret .desktop-search-bar {
 - [80s手机电影](http://m.8080s.org/)
 - [小宝影院](https://xiaoheimi.cc/)
 ###影视导航
-- [可乐影视](https://kldaohang2.com/) 
+- [可乐影视](https://klyingshi.top/) 
 - [影视森林](http://549.tv/) 
 - [影视宝藏导航](https://tv.baozangdh.com/)
 - [思菲影视](https://www.sfeii.com/)
@@ -1064,10 +1056,11 @@ body.secret .desktop-search-bar {
 - [Jav777](https://www.jav777.xyz/) 
 - [91jav](https://91jav7.com/)
 - [JavTREE](https://javtree.com/) 
-- [123av](https://123av.com/cn) 
+- [Javxx360](https://javxx.com/cn) 
 - [AVTOP10 360](https://avtop10.com/)
 - [kissav](https://kissav.me/)
 - [NOWAV](https://nowav.tv/)
+- [123av](https://123av.com/en)
 - [7mmtv](https://7mmtv.sx/zh/)
 - [AVhub](https://avhuba16.com/)
 - [whosTV](https://whos.tv/)
@@ -1158,7 +1151,19 @@ const ICON_ERR = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#D97A7
 let currentSelectedEngineValue = "local"; 
 let promptCallback = null;
 
-function getDisplayLimit() { return window.innerWidth <= 850 ? MOBILE_LIMIT : DESKTOP_LIMIT; }
+function getDisplayLimit() { return window.innerWidth < 850 ? MOBILE_LIMIT : DESKTOP_LIMIT; }
+function escapeHTML(v) { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function safeUrl(v) { try { const u = new URL(v); return ['http:', 'https:'].includes(u.protocol) ? u.href : ''; } catch { return ''; } }
+function parseBookmark(line) {
+    const m = line.match(/^- \[(.*?)\]\((.*)\)\s*$/);
+    if (!m) return null;
+    const url = safeUrl(m[2]);
+    return url ? {name:m[1], url} : null;
+}
+function cardMarkup(item) {
+    const name = escapeHTML(item.name), url = escapeHTML(item.url);
+    return `<div class="link-card" data-name="${escapeHTML(item.name.toLowerCase())}" data-url="${url}"><a href="${url}" target="_blank" rel="noopener noreferrer" title="${name}">${name}</a><span class="copy-btn" role="button" tabindex="0" aria-label="复制网址">${ICON_COPY}</span></div>`;
+}
 
 // ===== 智能架构树生成 =====
 function parseMarkdown(md) {
@@ -1181,10 +1186,10 @@ function parseMarkdown(md) {
             currentSub = { name: line.replace(/^###\s*/, "").trim(), id: `s-${subIndex++}`, links: [] };
             currentParent.subs.push(currentSub);
         } else if (line.startsWith("- [")) {
-            const m = line.match(/- \[(.*?)\]\((.*?)\)/);
-            if (m) {
-                if (currentSub) { currentSub.links.push(m); } 
-                else if (currentParent) { currentParent.links.push(m); }
+            const item = parseBookmark(line);
+            if (item) {
+                if (currentSub) currentSub.links.push(item);
+                else if (currentParent) currentParent.links.push(item);
             }
         }
     });
@@ -1197,7 +1202,7 @@ function parseMarkdown(md) {
         if (hasSubCategories) {
             const shouldOpen = !isFirstNodeActivated ? 'open' : '';
             navHtml += `<div class="nav-parent-group ${shouldOpen}" id="nav-group-${p.id}">`;
-            navHtml += `<div class="nav-item parent-toggle" onclick="toggleNavGroup('${p.id}')">${p.name}</div>`;
+            navHtml += `<div class="nav-item parent-toggle" onclick="toggleNavGroup('${p.id}')">${escapeHTML(p.name)}</div>`;
             navHtml += `<div class="nav-sub-menu">`;
             
             if (p.links.length > 0) {
@@ -1208,22 +1213,22 @@ function parseMarkdown(md) {
             p.subs.forEach((s) => {
                 const isActive = !isFirstNodeActivated ? 'active' : '';
                 isFirstNodeActivated = true;
-                navHtml += `<div class="nav-sub-item ${isActive}" data-target="${s.id}" onclick="activeSubItem(this)">${s.name}</div>`;
+                navHtml += `<div class="nav-sub-item ${isActive}" data-target="${s.id}" onclick="activeSubItem(this)">${escapeHTML(s.name)}</div>`;
             });
             navHtml += `</div></div>`;
         } else {
             const isActive = !isFirstNodeActivated ? 'active' : '';
             if (!isFirstNodeActivated) isFirstNodeActivated = true;
-            navHtml += `<div class="nav-item flat-item ${isActive}" id="flat-item-${p.id}" data-target="${p.id}" onclick="activeFlatItem(this)">${p.name}</div>`;
+            navHtml += `<div class="nav-item flat-item ${isActive}" id="flat-item-${p.id}" data-target="${p.id}" onclick="activeFlatItem(this)">${escapeHTML(p.name)}</div>`;
         }
 
         if (p.links.length > 0) {
             const activeClass = html === "" ? 'active' : '';
             html += `<section class="group-section ${activeClass}" id="section-${p.id}">
-                        <div class="group-header"><h2>${p.name}</h2></div>
+                        <div class="group-header"><h2>${escapeHTML(p.name)}</h2></div>
                         <div class="links-group">`;
             p.links.forEach(m => {
-                html += `<div class="link-card" data-name="${m[1].toLowerCase()}"><a href="${m[2]}" target="_blank" rel="noopener noreferrer" title="${m[1]}">${m[1]}</a><span class="copy-btn" onclick="copyLink('${m[2]}', this)">${ICON_COPY}</span></div>`;
+                html += cardMarkup(m);
             });
             html += `</div></section>`;
         }
@@ -1231,10 +1236,10 @@ function parseMarkdown(md) {
         p.subs.forEach((s) => {
             const activeClass = html === "" ? 'active' : '';
             html += `<section class="group-section ${activeClass}" id="section-${s.id}">
-                        <div class="group-header"><h2>${p.name} <span class="sub-title-mark">/ ${s.name}</span></h2></div>
+                        <div class="group-header"><h2>${escapeHTML(p.name)} <span class="sub-title-mark">/ ${escapeHTML(s.name)}</span></h2></div>
                         <div class="links-group">`;
             s.links.forEach(m => {
-                html += `<div class="link-card" data-name="${m[1].toLowerCase()}"><a href="${m[2]}" target="_blank" rel="noopener noreferrer" title="${m[1]}">${m[1]}</a><span class="copy-btn" onclick="copyLink('${m[2]}', this)">${ICON_COPY}</span></div>`;
+                html += cardMarkup(m);
             });
             html += `</div></section>`;
         });
@@ -1311,6 +1316,7 @@ function doLocalFilter(val) {
 
 // 搜索主控 logic：支持站内检索和跳转外部引擎
 function doSearch(isMobile) {
+    clearTimeout(searchDebounceTimer);
     const inputId = isMobile ? "m_searchInput" : "searchInput";
     const val = document.getElementById(inputId).value.trim();
     if (currentSelectedEngineValue === "local") {
@@ -1372,13 +1378,14 @@ function activeFlatItem(el) {
     
     if (window.innerWidth < 850) { 
         closeSidebar();
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        window.scrollTo({ top: 0, behavior: 'auto' }); 
     } else { 
         document.getElementById("searchInput").focus(); 
     }
 }
 
 function clearSearchInputs() {
+    clearTimeout(searchDebounceTimer);
     document.getElementById('searchInput').value = '';
     document.getElementById('m_searchInput').value = '';
 }
@@ -1400,6 +1407,7 @@ function toggleMobileEngineDropdown(e) {
 }
 
 function selectMobileEngine(val, name) {
+    clearTimeout(searchDebounceTimer);
     currentSelectedEngineValue = val;
     document.getElementById('m_selectTrigger').innerHTML = `${name} <i class="arrow-icon">▸</i>`;
     
@@ -1434,6 +1442,7 @@ function toggleDesktopEngineDropdown(e) {
 }
 
 function selectDesktopEngine(val, name) {
+    clearTimeout(searchDebounceTimer);
     currentSelectedEngineValue = val;
     document.getElementById('pc_selectTrigger').innerText = name;
     
@@ -1594,8 +1603,8 @@ function handleGesture() {
     if (window.innerWidth >= 850) return; 
     const deltaX = touchEndX - touchStartX; const deltaY = touchEndY - touchStartY;
     if (Math.abs(deltaX) > Math.abs(deltaY) + 10) {
-        if (deltaX > 20 && !sidebarEl.classList.contains('open')) openSidebar();
-        else if (deltaX < -20 && sidebarEl.classList.contains('open')) closeSidebar();
+        if (deltaX > 55 && !sidebarEl.classList.contains('open')) openSidebar();
+        else if (deltaX < -65 && sidebarEl.classList.contains('open')) closeSidebar();
     }
 }
 
@@ -1617,9 +1626,20 @@ function saveAdminConfig() { const pwd = document.getElementById('setupPwd').val
 function resetAdminConfig() { if(confirm("重置配置？")) { localStorage.removeItem('gh_admin_config'); openAdmin(); } }
 
 function verifyAdmin() {
-    const pwd = document.getElementById('loginPwd').value.trim(); if(!pwd) return;
-    const hash = localStorage.getItem('gh_admin_config'); const decryptedText = decryptData(hash, pwd);
-    if (decryptedText && decryptedText.includes('token')) { ghData = JSON.parse(decryptedText); document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'flex'; document.getElementById('adminBox').classList.add('editor-mode'); fetchFromGitHub(); } else { alert("密码错误！"); document.getElementById('loginPwd').value = ''; }
+    const pwd = document.getElementById('loginPwd').value.trim(); if (!pwd) return;
+    try {
+        const raw = decryptData(localStorage.getItem('gh_admin_config'), pwd);
+        const config = JSON.parse(raw);
+        if (!config || !['user','repo','token'].every(key => typeof config[key] === 'string' && config[key].trim())) throw Error('invalid config');
+        ghData = config;
+        document.getElementById('adminLoginView').style.display = 'none';
+        document.getElementById('adminEditorView').style.display = 'flex';
+        document.getElementById('adminBox').classList.add('editor-mode');
+        fetchFromGitHub();
+    } catch (err) {
+        alert('密码错误或本地配置损坏！');
+        document.getElementById('loginPwd').value = '';
+    }
 }
 
 let catUpdateTimer;
@@ -1645,6 +1665,68 @@ function updateCategoryDropdown() {
     if([...catSelect.options].some(o => o.value === currentVal)) { catSelect.value = currentVal; }
 }
 
+// 可视化书签管理器：严格基于每行书签操作，不重新格式化其他内容。
+let managerEditingLine = -1, managerTimer = null;
+const managerLinkPattern = /^\s*- \[([^\]]+)\]\((https?:\/\/[^\s)]+(?:\([^)]*\)[^\s)]*)*)\)(.*)$/i;
+function managerData() {
+    const lines=document.getElementById('editorTextarea').value.split('\n');
+    let parent='', category='', sections=[], links=[];
+    lines.forEach((line,i)=>{
+        const top=line.match(/^\s*##\s*(.+)$/),sub=line.match(/^\s*###\s*(.+)$/);
+        if(sub){category=parent+' / '+sub[1].trim();sections.push({title:category,header:line.trim(),at:i});}
+        else if(top){parent=top[1].trim();category=parent;sections.push({title:category,header:line.trim(),at:i});}
+        else {const m=line.match(managerLinkPattern);if(m&&category)links.push({name:m[1],url:m[2],category,at:i,suffix:m[3]||''});}
+    });
+    return {lines,sections,links};
+}
+function managerEsc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function managerRender(){
+    const data=managerData(),filter=document.getElementById('managerFilter').value.trim().toLowerCase(),cat=document.getElementById('managerCategoryFilter');
+    const previous=cat.value, unique=[...new Set(data.sections.map(x=>x.title))];
+    cat.replaceChildren(new Option('全部分类',''),...unique.map(x=>new Option(x,x)));if(unique.includes(previous))cat.value=previous;
+    const selected=cat.value;const items=data.links.filter(x=>(!selected||x.category===selected)&&(!filter||[x.name,x.url,x.category].some(v=>v.toLowerCase().includes(filter))));
+    const list=document.getElementById('managerList');list.replaceChildren();
+    const summary=document.createElement('div');summary.className='manager-summary';summary.textContent=`共 ${data.links.length} 个网址 · ${unique.length} 个分类 · 当前显示 ${items.length} 个`;list.append(summary);
+    if(!items.length){const empty=document.createElement('div');empty.className='manager-empty';empty.textContent='没有匹配的网址。可以添加一个，或尝试其他搜索条件。';list.append(empty);return;}
+    const groups=new Map();for(const item of items){if(!groups.has(item.category))groups.set(item.category,[]);groups.get(item.category).push(item);}
+    for(const [title,rows] of groups){const group=document.createElement('section');group.className='manager-group';const h=document.createElement('h4');h.textContent=title;group.append(h);
+        for(const item of rows){const row=document.createElement('div');row.className='manager-row';row.innerHTML='<span class="manager-row-icon">🔖</span><div class="manager-row-info"><div class="manager-row-title"></div><div class="manager-row-url"></div></div><div class="manager-row-actions"><button type="button">编辑</button><button type="button" class="danger">删除</button></div>';
+            row.querySelector('.manager-row-title').textContent=item.name;row.querySelector('.manager-row-url').textContent=item.url;
+            const buttons=row.querySelectorAll('button');buttons[0].onclick=()=>managerOpenForm(item.at);buttons[1].onclick=()=>managerDeleteLink(item.at);group.append(row);
+        }list.append(group);
+    }
+}
+function managerSync(){mdContents[currentTabId]=document.getElementById('editorTextarea').value;managerRender();}
+function managerScheduleRender(){clearTimeout(managerTimer);managerTimer=setTimeout(managerSync,180);}
+function managerSwitchPage(id){managerSync();currentTabId=id;document.getElementById('editorSelect').value=id;document.getElementById('editorTextarea').value=mdContents[id]||'';document.getElementById('managerFilter').value='';document.getElementById('managerCategoryFilter').value='';document.querySelectorAll('.manager-tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.page===id));managerRender();}
+function managerOpenForm(at=-1){const data=managerData();managerEditingLine=at;const item=data.links.find(x=>x.at===at);const sel=document.getElementById('managerFormCategory');sel.replaceChildren(...data.sections.map(x=>new Option(x.title,x.header+'@@'+x.at)));
+    if(!data.sections.length){alert('请先新建分类');return;}
+    document.getElementById('managerDialogTitle').textContent=item?'编辑网址':'添加网址';document.getElementById('managerName').value=item?.name||'';document.getElementById('managerUrl').value=item?.url||'';
+    if(item){const section=[...data.sections].reverse().find(x=>x.at<item.at);if(section)sel.value=section.header+'@@'+section.at;}
+    else {const chosen=document.getElementById('managerCategoryFilter').value;const section=data.sections.find(x=>x.title===chosen);if(section)sel.value=section.header+'@@'+section.at;}
+    document.getElementById('managerDialog').style.display='flex';document.getElementById('managerName').focus();
+}
+function managerCloseForm(){document.getElementById('managerDialog').style.display='none';managerEditingLine=-1;}
+function managerSaveLink(){const name=document.getElementById('managerName').value.trim();let url=document.getElementById('managerUrl').value.trim();const value=document.getElementById('managerFormCategory').value;
+    if(!name||!url)return alert('请填写网址名称和链接');if(/[\[\]\r\n]/.test(name))return alert('名称不能包含方括号或换行');
+    if(!/^https?:\/\//i.test(url))url='https://'+url;
+    url=safeUrl(url);if(!url||/[()\s]/.test(url))return alert('请填写有效的 HTTP/HTTPS 链接（当前不支持网址括号和空格）');
+    const data=managerData();const mark=data.sections.find(x=>x.header+'@@'+x.at===value);if(!mark)return alert('请先选择分类');
+    const line=`- [${name}](${url})`;let lines=data.lines;
+    if(managerEditingLine>=0){const old=data.links.find(x=>x.at===managerEditingLine);if(!old)return alert('原网址已变化，请重新打开');lines.splice(old.at,1);const dest=data.sections.filter(x=>x.at!==undefined).find(x=>x.at===mark.at);let insertAt=dest.at+1;
+        if(old.category===mark.title){lines.splice(old.at,0,line+old.suffix);}else {if(old.at<insertAt)insertAt--;while(insertAt<lines.length&&!/^\s*#{2,3}\s+/.test(lines[insertAt]))insertAt++;lines.splice(insertAt,0,line+old.suffix);}
+    }else{let at=mark.at+1;while(at<lines.length&&!/^\s*#{2,3}\s+/.test(lines[at]))at++;lines.splice(at,0,line);}
+    document.getElementById('editorTextarea').value=lines.join('\n');managerCloseForm();managerSync();showStatus('已在本地更新，点击“保存到 GitHub”正式提交');
+}
+function managerDeleteLink(at){const data=managerData(),item=data.links.find(x=>x.at===at);if(!item)return;if(!confirm(`确定删除「${item.name}」？\n保存到 GitHub 后才会正式生效。`))return;
+    data.lines.splice(at,1);document.getElementById('editorTextarea').value=data.lines.join('\n');managerSync();showStatus('网址已在本地删除，尚未提交到 GitHub');
+}
+function managerToggleRaw(){const el=document.getElementById('managerRaw'),show=el.style.display==='none';el.style.display=show?'block':'none';document.getElementById('managerRawToggle').textContent=show?'⌃ 收起原始文本':'⌄ 高级：编辑原始文本';}
+function managerAddCategory(){const name=prompt('新建分类：\n输入 ## 大分类名称，或 ### 子分类名称');if(name==null||!name.trim())return;
+    const textarea=document.getElementById('editorTextarea'),old=textarea.value;insertQuickCategoryFromName(name);if(textarea.value!==old){managerSync();showStatus('已添加分类，记得保存到 GitHub');}}
+function insertQuickCategoryFromName(name){let heading=name.trim();if(!heading.startsWith('#'))heading='## '+heading;if(!/^#{2,3}\s+\S/.test(heading)||/[\r\n]/.test(heading))return alert('分类格式不正确');
+    const textarea=document.getElementById('editorTextarea'),lines=textarea.value.split('\n');if(heading.startsWith('###')){const parents=lines.map((s,i)=>/^##\s+/.test(s.trim())?{name:s.trim().replace(/^##\s+/,''),i}:null).filter(Boolean);if(!parents.length)return alert('请先新建大分类');const choice=prompt('请选择所属大分类编号：\n'+parents.map((p,i)=>`${i+1}. ${p.name}`).join('\n'));if(choice===null)return;const n=Number(choice);if(!Number.isInteger(n)||n<1||n>parents.length)return alert('编号不正确');let at=parents[n-1].i+1;while(at<lines.length&&!/^##\s+/.test(lines[at].trim()))at++;lines.splice(at,0,'',heading);}else lines.push('',heading);textarea.value=lines.join('\n');}
+
 async function fetchFromGitHub() {
     showStatus("📡 正在连接 GitHub..."); document.getElementById("editorTextarea").disabled = true;
     try {
@@ -1660,6 +1742,7 @@ async function fetchFromGitHub() {
         document.getElementById("editorTextarea").value = mdContents[currentTabId]; 
         
         updateCategoryDropdown();
+        managerRender();
         showStatus("✅ 拉取成功，可以编辑了！");
     } catch (err) { showStatus("❌ " + err.message, "red"); }
 }
@@ -1678,7 +1761,9 @@ function insertQuickLink() {
     if(!name || !url) return alert("请填入名称 and 网址"); 
     if(!catRaw) return alert("请先选择一个目标分类！");
     
-    if(!url.startsWith('http')) url = 'https://' + url; 
+    if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    url = safeUrl(url);
+    if (!url || /[\r\n]/.test(name) || /[\[\]]/.test(name)) return alert('名称或网址格式不正确！');
     const mdStr = `- [${name}](${url})`; 
     
     const textarea = document.getElementById('editorTextarea');
@@ -1710,26 +1795,64 @@ function insertQuickLink() {
     }
 }
 
-function insertQuickCategory() { 
-    const name = prompt("请输入新分类名称：\n(提示: 输入 '## 名称' 创建大类，输入 '### 名称' 创建小类)"); 
-    if(name && name.trim()) { 
-        const textarea = document.getElementById('editorTextarea');
-        const prefix = name.trim().startsWith('#') ? '' : '## ';
-        const mdStr = `\n${prefix}${name.trim()}\n`;
-        textarea.value = textarea.value.trim() + '\n' + mdStr;
-        textarea.scrollTop = textarea.scrollHeight; 
-        updateCategoryDropdown();
-        showStatus(`📁 新分类创建成功！`, "var(--color-link-btn)");
-    } 
+function insertQuickCategory() {
+    const name = prompt("请输入新分类名称：\n(输入 '## 名称' 创建大类，输入 '### 名称' 创建小类)");
+    if (!name || !name.trim()) return;
+    let heading = name.trim();
+    if (!heading.startsWith('#')) heading = '## ' + heading;
+    if (!/^#{2,3}\s+\S/.test(heading) || /[\r\n]/.test(heading)) return alert('分类格式不正确');
+    const textarea = document.getElementById('editorTextarea');
+    const lines = textarea.value.split('\n');
+    if (heading.startsWith('###')) {
+        const parents = lines.map((line, i) => /^##\s+/.test(line.trim()) ? {name:line.trim().replace(/^##\s+/, ''), i} : null).filter(Boolean);
+        if (!parents.length) return alert('请先创建大分类');
+        const names = parents.map((p,i) => `${i+1}. ${p.name}`).join('\n');
+        const choice = prompt(`请选择所属大分类编号：\n${names}`);
+        if (choice === null) return;
+        const n = Number(choice);
+        if (!Number.isInteger(n) || n < 1 || n > parents.length) return alert('分类编号不正确');
+        const parent = parents[n-1];
+        let at = parent.i + 1;
+        while (at < lines.length && !/^##\s+/.test(lines[at].trim())) at++;
+        lines.splice(at, 0, '', heading);
+    } else {
+        lines.push('', heading);
+    }
+    textarea.value = lines.join('\n');
+    textarea.scrollTop = textarea.scrollHeight;
+    updateCategoryDropdown();
+    showStatus('📁 新分类创建成功！');
 }
 
 async function pushToGitHub() {
-    mdContents[currentTabId] = document.getElementById("editorTextarea").value; const pushBtn = document.getElementById("pushBtn"); pushBtn.disabled = true; pushBtn.innerText = "正在推送...";
+    mdContents[currentTabId] = document.getElementById('editorTextarea').value;
+    const pushBtn = document.getElementById('pushBtn');
+    pushBtn.disabled = true; pushBtn.innerText = '正在推送...';
     try {
-        let newHtml = currentFullHtml; ['markdown-main', 'markdown-secret', 'markdown-private'].forEach(id => { const regex = new RegExp(`(<script id="${id}" type="text\\/plain">)([\\s\\S]*?)(<\\/script>)`); newHtml = newHtml.replace(regex, `$1\n${mdContents[id]}\n$3`); });
-        const res = await fetch(`https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`, { method: "PUT", headers: { "Authorization": `token ${ghData.token}`, "Content-Type": "application/json" }, body: JSON.stringify({ message: "Update via Visual Editor", content: utf8_to_b64(newHtml), sha: currentFileSha }) });
-        if (!res.ok) throw new Error("推送失败"); alert("🎉 推送成功！大约30秒后刷新生效。"); closeAdmin();
-    } catch (err) { showStatus("❌ " + err.message, "red"); } finally { pushBtn.disabled = false; pushBtn.innerText = "🚀 保存并推送到 GitHub"; }
+        if (!currentFullHtml || !currentFileSha) throw Error('尚未成功拉取 GitHub 文件');
+        let newHtml = currentFullHtml;
+        for (const id of ['markdown-main', 'markdown-secret', 'markdown-private']) {
+            const regex = new RegExp(`(<script id="${id}" type="text\\/plain">)([\\s\\S]*?)(<\\/script>)`);
+            if (!regex.test(newHtml)) throw Error(`找不到 ${id} 数据区，已中止保存`);
+            newHtml = newHtml.replace(regex, (_, open, content, close) => `${open}\n${mdContents[id]}\n${close}`);
+        }
+        const res = await fetch(`https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`, {
+            method:'PUT',
+            headers:{'Authorization':`Bearer ${ghData.token}`, 'Content-Type':'application/json', 'Accept':'application/vnd.github+json'},
+            body:JSON.stringify({message:'Update via Visual Editor', content:utf8_to_b64(newHtml), sha:currentFileSha})
+        });
+        if (!res.ok) {
+            if (res.status === 409 || res.status === 422) throw Error('远程文件已变更或版本冲突，请备份当前编辑内容后重新拉取');
+            if (res.status === 401 || res.status === 403) throw Error('GitHub 凭证失效或没有写入权限');
+            throw Error(`推送失败（HTTP ${res.status}）`);
+        }
+        const response = await res.json();
+        currentFileSha = response.content?.sha || currentFileSha;
+        currentFullHtml = newHtml;
+        alert('🎉 推送成功！GitHub Pages 生效时间取决于部署进度。');
+        closeAdmin();
+    } catch (err) { showStatus('❌ ' + err.message, 'red'); }
+    finally { pushBtn.disabled = false; pushBtn.innerText = '🚀 保存并推送到 GitHub'; }
 }
 
 let pressTimer;
@@ -1738,6 +1861,14 @@ document.getElementById('pageTitle').addEventListener('mouseup', () => clearTime
 document.getElementById('mobileAdminBtn').addEventListener('click', openAdmin);
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('links').addEventListener('click', event => {
+        const button = event.target.closest('.copy-btn');
+        if (button) copyLink(button.closest('.link-card').dataset.url, button);
+    });
+    document.getElementById('links').addEventListener('keydown', event => {
+        const button = event.target.closest('.copy-btn');
+        if (button && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); copyLink(button.closest('.link-card').dataset.url, button); }
+    });
     render("markdown-main");
     document.getElementById("searchButton").addEventListener('click', () => doSearch(false));
     document.getElementById("searchInput").addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(false); });
