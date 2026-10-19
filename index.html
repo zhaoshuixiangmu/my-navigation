@@ -404,6 +404,43 @@ body.secret .desktop-search-bar {
  .manager-bottom {grid-template-columns:minmax(0,1fr)}
  .manager-bottom #pushBtn {width:100%;max-width:100%}
 }
+
+/* v7.5 可视化后台操作流程：仅限书签管理界面 */
+.manager-actions-primary{display:flex;align-items:center;gap:10px;padding:16px 22px 2px;flex-shrink:0;flex-wrap:wrap}
+.manager-actions-primary button{height:42px;border-radius:8px;padding:0 18px;font-size:14px;font-weight:700;cursor:pointer}
+.manager-actions-primary .manager-add{background:var(--color-text);color:var(--bg-main);border:1px solid var(--color-text)}
+.manager-actions-primary .manager-cat-add{background:var(--bg-card);color:var(--color-text);border:1px solid var(--color-border)}
+.manager-actions-hint{font-size:12px;color:var(--color-link-btn);margin-left:auto;line-height:1.4}
+.manager-bar{padding-top:12px}.manager-bar input{flex:2}.manager-bar select{flex:1}
+.manager-dialog{z-index:15;overflow-y:auto;overscroll-behavior:contain}
+.manager-dialog-box{max-height:calc(100dvh - 42px);overflow-y:auto}
+.manager-dialog-head{align-items:flex-start;margin-bottom:12px}
+.manager-form-subtitle{font-size:12px;font-weight:400;color:var(--color-link-btn);margin:6px 0 0}
+.manager-dialog-box label{font-size:14px;margin-top:15px}
+.manager-dialog-box label input,.manager-dialog-box label select{height:44px;font-size:14px}
+.manager-field-note{font-size:12px;color:var(--color-link-btn);padding-top:5px}
+.manager-inline-create{display:block;border:0;background:transparent;color:var(--color-link-btn);font-weight:700;cursor:pointer;padding:12px 0 3px;text-align:left}
+.manager-form-error{margin-top:10px;padding:9px 10px;background:#fff0ed;color:#a23d31;border-radius:6px;font-size:12px}
+.manager-dialog-actions .btn-primary{min-width:132px}
+.manager-raw-head{justify-content:flex-end}
+.manager-bottom #pushBtn{background:var(--color-text);color:var(--bg-main);font-weight:700}
+.manager-top,.manager-tabs,.manager-actions-primary,.manager-bar,.manager-raw-head,.manager-bottom{background:var(--bg-main)}
+@media(max-width:849px){
+ .manager-actions-primary{padding:12px 14px 1px;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+ .manager-actions-primary button{height:44px;padding:0 7px;font-size:13px}
+ .manager-actions-hint{grid-column:1/-1;margin:0;font-size:11px}
+ .manager-bar{flex-wrap:nowrap;padding-top:10px}
+ .manager-bar input{flex:1 1 52%;min-width:0}
+ .manager-bar select{flex:1 1 35%;min-width:0}
+ .manager-dialog{padding:12px;align-items:center}
+ .manager-dialog-box{padding:17px;max-height:calc(100dvh - 24px)}
+ .manager-dialog-actions button{flex:1;padding:0 8px}
+ .manager-raw-head{justify-content:flex-start}
+}
+/* 新建子分类弹窗应覆盖添加网址表单，父子分类选择保持清晰 */
+#managerCategoryDialog{z-index:18}
+#managerFormCategory optgroup{font-style:normal;font-weight:700}
+#managerFormCategory option{font-weight:400}
 </style>
 </head>
 <body>
@@ -491,15 +528,16 @@ body.secret .desktop-search-bar {
         </div>
         
         <div id="adminEditorView" style="display:none; height:100%; flex-direction:column;">
-            <div class="manager-top"><div><strong>书签管理</strong><small>轻松整理你的导航网址</small></div><button class="manager-exit" onclick="closeAdmin()">退出</button></div>
+            <div class="manager-top"><div><strong>书签管理</strong><small>选择页面、整理网址，最后统一保存</small></div><button class="manager-exit" onclick="closeAdmin()">退出</button></div>
             <div class="manager-tabs" role="tablist"><button class="selected" data-page="markdown-main" onclick="managerSwitchPage('markdown-main')">我的主页</button><button data-page="markdown-secret" onclick="managerSwitchPage('markdown-secret')">私藏页面</button><button data-page="markdown-private" onclick="managerSwitchPage('markdown-private')">个人空间</button></div>
-            <div class="manager-bar"><input id="managerFilter" type="search" placeholder="搜索名称或网址..." oninput="managerRender()"><select id="managerCategoryFilter" onchange="managerRender()"><option value="">全部分类</option></select><button class="manager-add" onclick="managerOpenForm()">＋ 添加网址</button></div>
+            <div class="manager-actions-primary"><button class="manager-add" onclick="managerOpenForm()">＋ 添加网址</button><button class="manager-cat-add" onclick="managerAddCategory()">＋ 新建分类</button><span class="manager-actions-hint">先添加或编辑，再点底部「保存到 GitHub」发布</span></div><div class="manager-bar"><input id="managerFilter" type="search" placeholder="搜索网址名称、链接或分类" oninput="managerRender()" aria-label="搜索书签"><select id="managerCategoryFilter" onchange="managerRender()" aria-label="筛选分类"><option value="">全部分类</option></select></div>
             <div class="manager-content" id="managerList" aria-live="polite"></div>
-            <div class="manager-raw-head"><button onclick="managerToggleRaw()" id="managerRawToggle">⌄ 高级：编辑原始文本</button><button onclick="managerAddCategory()">＋ 新建分类</button></div>
+            <div class="manager-raw-head"><button onclick="managerToggleRaw()" id="managerRawToggle">⌄ 高级功能：编辑原始文本（通常不需要）</button></div>
             <div id="managerRaw" style="display:none"><div class="manager-raw-note">高级编辑将直接修改 Markdown。修改后请检查列表，再保存到 GitHub。</div><textarea id="editorTextarea" spellcheck="false" oninput="debounceUpdateCat();managerScheduleRender()"></textarea></div>
+            <div id="managerCategoryDialog" class="manager-dialog" style="display:none"><div class="manager-dialog-box manager-category-box"><div class="manager-dialog-head"><div><strong>新建分类</strong><p class="manager-form-subtitle">输入名称即可，无需 ## 格式</p></div><button onclick="managerCloseCategory()" aria-label="关闭">×</button></div><label>分类名称<input id="managerNewCategoryName" placeholder="例如：科技资讯" autocomplete="off"></label><label>分类级别<select id="managerNewCategoryLevel" onchange="managerCategoryLevelChanged()"><option value="2">大分类（侧边栏一级）</option><option value="3">子分类（归属某个大分类）</option></select></label><label id="managerParentWrap" style="display:none">所属大分类<select id="managerParentCategory"></select></label><div id="managerCategoryError" class="manager-form-error" role="alert" style="display:none"></div><div class="manager-dialog-actions"><button onclick="managerCloseCategory()">取消</button><button class="btn-primary" onclick="managerConfirmCategory()">✓ 创建分类</button></div></div></div>
             <select id="editorSelect" style="display:none" onchange="switchEditorTab()"><option value="markdown-main">主页</option><option value="markdown-secret">私藏</option><option value="markdown-private">个人</option></select>
             <div class="manager-bottom"><span id="editorStatus">尚未连接 GitHub</span><button class="btn-primary" id="pushBtn" onclick="pushToGitHub()">保存到 GitHub</button></div>
-            <div id="managerDialog" class="manager-dialog" style="display:none"><div class="manager-dialog-box"><div class="manager-dialog-head"><strong id="managerDialogTitle">添加网址</strong><button onclick="managerCloseForm()" aria-label="关闭">×</button></div><label>网址名称<input id="managerName" placeholder="例如：少数派"></label><label>网址链接<input id="managerUrl" placeholder="https://example.com"></label><label>所属分类<select id="managerFormCategory"></select></label><div class="manager-dialog-actions"><button onclick="managerCloseForm()">取消</button><button class="btn-primary" onclick="managerSaveLink()">确认保存</button></div></div></div>
+            <div id="managerDialog" class="manager-dialog" style="display:none"><div class="manager-dialog-box"><div class="manager-dialog-head"><div><strong id="managerDialogTitle">添加网址</strong><p class="manager-form-subtitle">填写下面三项即可，不用编辑代码</p></div><button onclick="managerCloseForm()" aria-label="关闭">×</button></div><label>① 网站名称<input id="managerName" placeholder="例如：少数派" autocomplete="off"></label><label>② 网站链接<input id="managerUrl" placeholder="例如：sspai.com" inputmode="url" autocomplete="url"></label><div class="manager-field-note">不写 https:// 也可以，系统会自动补全</div><label>③ 放入哪个分类？<select id="managerFormCategory"></select></label><button type="button" class="manager-inline-create" onclick="managerAddCategory(true)">＋ 没有合适的分类？新建一个</button><div id="managerFormError" class="manager-form-error" role="alert" style="display:none"></div><div class="manager-dialog-actions"><button onclick="managerCloseForm()">取消</button><button class="btn-primary" onclick="managerSaveLink()">✓ 添加到列表</button></div></div></div>
         </div>
     </div>
 </div>
@@ -1721,7 +1759,7 @@ function managerEsc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function managerRender(){
     const data=managerData(),filter=document.getElementById('managerFilter').value.trim().toLowerCase(),cat=document.getElementById('managerCategoryFilter');
     const previous=cat.value, unique=[...new Set(data.sections.map(x=>x.title))];
-    cat.replaceChildren(new Option('全部分类',''),...unique.map(x=>new Option(x,x)));if(unique.includes(previous))cat.value=previous;
+    cat.replaceChildren(new Option('全部分类',''),...unique.map(x=>new Option(x.includes(' / ')?'　↳ '+x:x,x)));if(unique.includes(previous))cat.value=previous;
     const selected=cat.value;const items=data.links.filter(x=>(!selected||x.category===selected)&&(!filter||[x.name,x.url,x.category].some(v=>v.toLowerCase().includes(filter))));
     const list=document.getElementById('managerList');list.replaceChildren();
     const summary=document.createElement('div');summary.className='manager-summary';summary.textContent=`共 ${data.links.length} 个网址 · ${unique.length} 个分类 · 当前显示 ${items.length} 个`;list.append(summary);
@@ -1737,19 +1775,44 @@ function managerRender(){
 function managerSync(){mdContents[currentTabId]=document.getElementById('editorTextarea').value;managerRender();}
 function managerScheduleRender(){clearTimeout(managerTimer);managerTimer=setTimeout(managerSync,180);}
 function managerSwitchPage(id){managerSync();currentTabId=id;document.getElementById('editorSelect').value=id;document.getElementById('editorTextarea').value=mdContents[id]||'';document.getElementById('managerFilter').value='';document.getElementById('managerCategoryFilter').value='';document.querySelectorAll('.manager-tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.page===id));managerRender();}
-function managerOpenForm(at=-1){const data=managerData();managerEditingLine=at;const item=data.links.find(x=>x.at===at);const sel=document.getElementById('managerFormCategory');sel.replaceChildren(...data.sections.map(x=>new Option(x.title,x.header+'@@'+x.at)));
+function managerFillCategorySelect(select,sections,preferred=''){
+    const groups=[];let group=null;
+    for(const section of sections){
+        const value=section.header+'@@'+section.at;
+        if(section.header.startsWith('## ')){
+            group=document.createElement('optgroup');group.label=section.title;
+            const opt=new Option('直接放在「'+section.title+'」',value);
+            group.appendChild(opt);groups.push(group);
+        }else if(section.header.startsWith('### ')){
+            if(!group){group=document.createElement('optgroup');group.label='未指定大分类';groups.push(group);}
+            const opt=new Option('↳ '+section.title.split(' / ').slice(1).join(' / '),value);
+            group.appendChild(opt);
+        }
+    }
+    select.replaceChildren(...groups);
+    if(preferred)select.value=preferred;
+}
+function managerOpenForm(at=-1){
+    const data=managerData();managerEditingLine=at;
+    const item=data.links.find(x=>x.at===at),sel=document.getElementById('managerFormCategory');
     if(!data.sections.length){alert('请先新建分类');return;}
-    document.getElementById('managerDialogTitle').textContent=item?'编辑网址':'添加网址';document.getElementById('managerName').value=item?.name||'';document.getElementById('managerUrl').value=item?.url||'';
-    if(item){const section=[...data.sections].reverse().find(x=>x.at<item.at);if(section)sel.value=section.header+'@@'+section.at;}
-    else {const chosen=document.getElementById('managerCategoryFilter').value;const section=data.sections.find(x=>x.title===chosen);if(section)sel.value=section.header+'@@'+section.at;}
+    const chosen=document.getElementById('managerCategoryFilter').value;
+    const section=item?[...data.sections].reverse().find(x=>x.at<item.at):data.sections.find(x=>x.title===chosen);
+    managerFillCategorySelect(sel,data.sections,section?section.header+'@@'+section.at:'');
+    document.getElementById('managerFormError').style.display='none';
+    document.getElementById('managerDialogTitle').textContent=item?'编辑网址':'添加网址';
+    document.querySelector('#managerDialog .manager-dialog-actions .btn-primary').textContent=item?'✓ 保存修改':'✓ 添加到列表';
+    document.getElementById('managerName').value=item?.name||'';
+    document.getElementById('managerUrl').value=item?.url||'';
     document.getElementById('managerDialog').style.display='flex';document.getElementById('managerName').focus();
 }
 function managerCloseForm(){document.getElementById('managerDialog').style.display='none';managerEditingLine=-1;}
+function managerFormError(message){const el=document.getElementById('managerFormError');el.textContent=message;el.style.display='block';}
 function managerSaveLink(){const name=document.getElementById('managerName').value.trim();let url=document.getElementById('managerUrl').value.trim();const value=document.getElementById('managerFormCategory').value;
-    if(!name||!url)return alert('请填写网址名称和链接');if(/[\[\]\r\n]/.test(name))return alert('名称不能包含方括号或换行');
+    if(!name||!url)return managerFormError('请先填写网站名称和网址链接');if(/[\[\]\r\n]/.test(name))return managerFormError('网站名称不能包含方括号或换行');
     if(!/^https?:\/\//i.test(url))url='https://'+url;
-    url=safeUrl(url);if(!url||/[()\s]/.test(url))return alert('请填写有效的 HTTP/HTTPS 链接（当前不支持网址括号和空格）');
-    const data=managerData();const mark=data.sections.find(x=>x.header+'@@'+x.at===value);if(!mark)return alert('请先选择分类');
+    url=safeUrl(url);if(!url||/[()\s]/.test(url))return managerFormError('请输入有效的网址，当前不支持括号或空格');
+    const data=managerData();const mark=data.sections.find(x=>x.header+'@@'+x.at===value);if(!mark)return managerFormError('请选择所属分类');
     const line=`- [${name}](${url})`;let lines=data.lines;
     if(managerEditingLine>=0){const old=data.links.find(x=>x.at===managerEditingLine);if(!old)return alert('原网址已变化，请重新打开');lines.splice(old.at,1);const dest=data.sections.filter(x=>x.at!==undefined).find(x=>x.at===mark.at);let insertAt=dest.at+1;
         if(old.category===mark.title){lines.splice(old.at,0,line+old.suffix);}else {if(old.at<insertAt)insertAt--;while(insertAt<lines.length&&!/^\s*#{2,3}\s+/.test(lines[insertAt]))insertAt++;lines.splice(insertAt,0,line+old.suffix);}
@@ -1760,10 +1823,68 @@ function managerDeleteLink(at){const data=managerData(),item=data.links.find(x=>
     data.lines.splice(at,1);document.getElementById('editorTextarea').value=data.lines.join('\n');managerSync();showStatus('网址已在本地删除，尚未提交到 GitHub');
 }
 function managerToggleRaw(){const el=document.getElementById('managerRaw'),show=el.style.display==='none';el.style.display=show?'block':'none';document.getElementById('managerRawToggle').textContent=show?'⌃ 收起原始文本':'⌄ 高级：编辑原始文本';}
-function managerAddCategory(){const name=prompt('新建分类：\n输入 ## 大分类名称，或 ### 子分类名称');if(name==null||!name.trim())return;
-    const textarea=document.getElementById('editorTextarea'),old=textarea.value;insertQuickCategoryFromName(name);if(textarea.value!==old){managerSync();showStatus('已添加分类，记得保存到 GitHub');}}
-function insertQuickCategoryFromName(name){let heading=name.trim();if(!heading.startsWith('#'))heading='## '+heading;if(!/^#{2,3}\s+\S/.test(heading)||/[\r\n]/.test(heading))return alert('分类格式不正确');
-    const textarea=document.getElementById('editorTextarea'),lines=textarea.value.split('\n');if(heading.startsWith('###')){const parents=lines.map((s,i)=>/^##\s+/.test(s.trim())?{name:s.trim().replace(/^##\s+/,''),i}:null).filter(Boolean);if(!parents.length)return alert('请先新建大分类');const choice=prompt('请选择所属大分类编号：\n'+parents.map((p,i)=>`${i+1}. ${p.name}`).join('\n'));if(choice===null)return;const n=Number(choice);if(!Number.isInteger(n)||n<1||n>parents.length)return alert('编号不正确');let at=parents[n-1].i+1;while(at<lines.length&&!/^##\s+/.test(lines[at].trim()))at++;lines.splice(at,0,'',heading);}else lines.push('',heading);textarea.value=lines.join('\n');}
+let managerCategoryForLink=false;
+function managerAddCategory(fromLink=false){
+    managerCategoryForLink=!!fromLink;
+    const data=managerData();
+    const parents=data.sections.filter(x=>x.header.startsWith('## '));
+    const select=document.getElementById('managerParentCategory');
+    select.replaceChildren(...parents.map(x=>new Option(x.title,x.header+'@@'+x.at)));
+    document.getElementById('managerNewCategoryName').value='';
+    document.getElementById('managerNewCategoryLevel').value='2';
+    document.getElementById('managerCategoryError').style.display='none';
+    if(fromLink){
+        const current=document.getElementById('managerFormCategory').value;
+        const section=data.sections.find(x=>x.header+'@@'+x.at===current);
+        if(section){
+            const parent=[...data.sections].reverse().find(x=>x.at<=section.at&&x.header.startsWith('## '));
+            if(parent){select.value=parent.header+'@@'+parent.at;document.getElementById('managerNewCategoryLevel').value='3';}
+        }
+    }
+    managerCategoryLevelChanged();
+    document.getElementById('managerCategoryDialog').style.display='flex';
+    document.getElementById('managerNewCategoryName').focus();
+}
+function managerCategoryLevelChanged(){
+    const sub=document.getElementById('managerNewCategoryLevel').value==='3';
+    document.getElementById('managerParentWrap').style.display=sub?'block':'none';
+}
+function managerCloseCategory(){
+    document.getElementById('managerCategoryDialog').style.display='none';
+    managerCategoryForLink=false;
+}
+function managerCategoryError(message){const el=document.getElementById('managerCategoryError');el.textContent=message;el.style.display='block';}
+function managerConfirmCategory(){
+    let name=document.getElementById('managerNewCategoryName').value.trim();
+    const level=Number(document.getElementById('managerNewCategoryLevel').value);
+    name=name.replace(/^#{2,3}\s*/, '').trim();
+    if(!name || /[\r\n]/.test(name) || name.startsWith('#'))return managerCategoryError('请填写正常的分类名称，例如：科技资讯');
+    const data=managerData(),lines=data.lines;
+    let created,insertedAt;
+    if(level===2){
+        if(data.sections.some(x=>x.header.startsWith('## ') && x.title===name))return managerCategoryError('这个大分类已经存在');
+        lines.push('', '## '+name);created='## '+name;insertedAt=lines.length-1;
+    }else{
+        const sel=document.getElementById('managerParentCategory');
+        const parent=data.sections.find(x=>x.header+'@@'+x.at===sel.value);
+        if(!parent)return managerCategoryError('请先选择所属的大分类');
+        const boundary=data.sections.find(x=>x.at>parent.at && x.header.startsWith('## '));
+        const stop=boundary?boundary.at:lines.length;
+        if(data.sections.some(x=>x.at>parent.at && x.at<stop && x.header.startsWith('### ') && x.header.slice(4).trim()===name))return managerCategoryError('这个大分类下已经有同名子分类');
+        lines.splice(stop,0,'','### '+name);created='### '+name;insertedAt=stop+1;
+    }
+    document.getElementById('editorTextarea').value=lines.join('\n');
+    managerSync();
+    managerCloseCategory();
+    showStatus('✓ 分类已添加到本地，点击「保存到 GitHub」才正式发布');
+    // 选中新创建的分类（即使存在其他大分类下的同名子分类）
+    if(document.getElementById('managerDialog').style.display==='flex'){
+        const sections=managerData().sections;
+        const field=document.getElementById('managerFormCategory');
+        const target=sections.find(x=>x.at===insertedAt && x.header===created);
+        managerFillCategorySelect(field,sections,target?target.header+'@@'+target.at:'');
+    }
+}
 
 async function fetchFromGitHub() {
     showStatus("📡 正在连接 GitHub..."); document.getElementById("editorTextarea").disabled = true;
@@ -1840,32 +1961,12 @@ function insertQuickLink() {
 }
 
 function insertQuickCategory() {
-    const name = prompt("请输入新分类名称：\n(输入 '## 名称' 创建大类，输入 '### 名称' 创建小类)");
-    if (!name || !name.trim()) return;
-    let heading = name.trim();
-    if (!heading.startsWith('#')) heading = '## ' + heading;
-    if (!/^#{2,3}\s+\S/.test(heading) || /[\r\n]/.test(heading)) return alert('分类格式不正确');
-    const textarea = document.getElementById('editorTextarea');
-    const lines = textarea.value.split('\n');
-    if (heading.startsWith('###')) {
-        const parents = lines.map((line, i) => /^##\s+/.test(line.trim()) ? {name:line.trim().replace(/^##\s+/, ''), i} : null).filter(Boolean);
-        if (!parents.length) return alert('请先创建大分类');
-        const names = parents.map((p,i) => `${i+1}. ${p.name}`).join('\n');
-        const choice = prompt(`请选择所属大分类编号：\n${names}`);
-        if (choice === null) return;
-        const n = Number(choice);
-        if (!Number.isInteger(n) || n < 1 || n > parents.length) return alert('分类编号不正确');
-        const parent = parents[n-1];
-        let at = parent.i + 1;
-        while (at < lines.length && !/^##\s+/.test(lines[at].trim())) at++;
-        lines.splice(at, 0, '', heading);
-    } else {
-        lines.push('', heading);
+    const name=prompt('新建分类：直接输入名称创建大分类，或用 ### 名称创建子分类');
+    if(name===null||!name.trim())return;
+    if(insertQuickCategoryFromName(name)){
+        updateCategoryDropdown();
+        showStatus('分类已添加，记得保存到 GitHub');
     }
-    textarea.value = lines.join('\n');
-    textarea.scrollTop = textarea.scrollHeight;
-    updateCategoryDropdown();
-    showStatus('📁 新分类创建成功！');
 }
 
 async function pushToGitHub() {
