@@ -503,6 +503,26 @@ body.secret .desktop-search-bar {
  .manager-bottom{min-height:56px;padding:8px 24px}
 }
 
+
+/* v7.7.1 全屏后台：使用显式状态类，兼容不支持 :has() 的环境 */
+@media (min-width: 850px) {
+  #adminModal.workspace-open {
+    position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;
+    padding:0!important;margin:0!important;display:flex!important;align-items:stretch!important;justify-content:stretch!important;
+    overflow:hidden!important;border-radius:0!important;
+  }
+  #adminModal.workspace-open > #adminBox.editor-mode {
+    flex:1 1 auto!important;position:relative!important;inset:auto!important;
+    width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;
+    margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+    display:flex!important;flex-direction:column!important;min-width:0!important;
+  }
+  #adminModal.workspace-open #adminEditorView {
+    display:grid!important;width:100%!important;height:100%!important;flex:1 1 auto!important;min-height:0!important;
+    grid-template-columns:240px minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto minmax(0,1fr) auto auto auto!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1743,8 +1763,8 @@ let ghData = null, currentFullHtml = "", currentFileSha = "", currentTabId = "ma
 let mdContents = { "markdown-main": "", "markdown-secret": "", "markdown-private": "" };
 
 function showStatus(text, color = "var(--color-link-btn)") { const el = document.getElementById('editorStatus'); el.innerText = text; el.style.color = color; }
-function openAdmin() { document.getElementById('adminModal').style.display = 'flex'; document.getElementById('customPromptView').style.display = 'none'; const config = localStorage.getItem('gh_admin_config'); if (config) { document.getElementById('adminSetupView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminLoginView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); setTimeout(() => document.getElementById('loginPwd').focus(), 100); } else { document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminSetupView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); } document.body.classList.add('no-scroll'); }
-function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; document.getElementById('setupPwd').value = ''; document.getElementById('loginPwd').value = ''; document.getElementById('adminBox').classList.remove('editor-mode'); document.body.classList.remove('no-scroll'); }
+function openAdmin() { document.getElementById('adminModal').classList.remove('workspace-open'); document.getElementById('adminModal').style.display = 'flex'; document.getElementById('customPromptView').style.display = 'none'; const config = localStorage.getItem('gh_admin_config'); if (config) { document.getElementById('adminSetupView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminLoginView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); setTimeout(() => document.getElementById('loginPwd').focus(), 100); } else { document.getElementById('adminLoginView').style.display = 'none'; document.getElementById('adminEditorView').style.display = 'none'; document.getElementById('adminSetupView').style.display = 'block'; document.getElementById('adminBox').classList.remove('editor-mode'); } document.body.classList.add('no-scroll'); }
+function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; document.getElementById('adminModal').classList.remove('workspace-open'); document.getElementById('setupPwd').value = ''; document.getElementById('loginPwd').value = ''; document.getElementById('adminBox').classList.remove('editor-mode'); document.body.classList.remove('no-scroll'); }
 function saveAdminConfig() { const pwd = document.getElementById('setupPwd').value.trim(), user = document.getElementById('setupUser').value.trim(), repo = document.getElementById('setupRepo').value.trim(), token = document.getElementById('setupToken').value.trim(); if (!pwd || !user || !repo || !token) return alert("各项参数不能为空！"); const rawData = JSON.stringify({ user, repo, token }), encryptedText = encryptData(rawData, pwd); localStorage.setItem('gh_admin_config', encryptedText); alert("配置已保存！"); closeAdmin(); }
 function resetAdminConfig() { if(confirm("重置配置？")) { localStorage.removeItem('gh_admin_config'); openAdmin(); } }
 
@@ -1758,6 +1778,7 @@ function verifyAdmin() {
         document.getElementById('adminLoginView').style.display = 'none';
         document.getElementById('adminEditorView').style.display = 'flex';
         document.getElementById('adminBox').classList.add('editor-mode');
+        document.getElementById('adminModal').classList.add('workspace-open');
         // GitHub 还未返回时先显示内嵌书签，只作预览；保存需远端拉取成功。
         currentFileSha = '';
         currentFullHtml = '';
