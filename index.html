@@ -631,6 +631,7 @@ body.secret .desktop-search-bar {
 - [澎湃新闻](https://www.thepaper.cn/)
 - [36氪](https://36kr.com/)
 - [理想生活实验室](https://www.toodaylab.com/)
+- [晚点](https://www.latepost.com/site/index)
 - [爱范儿](https://www.ifanr.com/)
 - [动点科技](https://cn.technode.com/)
 - [品玩](https://www.pingwest.com/)
@@ -725,7 +726,6 @@ body.secret .desktop-search-bar {
 - [影猫导航](https://www.ymaoo.cn/)
 - [追剧么指南](https://zhuiju.me/)
 
-- [晚点](https://www.latepost.com/site/index)
 ## AI
 ###AI导航
 - [AI工具集](https://ai-bot.cn/)      
@@ -1859,21 +1859,29 @@ function managerSync(){mdContents[currentTabId]=document.getElementById('editorT
 function managerScheduleRender(){clearTimeout(managerTimer);managerTimer=setTimeout(managerSync,180);}
 function managerSwitchPage(id){managerSync();currentTabId=id;document.getElementById('editorSelect').value=id;document.getElementById('editorTextarea').value=mdContents[id]||'';document.getElementById('managerFilter').value='';document.getElementById('managerCategoryFilter').value='';document.querySelectorAll('.manager-tabs button').forEach(x=>x.classList.toggle('selected',x.dataset.page===id));managerRender();}
 function managerFillCategorySelect(select,sections,preferred=''){
-    const groups=[];let group=null;
+    const groups=[];
+    let group=null, parentSection=null;
+    const hasChildren=new Set();
+    // 有子分类的大分类只充当分组标题；无子分类的大分类才可作为网址目的地。
+    for(const section of sections){
+        if(section.level===2)parentSection=section;
+        else if(section.level===3 && parentSection)hasChildren.add(parentSection.at);
+    }
     for(const section of sections){
         const value=section.header+'@@'+section.at;
         if(section.level===2){
             group=document.createElement('optgroup');group.label=section.title;
-            const opt=new Option('直接放在「'+section.title+'」',value);
-            group.appendChild(opt);groups.push(group);
+            if(!hasChildren.has(section.at)){
+                group.appendChild(new Option('直接放在「'+section.title+'」',value));
+            }
+            groups.push(group);
         }else if(section.level===3){
             if(!group){group=document.createElement('optgroup');group.label='未指定大分类';groups.push(group);}
-            const opt=new Option('　↳ '+section.title.split(' / ').slice(1).join(' / '),value);
-            group.appendChild(opt);
+            group.appendChild(new Option('　↳ '+section.title.split(' / ').slice(1).join(' / '),value));
         }
     }
     select.replaceChildren(...groups);
-    if(preferred)select.value=preferred;
+    if(preferred && [...select.options].some(option=>option.value===preferred))select.value=preferred;
 }
 function managerOpenForm(at=-1){
     const data=managerData();managerEditingLine=at;
@@ -1898,8 +1906,8 @@ function managerSaveLink(){const name=document.getElementById('managerName').val
     const data=managerData();const mark=data.sections.find(x=>x.header+'@@'+x.at===value);if(!mark)return managerFormError('请选择所属分类');
     const line=`- [${name}](${url})`;let lines=data.lines;
     if(managerEditingLine>=0){const old=data.links.find(x=>x.at===managerEditingLine);if(!old)return alert('原网址已变化，请重新打开');lines.splice(old.at,1);const dest=data.sections.filter(x=>x.at!==undefined).find(x=>x.at===mark.at);let insertAt=dest.at+1;
-        if(old.category===mark.title){lines.splice(old.at,0,line+old.suffix);}else {if(old.at<insertAt)insertAt--;while(insertAt<lines.length&&!/^\s*#{2,3}\s+/.test(lines[insertAt]))insertAt++;lines.splice(insertAt,0,line+old.suffix);}
-    }else{let at=mark.at+1;while(at<lines.length&&!/^\s*#{2,3}\s+/.test(lines[at]))at++;lines.splice(at,0,line);}
+        if(old.category===mark.title){lines.splice(old.at,0,line+old.suffix);}else {if(old.at<insertAt)insertAt--;while(insertAt<lines.length&&!/^\s*#{2,3}\s*/.test(lines[insertAt]))insertAt++;lines.splice(insertAt,0,line+old.suffix);}
+    }else{let at=mark.at+1;while(at<lines.length&&!/^\s*#{2,3}\s*/.test(lines[at]))at++;lines.splice(at,0,line);}
     document.getElementById('editorTextarea').value=lines.join('\n');managerCloseForm();managerSync();showStatus('已在本地更新，点击“保存到 GitHub”正式提交');
 }
 function managerDeleteLink(at){const data=managerData(),item=data.links.find(x=>x.at===at);if(!item)return;if(!confirm(`确定删除「${item.name}」？\n保存到 GitHub 后才会正式生效。`))return;
