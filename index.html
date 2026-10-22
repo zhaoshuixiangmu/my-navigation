@@ -523,6 +523,28 @@ body.secret .desktop-search-bar {
     grid-template-rows:auto auto auto minmax(0,1fr) auto auto auto!important;
   }
 }
+
+/* v7.7.6 仅 Markdown 书签导入与导出，不修改导航主体布局 */
+.manager-raw-head{align-items:center;flex-wrap:wrap}
+.manager-md-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.manager-md-tools button{min-height:36px;padding:7px 12px;font-size:12px;border-radius:7px;white-space:nowrap}
+.manager-md-tools #managerMdImport{background:var(--color-text);color:var(--bg-main);border-color:var(--color-text)}
+.manager-md-dialog-box{width:min(100%,510px);max-height:calc(100dvh - 36px);overflow-y:auto}
+.manager-md-preview{font-size:13px;line-height:1.7;border-radius:9px;background:var(--bg-card);border:1px solid var(--color-border);padding:12px 14px;overflow-wrap:anywhere}
+.manager-md-preview .manager-md-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:5px 0;border-bottom:1px solid var(--color-border-light)}
+.manager-md-preview .manager-md-row:last-child{border-bottom:none}
+.manager-md-preview .manager-md-row span:last-child{text-align:right}
+.manager-md-note{font-size:12px;color:var(--color-link-btn);padding-top:8px;line-height:1.6}
+.manager-md-notice{font-size:12px;line-height:1.65;background:var(--color-active-bg);border-radius:8px;padding:10px 12px;margin-top:12px}
+.manager-dialog-box label.manager-md-agree{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;margin:12px 0 0;cursor:pointer}
+.manager-md-agree input{width:18px;height:18px;margin:0;flex:0 0 18px;accent-color:var(--color-text)}
+.manager-md-dialog-box #managerMdApply:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:849px){
+ .manager-md-tools{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .manager-md-tools button{width:100%;min-width:0;white-space:normal}
+ .manager-raw-head #managerRawToggle{width:100%;text-align:left}
+ .manager-md-dialog-box{max-height:calc(100dvh - 24px)}
+}
 </style>
 </head>
 <body>
@@ -614,8 +636,9 @@ body.secret .desktop-search-bar {
             <div class="manager-tabs" role="tablist"><button class="selected" data-page="markdown-main" onclick="managerSwitchPage('markdown-main')">我的主页</button><button data-page="markdown-secret" onclick="managerSwitchPage('markdown-secret')">私藏页面</button><button data-page="markdown-private" onclick="managerSwitchPage('markdown-private')">个人空间</button></div>
             <div class="manager-actions-primary"><button class="manager-add" onclick="managerOpenForm()">＋ 添加网址</button><button class="manager-cat-add" onclick="managerAddCategory()">＋ 新建分类</button><span class="manager-actions-hint">先添加或编辑，再点底部「保存到 GitHub」发布</span></div><div class="manager-bar"><input id="managerFilter" type="search" placeholder="搜索网址名称、链接或分类" oninput="managerRender()" aria-label="搜索书签"><select id="managerCategoryFilter" onchange="managerRender()" aria-label="筛选分类"><option value="">全部分类</option></select></div>
             <div class="manager-content" id="managerList" aria-live="polite"></div>
-            <div class="manager-raw-head"><button onclick="managerToggleRaw()" id="managerRawToggle">⌄ 高级功能：编辑原始文本（通常不需要）</button></div>
+            <div class="manager-raw-head"><button onclick="managerToggleRaw()" id="managerRawToggle">⌄ 高级功能：编辑原始文本（通常不需要）</button><div class="manager-md-tools" aria-label="Markdown 书签备份和导入"><button type="button" id="managerMdExport" onclick="managerExportMarkdown()" title="下载当前空间的 Markdown 书签">↓ 导出书签 .md</button><button type="button" id="managerMdImport" onclick="managerSelectMarkdown()" title="导入 Markdown 到当前空间">↑ 导入书签 .md</button><input type="file" id="managerMdFile" accept=".md,.markdown,text/markdown,text/plain" style="display:none" onchange="managerReadMarkdown(this)"></div></div>
             <div id="managerRaw" style="display:none"><div class="manager-raw-note">高级编辑将直接修改 Markdown。修改后请检查列表，再保存到 GitHub。</div><textarea id="editorTextarea" spellcheck="false" oninput="debounceUpdateCat();managerScheduleRender()"></textarea></div>
+            <div id="managerMdDialog" class="manager-dialog" style="display:none" role="dialog" aria-modal="true" aria-labelledby="managerMdTitle"><div class="manager-dialog-box manager-md-dialog-box"><div class="manager-dialog-head"><div><strong id="managerMdTitle">导入 Markdown 书签</strong><p class="manager-form-subtitle">仅更新当前空间的书签，不改变网页代码或其他空间</p></div><button type="button" onclick="managerCloseMarkdownDialog()" aria-label="关闭">×</button></div><div id="managerMdPreview" class="manager-md-preview"></div><p class="manager-md-notice">导入将<strong>替换所选空间的全部 Markdown 书签</strong>（包括大分类和子分类），不会自动上传 GitHub。确认导入后可先检查列表，再点击「保存到 GitHub」正式发布。</p><label class="manager-md-agree"><input type="checkbox" id="managerMdConfirm" onchange="managerUpdateMarkdownConfirm()"><span id="managerMdAgreeLabel">我已确认替换当前空间的书签</span></label><div class="manager-dialog-actions"><button type="button" onclick="managerCloseMarkdownDialog()">取消</button><button type="button" class="btn-primary" id="managerMdApply" onclick="managerApplyMarkdown()" disabled>✓ 导入到当前空间</button></div></div></div>
             <div id="managerCategoryDialog" class="manager-dialog" style="display:none"><div class="manager-dialog-box manager-category-box"><div class="manager-dialog-head"><div><strong>新建分类</strong><p class="manager-form-subtitle">输入名称即可，无需 ## 格式</p></div><button onclick="managerCloseCategory()" aria-label="关闭">×</button></div><label>分类名称<input id="managerNewCategoryName" placeholder="例如：科技资讯" autocomplete="off"></label><label>分类级别<select id="managerNewCategoryLevel" onchange="managerCategoryLevelChanged()"><option value="2">大分类（侧边栏一级）</option><option value="3">子分类（归属某个大分类）</option></select></label><label id="managerParentWrap" style="display:none">所属大分类<select id="managerParentCategory"></select></label><div id="managerCategoryError" class="manager-form-error" role="alert" style="display:none"></div><div class="manager-dialog-actions"><button onclick="managerCloseCategory()">取消</button><button class="btn-primary" onclick="managerConfirmCategory()">✓ 创建分类</button></div></div></div>
             <select id="editorSelect" style="display:none" onchange="switchEditorTab()"><option value="markdown-main">主页</option><option value="markdown-secret">私藏</option><option value="markdown-private">个人</option></select>
             <div class="manager-bottom"><span id="editorStatus">尚未连接 GitHub</span><button class="btn-primary" id="pushBtn" onclick="pushToGitHub()">保存到 GitHub</button></div>
@@ -648,8 +671,8 @@ body.secret .desktop-search-bar {
 - [求是](https://www.qstheory.cn/index.htm)
 - [钛媒体](https://www.tmtpost.com/)
 - [生财有术官网](https://scys.com)
-
 - [The Verge](https://www.theverge.com/)
+
 ##影视娱乐
 ###精选影视 
 - [低调影视](https://ddys.app/)   
@@ -812,9 +835,9 @@ body.secret .desktop-search-bar {
 - [水木资源](https://shuimu123.com/)
 - [产品派](https://chanpinpai.com/)
 - [1000UserGuide](https://1000.1000userguide.com/)
-
 - [365天独立开发挑战](https://365-tools.cn/)
 - [Design notes](https://designnotes.cn/)
+
 ## 博客周刊
 - [软鸭资源库](https://ruanyazyk.com)
 - [哎哟不错](https://aiyoubucuo.com/)  
@@ -972,8 +995,8 @@ body.secret .desktop-search-bar {
 - [PanHunt](https://panhunt.com/)
 - [轻工具导航](https://qinggongju.com/)
 - [蛙蛙导航](https://www.wawadh.cn/)
-
 - [7080网](https://7080.wang/)  
+
 ## 电子书籍
 - [电子书导航](https://shu.baozangdh.com/)  
 - [阅读指南Readzn](https://readzn.com/)  
@@ -1955,12 +1978,125 @@ function managerSaveLink(){
     mdContents[targetPage]=targetLines.join('\n');
     document.getElementById('editorTextarea').value=mdContents[currentTabId];
     const moved=!!old&&managerEditingPage!==targetPage;
-    managerCloseForm();managerRender();
-    showStatus(moved?`网址已移至「${managerSpaceNames[targetPage]}」，点击「保存到 GitHub」正式提交`:'网址已暂存，点击「保存到 GitHub」正式提交');
+    managerCloseForm();
+    // 跨空间添加或移动成功后跳到目标空间，避免用户误以为网址没有添加。
+    if (targetPage !== currentTabId) managerSwitchPage(targetPage);
+    else managerRender();
+    showStatus(moved?`网址已移至「${managerSpaceNames[targetPage]}」，尚未发布到 GitHub`:`网址已暂存到「${managerSpaceNames[targetPage]}」，请点击「保存到 GitHub」正式发布`);
 }
 function managerDeleteLink(at){const data=managerData(),item=data.links.find(x=>x.at===at);if(!item)return;if(!confirm(`确定删除「${item.name}」？\n保存到 GitHub 后才会正式生效。`))return;
     data.lines.splice(at,1);document.getElementById('editorTextarea').value=data.lines.join('\n');managerSync();showStatus('网址已在本地删除，尚未提交到 GitHub');
 }
+// v7.7.6 Markdown-only import/export: per-space; never upload or replace the website HTML.
+let managerMarkdownPending = null;
+const managerMarkdownLabels = {'markdown-main':'我的主页','markdown-secret':'私藏页面','markdown-private':'个人空间'};
+const managerMarkdownFiles = {'markdown-main':'我的主页-书签.md','markdown-secret':'私藏页面-书签.md','markdown-private':'个人空间-书签.md'};
+function managerCurrentMarkdown() {
+    // The active editor textarea is the authoritative unsaved draft.
+    const raw = document.getElementById('editorTextarea');
+    if (raw && currentTabId) mdContents[currentTabId] = raw.value;
+    return mdContents[currentTabId] || '';
+}
+function managerDownloadMarkdown(text, filename) {
+    const href = URL.createObjectURL(new Blob(['\ufeff' + text],{type:'text/markdown;charset=utf-8'}));
+    const a=document.createElement('a');a.href=href;a.download=filename;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(href), 10000);
+}
+function managerExportMarkdown() {
+    const id=currentTabId;
+    if (!managerMarkdownLabels[id]) return showStatus('无法识别当前书签空间','red');
+    try {
+        const content=managerCurrentMarkdown();
+        managerDownloadMarkdown(content, managerMarkdownFiles[id]);
+        showStatus(`✅ 已导出「${managerMarkdownLabels[id]}」的 Markdown 书签（包含尚未提交的修改）`);
+    } catch(err) { showStatus('❌ 导出失败：'+err.message,'red'); }
+}
+function managerSelectMarkdown() {
+    const input=document.getElementById('managerMdFile');
+    input.value='';input.click();
+}
+function managerMarkdownSummary(markdown) {
+    let parents=0,children=0,links=0,unknown=0,insideParent=false;
+    const errors=[];
+    const lines=markdown.split('\n');
+    lines.forEach((line,index)=>{
+        const s=line.trim();if(!s)return;
+        // HTML script end tags would close the bookmark data container when published.
+        if(/<\s*\/?\s*script\b/i.test(s))errors.push(`第 ${index+1} 行含有不安全的 script 标签`);
+        if(/^###(?!#)\s*\S/.test(s)){
+            children++;if(!insideParent)errors.push(`第 ${index+1} 行：子分类前没有大分类`);
+        } else if(/^##(?!#)\s*\S/.test(s)){
+            parents++;insideParent=true;
+        } else if(managerLinkPattern.test(s)){
+            links++;if(!insideParent)errors.push(`第 ${index+1} 行：网址前缺少大分类`);
+        }else{
+            unknown++;
+            if(/^#{2,}\s*$/.test(s))errors.push(`第 ${index+1} 行：分类名称不能为空`);
+            if(/^\s*-\s*\[/.test(s) && !managerLinkPattern.test(s))errors.push(`第 ${index+1} 行：网址语法或协议不受支持`);
+        }
+    });
+    if(!parents)errors.push('Markdown 中没有大分类（## 分类名称）');
+    // A file with no links is allowed when exporting a newly organized empty category tree.
+    return {parents,children,links,unknown,errors};
+}
+async function managerReadMarkdown(input) {
+    if(!input.files || !input.files.length)return;
+    const file=input.files[0];
+    const target=currentTabId;
+    try {
+        if (!/\.(md|markdown)$/i.test(file.name)) throw Error('请选择 .md 或 .markdown 文件');
+        if (!file.size) throw Error('文件内容为空');
+        if(file.size>2*1024*1024)throw Error('Markdown 文件超过 2MB，请先拆分');
+        let content=(await file.text()).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n').trim();
+        if (!content)throw Error('文件没有可导入的内容');
+        if(/<\s*\/?\s*script\b/i.test(content))throw Error('不接受包含 script 标签的 Markdown');
+        const summary=managerMarkdownSummary(content);
+        if(summary.errors.length)throw Error(summary.errors.slice(0,4).join('；'));
+        // Keep extra comments/notes as original raw Markdown; expose count in preview.
+        managerCurrentMarkdown();
+        const current=managerMarkdownSummary(mdContents[target]||'');
+        managerMarkdownPending={target,content,filename:file.name,summary};
+        const details=document.getElementById('managerMdPreview');details.replaceChildren();
+        const rows=[['导入文件',file.name],['目标空间',managerMarkdownLabels[target]],['原有书签',current.links+' 条'],['导入书签',summary.links+' 条'],['大分类 / 子分类',summary.parents+' / '+summary.children]];
+        for(const [label,value] of rows){
+            const row=document.createElement('div');row.className='manager-md-row';
+            const a=document.createElement('strong');a.textContent=label;
+            const b=document.createElement('span');b.textContent=value;
+            row.append(a,b);details.append(row);
+        }
+        if(summary.unknown){const note=document.createElement('p');note.className='manager-md-note';note.textContent=`另有 ${summary.unknown} 行非标准书签或分类文本，将原样保留。`;details.append(note);}
+        document.getElementById('managerMdConfirm').checked=false;
+        document.getElementById('managerMdAgreeLabel').textContent=`我确认替换「${managerMarkdownLabels[target]}」的书签文本`;
+        document.getElementById('managerMdDialog').style.display='flex';
+        managerUpdateMarkdownConfirm();
+    }catch(err){managerMarkdownPending=null;showStatus('❌ Markdown 检查未通过：'+err.message,'red');alert('导入失败：'+err.message);}
+}
+function managerUpdateMarkdownConfirm(){
+    document.getElementById('managerMdApply').disabled=!managerMarkdownPending||!document.getElementById('managerMdConfirm').checked;
+}
+function managerCloseMarkdownDialog(){
+    document.getElementById('managerMdDialog').style.display='none';
+    document.getElementById('managerMdConfirm').checked=false;
+    document.getElementById('managerMdFile').value='';
+    managerMarkdownPending=null;
+}
+function managerApplyMarkdown() {
+    const p=managerMarkdownPending;
+    if(!p || !document.getElementById('managerMdConfirm').checked)return;
+    if(!managerMarkdownLabels[p.target])return;
+    clearTimeout(managerTimer);clearTimeout(catUpdateTimer);
+    mdContents[p.target]=p.content;
+    if(currentTabId===p.target){
+        document.getElementById('editorTextarea').value=p.content;
+        document.getElementById('managerFilter').value='';
+        document.getElementById('managerCategoryFilter').value='';
+        managerRender();
+    }
+    managerCloseMarkdownDialog();
+    showStatus(`✅ 已导入「${managerMarkdownLabels[p.target]}」${p.summary.links} 条网址，尚未保存到 GitHub`);
+}
+
 function managerToggleRaw(){const el=document.getElementById('managerRaw'),show=el.style.display==='none';el.style.display=show?'block':'none';document.getElementById('managerRawToggle').textContent=show?'⌃ 收起原始文本':'⌄ 高级：编辑原始文本';}
 let managerCategoryForLink=false;
 function managerAddCategory(fromLink=false){
@@ -2114,16 +2250,33 @@ function insertQuickCategory() {
     }
 }
 
+// GitHub 提交成功后，更新当前页面内嵌书签数据和可见卡片。
+// 以前只关闭后台，仍然显示本次打开页面时载入的旧书签。
+function applyPublishedBookmarksToPage() {
+    for (const id of ['markdown-main', 'markdown-secret', 'markdown-private']) {
+        const sourceElement = document.getElementById(id);
+        if (!sourceElement) throw new Error(`当前页面缺少 ${id} 数据区`);
+        sourceElement.textContent = '\n' + mdContents[id] + '\n';
+    }
+    const view = document.body.classList.contains('mode-private') ? 'markdown-private'
+      : document.body.classList.contains('mode-secret') ? 'markdown-secret' : 'markdown-main';
+    render(view);
+}
+
 async function pushToGitHub() {
+    // 等待中的原始文本编辑防抖任务不能覆盖新提交的数据。
+    clearTimeout(managerTimer);
     mdContents[currentTabId] = document.getElementById('editorTextarea').value;
     const pushBtn = document.getElementById('pushBtn');
-    pushBtn.disabled = true; pushBtn.innerText = '正在推送...';
+    pushBtn.disabled = true;
+    pushBtn.innerText = '正在保存到 GitHub...';
     try {
         if (!currentFullHtml || !currentFileSha) throw Error('尚未成功拉取 GitHub 文件');
         let newHtml = currentFullHtml;
         for (const id of ['markdown-main', 'markdown-secret', 'markdown-private']) {
             const regex = new RegExp(`(<script id="${id}" type="text\\/plain">)([\\s\\S]*?)(<\\/script>)`);
             if (!regex.test(newHtml)) throw Error(`找不到 ${id} 数据区，已中止保存`);
+            // 仅改三个书签区，不整体格式化 HTML，也不改动已有 Markdown 空行。
             newHtml = newHtml.replace(regex, (_, open, content, close) => `${open}\n${mdContents[id]}\n${close}`);
         }
         const res = await fetch(`https://api.github.com/repos/${ghData.user}/${ghData.repo}/contents/index.html`, {
@@ -2137,9 +2290,16 @@ async function pushToGitHub() {
             throw Error(`推送失败（HTTP ${res.status}）`);
         }
         const response = await res.json();
-        currentFileSha = response.content?.sha || currentFileSha;
+        // 以 GitHub 返回的文件 SHA 作为成功依据，不提前宣称已保存。
+        if (!response.content?.sha) throw Error('GitHub 已响应，但未返回新文件版本；请先在仓库核实，暂勿重复提交');
+        currentFileSha = response.content.sha;
         currentFullHtml = newHtml;
-        alert('🎉 推送成功！GitHub Pages 生效时间取决于部署进度。');
+        let syncNote = '当前导航页面的书签已同步更新。';
+        try { applyPublishedBookmarksToPage(); }
+        catch (err) { console.error('提交成功，但本页渲染失败', err); syncNote = 'GitHub 已保存，但当前页面渲染失败，请刷新页面查看。'; }
+        const commit = response.commit?.sha ? `\n提交：${response.commit.sha.slice(0, 7)}` : '';
+        showStatus(`✅ 已保存到 ${ghData.user}/${ghData.repo}/index.html`);
+        alert(`✅ GitHub 已确认保存！\n${syncNote}\n其他设备或 GitHub Pages 可能需要刷新。${commit}`);
         closeAdmin();
     } catch (err) { showStatus('❌ ' + err.message, 'red'); }
     finally { pushBtn.disabled = false; pushBtn.innerText = '保存到 GitHub'; }
