@@ -1953,6 +1953,47 @@ function managerMarkdownSummary(markdown) {
     // A file with no links is allowed when exporting a newly organized empty category tree.
     return {parents,children,links,unknown,errors};
 }
+async function unlockMarkdownImport(target) {
+    if(target==='markdown-main' || spaceKeys.has(target))return;
+    if(!currentFileSha || !currentFullHtml)throw Error('请等待后台成功读取 GitHub 后再导入');
+    const dialog=document.createElement('dialog');
+    const form=document.createElement('form');
+    form.method='dialog';
+    const label=document.createElement('label');
+    label.textContent='请输入「'+managerMarkdownLabels[target]+'」原来的空间密码';
+    const input=document.createElement('input');
+    input.type='password';
+    input.autocomplete='off';
+    label.append(input);
+    const ok=document.createElement('button');
+    ok.value='unlock';
+    ok.textContent='解锁并继续导入';
+    const cancel=document.createElement('button');
+    cancel.value='cancel';
+    cancel.textContent='取消';
+    form.append(label,ok,cancel);
+    dialog.append(form);
+    document.body.append(dialog);
+    try {
+        const closed=new Promise(resolve=>dialog.addEventListener('close',resolve,{once:true}));
+        dialog.showModal();
+        input.focus();
+        await closed;
+        if(dialog.returnValue!=='unlock')throw Error('已取消解锁，原有书签已保留');
+        const remote=new DOMParser().parseFromString(currentFullHtml,'text/html');
+        const box=remote.getElementById(target).textContent;
+        const key=await readSpaceKey(input.value,box);
+        let original;
+        try {original=await openSpace(box,key);}
+        catch {throw Error('空间密码不正确，请重新选择文件并输入该空间的密码');}
+        spaceKeys.set(target,key);
+        unlockedSpaces.set(target,original);
+        if(!mdContents[target]){
+            mdContents[target]=original;
+            if(currentTabId===target)document.getElementById('editorTextarea').value=original;
+        }
+    } finally {dialog.remove();}
+}
 async function managerReadMarkdown(input) {
     if(!input.files || !input.files.length)return;
     const file=input.files[0];
@@ -1966,6 +2007,7 @@ async function managerReadMarkdown(input) {
         if(/<\s*\/?\s*script\b/i.test(content))throw Error('不接受包含 script 标签的 Markdown');
         const summary=managerMarkdownSummary(content);
         if(summary.errors.length)throw Error(summary.errors.slice(0,4).join('；'));
+        await unlockMarkdownImport(target);
         // Keep extra comments/notes as original raw Markdown; expose count in preview.
         managerCurrentMarkdown();
         const current=managerMarkdownSummary(mdContents[target]||'');
@@ -1983,7 +2025,7 @@ async function managerReadMarkdown(input) {
         document.getElementById('managerMdAgreeLabel').textContent=`我确认替换「${managerMarkdownLabels[target]}」的书签文本`;
         document.getElementById('managerMdDialog').style.display='flex';
         managerUpdateMarkdownConfirm();
-    }catch(err){managerMarkdownPending=null;showStatus('❌ Markdown 检查未通过：'+err.message,'red');alert('导入失败：'+err.message);}
+    }catch(err){input.value='';managerMarkdownPending=null;showStatus('❌ Markdown 检查未通过：'+err.message,'red');alert('导入失败：'+err.message);}
 }
 function managerUpdateMarkdownConfirm(){
     document.getElementById('managerMdApply').disabled=!managerMarkdownPending||!document.getElementById('managerMdConfirm').checked;
