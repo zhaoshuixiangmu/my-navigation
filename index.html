@@ -1953,7 +1953,7 @@ function managerMarkdownSummary(markdown) {
     // A file with no links is allowed when exporting a newly organized empty category tree.
     return {parents,children,links,unknown,errors};
 }
-async function unlockMarkdownImport(target) {
+async function unlockEditorSpace(target) {
     if(target==='markdown-main' || spaceKeys.has(target))return;
     if(!currentFileSha || !currentFullHtml)throw Error('请等待后台成功读取 GitHub 后再导入');
     const dialog=document.createElement('dialog');
@@ -1967,7 +1967,7 @@ async function unlockMarkdownImport(target) {
     label.append(input);
     const ok=document.createElement('button');
     ok.value='unlock';
-    ok.textContent='解锁并继续导入';
+    ok.textContent='解锁并继续';
     const cancel=document.createElement('button');
     cancel.value='cancel';
     cancel.textContent='取消';
@@ -1985,7 +1985,7 @@ async function unlockMarkdownImport(target) {
         const key=await readSpaceKey(input.value,box);
         let original;
         try {original=await openSpace(box,key);}
-        catch {throw Error('空间密码不正确，请重新选择文件并输入该空间的密码');}
+        catch {throw Error('空间密码不正确，请使用该空间原来的密码重试');}
         spaceKeys.set(target,key);
         unlockedSpaces.set(target,original);
         if(!mdContents[target]){
@@ -2007,7 +2007,7 @@ async function managerReadMarkdown(input) {
         if(/<\s*\/?\s*script\b/i.test(content))throw Error('不接受包含 script 标签的 Markdown');
         const summary=managerMarkdownSummary(content);
         if(summary.errors.length)throw Error(summary.errors.slice(0,4).join('；'));
-        await unlockMarkdownImport(target);
+        await unlockEditorSpace(target);
         // Keep extra comments/notes as original raw Markdown; expose count in preview.
         managerCurrentMarkdown();
         const current=managerMarkdownSummary(mdContents[target]||'');
@@ -2247,8 +2247,8 @@ async function pushToGitHub() {
             let payload=mdContents[id];
             if(id!=='markdown-main'){
                 if(!spaceKeys.has(id)){
-                    if(payload.trim())throw Error('请先备份编辑内容，退出后台并用对应空间密码解锁，再编辑该空间');
-                    continue;
+                    if(!payload.trim())continue;
+                    await unlockEditorSpace(id);
                 }
                 payload=await sealSpace(payload,spaceKeys.get(id),JSON.parse(newHtml.match(regex)[2]).salt);
             }
